@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en-us" style="transform: rotate(90deg);">
+<html lang="en-us">
 
 <head>
   <meta charset="utf-8">
@@ -26,18 +26,17 @@
   <link rel="apple-touch-icon" href="icons/icon-512x512.png" sizes="512x512" type="image/png" />
 
   <meta name="theme-color" content="#000" />
+  <meta name="screen-orientation" content="landscape">
+  <meta name="x5-orientation" content="landscape">
+  <meta name="apple-mobile-web-app-orientations" content="landscape">
 
   <style>
     html, body {
-      position: fixed;
-      overflow: hidden;
-      width: 100vh;  /* Ширина равна высоте viewport */
-      height: 100vw; /* Высота равна ширине viewport */
-      top: 0;
-      left: 0;
       margin: 0;
       padding: 0;
-      transform-origin: 0 0;
+      overflow: hidden;
+      width: 100%;
+      height: 100%;
       background: #444;
       font-family: sans-serif;
       touch-action: none;
@@ -47,7 +46,7 @@
     }
 
     body {
-      transform: rotate(90deg) translateY(-100%);
+      position: fixed;
     }
 
     body, html {
@@ -56,13 +55,11 @@
 
     #canvas, #overlayDiv {
       position: absolute;
-      top: 0px;
-      left: 0px;
-      width: 100vh;
-      height: 100vw;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
       border: 0 none;
-      transform: rotate(-90deg) translateX(-100%);
-      transform-origin: 0 0;
     }
 
     #canvas {
@@ -92,8 +89,6 @@
       left: 0;
       right: 0;
       border-radius: 0 0 5px 5px;
-      transform: rotate(-90deg) translateX(-100%);
-      transform-origin: 0 0;
     }
 
     #statusTextDiv {
@@ -138,8 +133,6 @@
       left: 0px;
       top: 0px;
       color: white;
-      transform: rotate(-90deg) translateX(-100%);
-      transform-origin: 0 0;
     }
 
     #ContextContainer.shown {
@@ -190,11 +183,36 @@
       top: 0;
       left: 0;
       display: block;
-      width: 100vh;
-      height: 100vw;
+      width: 100%;
+      height: 100%;
       object-fit: contain;
-      transform: rotate(-90deg) translateX(-100%);
-      transform-origin: 0 0;
+    }
+
+    /* Сообщение о повороте */
+    #rotate-message {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.9);
+      color: white;
+      font-size: 24px;
+      text-align: center;
+      padding-top: 30vh;
+      z-index: 9999;
+      font-family: sans-serif;
+    }
+
+    @media (orientation: portrait) {
+      #rotate-message {
+        display: block;
+      }
+      #presplash, #canvas, #overlayDiv, #ContextContainer,
+      #statusDiv, #inputDiv {
+        display: none;
+      }
     }
 
     /* Скрываем скроллбары */
@@ -214,6 +232,11 @@
   <div id="overlayDiv"></div>
 
   <img id="presplash" src="web-presplash.jpg">
+
+  <div id="rotate-message">
+    <div style="font-size: 48px; margin-bottom: 20px;">↻</div>
+    Пожалуйста, поверните устройство<br>в альбомную ориентацию
+  </div>
 
   <div id="ContextContainer">
     <a id="ContextButton">&#8801;</a><br />
@@ -254,8 +277,15 @@
         }
     }
     
-    // Блокировка ориентации и обработка событий
+    // Определение мобильного устройства
+    function isMobileDevice() {
+      return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    }
+    
+    // Блокировка ориентации для мобильных устройств
     function lockOrientation() {
+      if (!isMobileDevice()) return;
+      
       // Современные браузеры
       if (screen.orientation && screen.orientation.lock) {
         screen.orientation.lock('landscape')
@@ -272,45 +302,60 @@
         screen.msLockOrientation('landscape');
       }
     }
-
-    // Блокировка при загрузке и ресайзе
-    window.addEventListener('load', function() {
-      lockOrientation();
+    
+    // Корректировка размеров canvas
+    function resizeCanvas() {
+      const canvas = document.getElementById('canvas');
+      if (!canvas) return;
       
+      // Устанавливаем физический размер canvas
+      const dpr = window.devicePixelRatio || 1;
+      canvas.width = window.innerWidth * dpr;
+      canvas.height = window.innerHeight * dpr;
+      
+      // Устанавливаем логический размер
+      canvas.style.width = window.innerWidth + 'px';
+      canvas.style.height = window.innerHeight + 'px';
+      
+      // Корректируем масштаб для HiDPI дисплеев
+      const ctx = canvas.getContext('2d');
+      if (ctx) {
+        ctx.scale(dpr, dpr);
+      }
+    }
+    
+    // Обновление ориентации при изменении размера
+    function handleResize() {
+      lockOrientation();
+      resizeCanvas();
+      
+      // Для мобильных устройств скрываем сообщение в альбомной ориентации
+      if (isMobileDevice()) {
+        const rotateMessage = document.getElementById('rotate-message');
+        if (window.innerWidth > window.innerHeight) {
+          rotateMessage.style.display = 'none';
+        } else {
+          rotateMessage.style.display = 'block';
+        }
+      }
+    }
+
+    // Инициализация при загрузке
+    window.addEventListener('load', function() {
       // Блокировка контекстного меню
       document.addEventListener('contextmenu', function(e) {
         e.preventDefault();
       });
       
-      // Корректировка размеров при изменении окна
-      window.addEventListener('resize', function() {
-        lockOrientation();
-        adjustLayout();
-      });
-      
       // Первоначальная настройка
-      adjustLayout();
+      lockOrientation();
+      resizeCanvas();
+      handleResize();
+      
+      // Обработка изменений размера
+      window.addEventListener('resize', handleResize);
+      window.addEventListener('orientationchange', handleResize);
     });
-
-    // Корректировка размеров элементов
-    function adjustLayout() {
-      const vh = window.innerHeight;
-      const vw = window.innerWidth;
-      
-      // Обновляем размеры canvas
-      const canvas = document.getElementById('canvas');
-      if (canvas) {
-        canvas.width = vh;
-        canvas.height = vw;
-      }
-      
-      // Обновляем пресплеш
-      const presplash = document.getElementById('presplash');
-      if (presplash) {
-        presplash.style.width = vh + 'px';
-        presplash.style.height = vw + 'px';
-      }
-    }
   </script>
   <script src="renpy-pre.js"></script>
   <script async type="text/javascript" src="renpy.js"></script>
