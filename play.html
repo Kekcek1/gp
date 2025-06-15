@@ -1,11 +1,11 @@
 <!doctype html>
-<html lang="en-us">
+<html lang="en-us" style="transform: rotate(90deg);">
 
 <head>
   <meta charset="utf-8">
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
   <title>Призраки Везенбергского квартала</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <link rel="manifest" href="manifest.json" crossorigin="use-credentials" />
   <link rel="icon" href="icons/icon-72x72.png" sizes="72x72" type="image/png" />
   <link rel="icon" href="icons/icon-96x96.png" sizes="96x96" type="image/png" />
@@ -28,9 +28,26 @@
   <meta name="theme-color" content="#000" />
 
   <style>
-    html {
+    html, body {
+      position: fixed;
+      overflow: hidden;
+      width: 100vh;  /* Ширина равна высоте viewport */
+      height: 100vw; /* Высота равна ширине viewport */
+      top: 0;
+      left: 0;
+      margin: 0;
+      padding: 0;
+      transform-origin: 0 0;
       background: #444;
       font-family: sans-serif;
+      touch-action: none;
+      -webkit-touch-callout: none;
+      -webkit-user-select: none;
+      user-select: none;
+    }
+
+    body {
+      transform: rotate(90deg) translateY(-100%);
     }
 
     body, html {
@@ -41,11 +58,11 @@
       position: absolute;
       top: 0px;
       left: 0px;
-
-      width: 100%;
-      height: 100%;
-
+      width: 100vh;
+      height: 100vw;
       border: 0 none;
+      transform: rotate(-90deg) translateX(-100%);
+      transform-origin: 0 0;
     }
 
     #canvas {
@@ -70,13 +87,13 @@
       margin: auto;
       min-width: 340px;
       padding: 10px;
-
       position: absolute;
       top: 0;
       left: 0;
       right: 0;
-
       border-radius: 0 0 5px 5px;
+      transform: rotate(-90deg) translateX(-100%);
+      transform-origin: 0 0;
     }
 
     #statusTextDiv {
@@ -102,7 +119,6 @@
       font-size: 150%;
       margin-bottom: 1em;
       margin-top: 1em;
-
     }
 
     #inputText {
@@ -122,6 +138,8 @@
       left: 0px;
       top: 0px;
       color: white;
+      transform: rotate(-90deg) translateX(-100%);
+      transform-origin: 0 0;
     }
 
     #ContextContainer.shown {
@@ -168,16 +186,25 @@
     }
 
     #presplash {
-        position: absolute;
-        top: 0;
-        left: 0;
-        display: block;
-        margin: auto;
-        width: 100%;
-        height: 100%;
-        object-fit: contain;
+      position: absolute;
+      top: 0;
+      left: 0;
+      display: block;
+      width: 100vh;
+      height: 100vw;
+      object-fit: contain;
+      transform: rotate(-90deg) translateX(-100%);
+      transform-origin: 0 0;
     }
 
+    /* Скрываем скроллбары */
+    ::-webkit-scrollbar {
+      display: none;
+    }
+    body {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
   </style>
 
 </head>
@@ -225,6 +252,64 @@
         if (!navigator.serviceWorker.controller) {
             navigator.serviceWorker.register('./service-worker.js', { updateViaCache: 'all' });
         }
+    }
+    
+    // Блокировка ориентации и обработка событий
+    function lockOrientation() {
+      // Современные браузеры
+      if (screen.orientation && screen.orientation.lock) {
+        screen.orientation.lock('landscape')
+          .catch(error => console.log('Orientation lock failed: ', error));
+      }
+      // Поддержка старых браузеров
+      else if (screen.lockOrientation) {
+        screen.lockOrientation('landscape');
+      }
+      else if (screen.mozLockOrientation) {
+        screen.mozLockOrientation('landscape');
+      }
+      else if (screen.msLockOrientation) {
+        screen.msLockOrientation('landscape');
+      }
+    }
+
+    // Блокировка при загрузке и ресайзе
+    window.addEventListener('load', function() {
+      lockOrientation();
+      
+      // Блокировка контекстного меню
+      document.addEventListener('contextmenu', function(e) {
+        e.preventDefault();
+      });
+      
+      // Корректировка размеров при изменении окна
+      window.addEventListener('resize', function() {
+        lockOrientation();
+        adjustLayout();
+      });
+      
+      // Первоначальная настройка
+      adjustLayout();
+    });
+
+    // Корректировка размеров элементов
+    function adjustLayout() {
+      const vh = window.innerHeight;
+      const vw = window.innerWidth;
+      
+      // Обновляем размеры canvas
+      const canvas = document.getElementById('canvas');
+      if (canvas) {
+        canvas.width = vh;
+        canvas.height = vw;
+      }
+      
+      // Обновляем пресплеш
+      const presplash = document.getElementById('presplash');
+      if (presplash) {
+        presplash.style.width = vh + 'px';
+        presplash.style.height = vw + 'px';
+      }
     }
   </script>
   <script src="renpy-pre.js"></script>
