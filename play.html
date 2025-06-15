@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
   <title>Призраки Везенбергского квартала</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="manifest" href="manifest.json" crossorigin="use-credentials" />
   <link rel="icon" href="icons/icon-72x72.png" sizes="72x72" type="image/png" />
   <link rel="icon" href="icons/icon-96x96.png" sizes="96x96" type="image/png" />
@@ -26,27 +26,11 @@
   <link rel="apple-touch-icon" href="icons/icon-512x512.png" sizes="512x512" type="image/png" />
 
   <meta name="theme-color" content="#000" />
-  <meta name="screen-orientation" content="landscape">
-  <meta name="x5-orientation" content="landscape">
-  <meta name="apple-mobile-web-app-orientations" content="landscape">
 
   <style>
-    html, body {
-      margin: 0;
-      padding: 0;
-      overflow: hidden;
-      width: 100%;
-      height: 100%;
+    html {
       background: #444;
       font-family: sans-serif;
-      touch-action: none;
-      -webkit-touch-callout: none;
-      -webkit-user-select: none;
-      user-select: none;
-    }
-
-    body {
-      position: fixed;
     }
 
     body, html {
@@ -55,10 +39,12 @@
 
     #canvas, #overlayDiv {
       position: absolute;
-      top: 0;
-      left: 0;
+      top: 0px;
+      left: 0px;
+
       width: 100%;
       height: 100%;
+
       border: 0 none;
     }
 
@@ -84,10 +70,12 @@
       margin: auto;
       min-width: 340px;
       padding: 10px;
+
       position: absolute;
       top: 0;
       left: 0;
       right: 0;
+
       border-radius: 0 0 5px 5px;
     }
 
@@ -114,6 +102,7 @@
       font-size: 150%;
       margin-bottom: 1em;
       margin-top: 1em;
+
     }
 
     #inputText {
@@ -179,50 +168,16 @@
     }
 
     #presplash {
-      position: absolute;
-      top: 0;
-      left: 0;
-      display: block;
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-    }
-
-    /* Сообщение о повороте */
-    #rotate-message {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(0,0,0,0.9);
-      color: white;
-      font-size: 24px;
-      text-align: center;
-      padding-top: 30vh;
-      z-index: 9999;
-      font-family: sans-serif;
-    }
-
-    @media (orientation: portrait) {
-      #rotate-message {
+        position: absolute;
+        top: 0;
+        left: 0;
         display: block;
-      }
-      #presplash, #canvas, #overlayDiv, #ContextContainer,
-      #statusDiv, #inputDiv {
-        display: none;
-      }
+        margin: auto;
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
     }
 
-    /* Скрываем скроллбары */
-    ::-webkit-scrollbar {
-      display: none;
-    }
-    body {
-      -ms-overflow-style: none;
-      scrollbar-width: none;
-    }
   </style>
 
 </head>
@@ -232,11 +187,6 @@
   <div id="overlayDiv"></div>
 
   <img id="presplash" src="web-presplash.jpg">
-
-  <div id="rotate-message">
-    <div style="font-size: 48px; margin-bottom: 20px;">↻</div>
-    Пожалуйста, поверните устройство<br>в альбомную ориентацию
-  </div>
 
   <div id="ContextContainer">
     <a id="ContextButton">&#8801;</a><br />
@@ -276,86 +226,6 @@
             navigator.serviceWorker.register('./service-worker.js', { updateViaCache: 'all' });
         }
     }
-    
-    // Определение мобильного устройства
-    function isMobileDevice() {
-      return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-    }
-    
-    // Блокировка ориентации для мобильных устройств
-    function lockOrientation() {
-      if (!isMobileDevice()) return;
-      
-      // Современные браузеры
-      if (screen.orientation && screen.orientation.lock) {
-        screen.orientation.lock('landscape')
-          .catch(error => console.log('Orientation lock failed: ', error));
-      }
-      // Поддержка старых браузеров
-      else if (screen.lockOrientation) {
-        screen.lockOrientation('landscape');
-      }
-      else if (screen.mozLockOrientation) {
-        screen.mozLockOrientation('landscape');
-      }
-      else if (screen.msLockOrientation) {
-        screen.msLockOrientation('landscape');
-      }
-    }
-    
-    // Корректировка размеров canvas
-    function resizeCanvas() {
-      const canvas = document.getElementById('canvas');
-      if (!canvas) return;
-      
-      // Устанавливаем физический размер canvas
-      const dpr = window.devicePixelRatio || 1;
-      canvas.width = window.innerWidth * dpr;
-      canvas.height = window.innerHeight * dpr;
-      
-      // Устанавливаем логический размер
-      canvas.style.width = window.innerWidth + 'px';
-      canvas.style.height = window.innerHeight + 'px';
-      
-      // Корректируем масштаб для HiDPI дисплеев
-      const ctx = canvas.getContext('2d');
-      if (ctx) {
-        ctx.scale(dpr, dpr);
-      }
-    }
-    
-    // Обновление ориентации при изменении размера
-    function handleResize() {
-      lockOrientation();
-      resizeCanvas();
-      
-      // Для мобильных устройств скрываем сообщение в альбомной ориентации
-      if (isMobileDevice()) {
-        const rotateMessage = document.getElementById('rotate-message');
-        if (window.innerWidth > window.innerHeight) {
-          rotateMessage.style.display = 'none';
-        } else {
-          rotateMessage.style.display = 'block';
-        }
-      }
-    }
-
-    // Инициализация при загрузке
-    window.addEventListener('load', function() {
-      // Блокировка контекстного меню
-      document.addEventListener('contextmenu', function(e) {
-        e.preventDefault();
-      });
-      
-      // Первоначальная настройка
-      lockOrientation();
-      resizeCanvas();
-      handleResize();
-      
-      // Обработка изменений размера
-      window.addEventListener('resize', handleResize);
-      window.addEventListener('orientationchange', handleResize);
-    });
   </script>
   <script src="renpy-pre.js"></script>
   <script async type="text/javascript" src="renpy.js"></script>
