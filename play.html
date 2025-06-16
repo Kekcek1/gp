@@ -27,6 +27,10 @@
 
   <meta name="theme-color" content="#000" />
 
+  <!-- Предзагрузка критических ресурсов -->
+  <link rel="preload" href="renpy-pre.js" as="script">
+  <link rel="preload" href="renpy.js" as="script">
+
   <style>
     html {
       background: #444;
@@ -35,6 +39,8 @@
 
     body, html {
       overscroll-behavior: none;
+      margin: 0;
+      padding: 0;
     }
 
     #canvas, #overlayDiv {
@@ -50,6 +56,14 @@
 
     #canvas {
       background: #000;
+      /* GPU ускорение и оптимизация рендеринга */
+      transform: translateZ(0);
+      image-rendering: -moz-crisp-edges;
+      image-rendering: -webkit-optimize-contrast;
+      image-rendering: crisp-edges;
+      image-rendering: pixelated;
+      -ms-interpolation-mode: nearest-neighbor;
+      will-change: transform;
     }
 
     .visible {
@@ -139,12 +153,17 @@
       -moz-user-select: none;
       padding: 10px 10px;
       opacity: .75;
+      transition: transform 0.2s, opacity 0.2s;
     }
 
     #ContextButton:focus {
       outline: none;
       color: #ffffff;
       opacity: 1.0;
+    }
+
+    #ContextButton:active {
+      transform: scale(0.9);
     }
 
     #ContextMenu {
@@ -156,33 +175,43 @@
       border-radius: 0 0 5px 0;
       padding: 5px;
       z-index: 1001;
+      backdrop-filter: blur(5px);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
     }
 
     #ContextMenu.visible {
       display: block;
+      animation: fadeIn 0.3s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
     #ContextMenu a {
       text-decoration: none;
       color: lightgrey;
-      background: #444;
+      background: linear-gradient(to bottom, #3a3a3a, #2c2c2c);
       height: 48px;
       width: 250px;
       border-radius: 5px;
-      border: 1px solid lightgrey;
+      border: 1px solid #555;
       display: flex;
       align-items: center;
       justify-content: center;
       margin: 5px 0;
       opacity: 1.0;
       text-align: center;
+      transition: all 0.2s ease;
     }
 
     #ContextMenu a:hover {
       text-decoration: none;
-      background: #666666;
+      background: linear-gradient(to bottom, #4a4a4a, #3c3c3c);
       color: #ffffff;
       cursor: pointer;
+      transform: translateX(5px);
     }
 
     #presplash {
@@ -194,9 +223,10 @@
         width: 100%;
         height: 100%;
         object-fit: contain;
+        animation: fadeIn 1.5s ease-out;
     }
     
-    /* Добавленное сообщение о повороте */
+    /* Сообщение о повороте */
     #rotate-message {
       display: none;
       position: fixed;
@@ -204,7 +234,7 @@
       left: 0;
       width: 100%;
       height: 100%;
-      background-color: rgba(0,0,0,0.95);
+      background: linear-gradient(135deg, #1a1a2e, #16213e);
       color: white;
       font-size: 24px;
       text-align: center;
@@ -226,20 +256,41 @@
       }
     }
 
+    /* Индикатор загрузки */
+    .loader {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 50px;
+      height: 50px;
+      border: 5px solid rgba(255,255,255,0.2);
+      border-radius: 50%;
+      border-top-color: #fff;
+      animation: spin 1s linear infinite;
+      z-index: 10000;
+    }
+
+    @keyframes spin {
+      to { transform: translate(-50%, -50%) rotate(360deg); }
+    }
   </style>
 
 </head>
 
 <body>
+  <div class="loader"></div>
+  
   <canvas id="canvas" oncontextmenu="event.preventDefault()" tabindex=-1></canvas>
   <div id="overlayDiv"></div>
 
-  <img id="presplash" src="web-presplash.jpg">
-  
-  <!-- Добавленный блок сообщения о повороте -->
+  <!-- Ленивая загрузка прелоада -->
+  <img id="presplash" data-src="web-presplash.jpg" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1' height='1' viewBox='0 0 1 1'%3E%3C/svg%3E" alt="Loading...">
+
+  <!-- Сообщение о повороте -->
   <div id="rotate-message">
     <div style="max-width: 90%; padding: 20px;">
-      <div style="font-size: 72px; margin-bottom: 30px;">↻</div>
+      <div style="font-size: 72px; margin-bottom: 30px; animation: pulse 2s infinite;">↻</div>
       <div style="font-size: 32px; margin-bottom: 20px;">Поверните устройство</div>
       <div style="font-size: 24px; margin-bottom: 30px; line-height: 1.4;">
         Для игры требуется альбомная ориентация экрана
@@ -280,14 +331,30 @@
         }
     }
   </script>
-  <script src="renpy-pre.js"></script>
-  <script async type="text/javascript" src="renpy.js"></script>
+  
+  <!-- Ленивая загрузка скриптов -->
+  <script src="renpy-pre.js" defer></script>
+  <script async type="text/javascript" src="renpy.js" defer></script>
   
   <script>
     document.addEventListener("DOMContentLoaded", function() {
+      // Скрываем лоадер после загрузки
+      window.addEventListener('load', function() {
+        document.querySelector('.loader').style.display = 'none';
+      });
+
       // Функция проверки iOS устройства
       function isIOS() {
         return /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+      }
+
+      // Ленивая загрузка прелоада
+      const presplash = document.getElementById('presplash');
+      if (presplash && presplash.dataset.src) {
+        // Загружаем с небольшой задержкой для приоритизации других ресурсов
+        setTimeout(() => {
+          presplash.src = presplash.dataset.src;
+        }, 100);
       }
 
       // Элементы интерфейса
@@ -339,7 +406,7 @@
         });
       }
       
-      // Добавленный код для обработки поворота экрана
+      // Обработка поворота экрана
       function isMobileDevice() {
         return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
       }
@@ -364,6 +431,45 @@
       updateRotateMessage();
       window.addEventListener('resize', handleEvents);
       window.addEventListener('orientationchange', handleEvents);
+
+      // Фикс для touch-событий на iOS
+      function setupTouchFix() {
+        if (!isIOS()) return;
+        
+        const canvas = document.getElementById('canvas');
+        if (!canvas) return;
+        
+        let touchStartTime = 0;
+        let touchStartX = 0;
+        let touchStartY = 0;
+        
+        canvas.addEventListener('touchstart', function(e) {
+          touchStartTime = Date.now();
+          touchStartX = e.touches[0].clientX;
+          touchStartY = e.touches[0].clientY;
+        }, { passive: true });
+        
+        canvas.addEventListener('touchend', function(e) {
+          const touchEndTime = Date.now();
+          const touchDuration = touchEndTime - touchStartTime;
+          const touchEndX = e.changedTouches[0].clientX;
+          const touchEndY = e.changedTouches[0].clientY;
+          const deltaX = Math.abs(touchEndX - touchStartX);
+          const deltaY = Math.abs(touchEndY - touchStartY);
+          
+          // Определяем короткое нажатие без перемещения
+          if (touchDuration < 300 && deltaX < 10 && deltaY < 10) {
+            const clickEvent = new MouseEvent('click', {
+              view: window,
+              bubbles: true,
+              cancelable: true
+            });
+            e.target.dispatchEvent(clickEvent);
+          }
+        }, { passive: true });
+      }
+      
+      setupTouchFix();
     });
   </script>
 </body>
