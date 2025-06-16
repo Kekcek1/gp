@@ -122,6 +122,7 @@
       left: 0px;
       top: 0px;
       color: white;
+      z-index: 1000; /* Убедимся что меню поверх игры */
     }
 
     #ContextContainer.shown {
@@ -146,6 +147,17 @@
       opacity: 1.0;
     }
 
+    #ContextMenu {
+      display: none;
+      position: absolute;
+      top: 100%; /* Располагаем под кнопкой */
+      left: 0;
+      background: rgba(0, 0, 0, 0.7);
+      border-radius: 0 0 5px 0;
+      padding: 5px;
+      z-index: 1001;
+    }
+
     #ContextMenu a {
       text-decoration: none;
       color: lightgrey;
@@ -157,7 +169,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      margin: 5px 5px;
+      margin: 5px 0;
       opacity: 1.0;
       text-align: center;
     }
@@ -191,13 +203,13 @@
   <img id="presplash" src="web-presplash.jpg">
 
   <div id="ContextContainer">
-    <a id="ContextButton">&#8801;</a><br />
-    <div id="ContextMenu" style="display: none;">
+    <a id="ContextButton">&#8801;</a>
+    <div id="ContextMenu">
       <input id="ID_SavegamesImport" type="file" onchange="onSavegamesImport(this)" accept="application/zip"
         style=display:none></input>
       <a href="games.html">back</a>
       <!-- Добавленная кнопка для полноэкранного режима -->
-      <a id="FullscreenButton" href="#" style="display: none;">fullscreen</a>
+      <a id="FullscreenButton" href="#">fullscreen</a>
     </div>
   </div>
 
@@ -227,7 +239,7 @@
   <script src="renpy-pre.js"></script>
   <script async type="text/javascript" src="renpy.js"></script>
   
-  <!-- Добавленный скрипт для работы полноэкранного режима на iOS -->
+  <!-- Исправленный скрипт для работы контекстного меню -->
   <script>
     document.addEventListener("DOMContentLoaded", function() {
       // Функция проверки iOS устройства
@@ -240,18 +252,22 @@
       const contextMenu = document.getElementById('ContextMenu');
       const fullscreenButton = document.getElementById('FullscreenButton');
       
+      // Скрываем кнопку fullscreen если не iOS
+      if (!isIOS()) {
+        fullscreenButton.style.display = 'none';
+      }
+      
       // Обработчик открытия/закрытия меню
-      contextButton.addEventListener('click', function() {
-        if (contextMenu.style.display === 'none') {
-          contextMenu.style.display = 'block';
-          
-          // // Показываем кнопку fullscreen только на iOS
-          // if (isIOS()) {
-          //   fullscreenButton.style.display = 'flex';
-          // } else {
-          //   fullscreenButton.style.display = 'none';
-          // }
-        } else {
+      contextButton.addEventListener('click', function(e) {
+        e.stopPropagation(); // Предотвращаем всплытие
+        contextMenu.style.display = contextMenu.style.display === 'block' ? 'none' : 'block';
+      });
+      
+      // Закрываем меню при клике вне его
+      document.addEventListener('click', function(e) {
+        if (contextMenu.style.display === 'block' && 
+            !contextMenu.contains(e.target) && 
+            e.target !== contextButton) {
           contextMenu.style.display = 'none';
         }
       });
@@ -266,6 +282,9 @@
         } else if (element.webkitRequestFullscreen) { // Для Safari
           element.webkitRequestFullscreen();
         }
+        
+        // Закрываем меню после выбора
+        contextMenu.style.display = 'none';
       });
     });
   </script>
