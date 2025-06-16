@@ -35,25 +35,17 @@
 
     body, html {
       overscroll-behavior: none;
-      margin: 0;
-      padding: 0;
-      width: 100%;
-      height: 100%;
-      overflow: hidden;
-      -webkit-tap-highlight-color: transparent;
-      -webkit-touch-callout: none;
-      touch-action: manipulation;
     }
 
     #canvas, #overlayDiv {
       position: absolute;
       top: 0px;
       left: 0px;
+
       width: 100%;
       height: 100%;
+
       border: 0 none;
-      -webkit-user-select: none;
-      user-select: none;
     }
 
     #canvas {
@@ -78,10 +70,12 @@
       margin: auto;
       min-width: 340px;
       padding: 10px;
+
       position: absolute;
       top: 0;
       left: 0;
       right: 0;
+
       border-radius: 0 0 5px 5px;
     }
 
@@ -108,6 +102,7 @@
       font-size: 150%;
       margin-bottom: 1em;
       margin-top: 1em;
+
     }
 
     #inputText {
@@ -127,6 +122,7 @@
       left: 0px;
       top: 0px;
       color: white;
+      z-index: 1000;
     }
 
     #ContextContainer.shown {
@@ -151,6 +147,21 @@
       opacity: 1.0;
     }
 
+    #ContextMenu {
+      display: none;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      background: rgba(0, 0, 0, 0.7);
+      border-radius: 0 0 5px 0;
+      padding: 5px;
+      z-index: 1001;
+    }
+
+    #ContextMenu.visible {
+      display: block;
+    }
+
     #ContextMenu a {
       text-decoration: none;
       color: lightgrey;
@@ -162,14 +173,16 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      margin: 5px 5px;
+      margin: 5px 0;
       opacity: 1.0;
+      text-align: center;
     }
 
     #ContextMenu a:hover {
       text-decoration: none;
       background: #666666;
-      color: #ffffff
+      color: #ffffff;
+      cursor: pointer;
     }
 
     #presplash {
@@ -183,7 +196,7 @@
         object-fit: contain;
     }
     
-    /* Сообщение о повороте */
+    /* Добавленное сообщение о повороте */
     #rotate-message {
       display: none;
       position: fixed;
@@ -212,6 +225,7 @@
         display: none;
       }
     }
+
   </style>
 
 </head>
