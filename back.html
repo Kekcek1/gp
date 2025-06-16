@@ -626,3 +626,374 @@
 
 </html>
 
+<!doctype html>
+<html lang="en-us">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <title>Призраки Везенбергского квартала</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="manifest" href="manifest.json" crossorigin="use-credentials" />
+  <link rel="icon" href="icons/icon-72x72.png" sizes="72x72" type="image/png" />
+  <link rel="icon" href="icons/icon-96x96.png" sizes="96x96" type="image/png" />
+  <link rel="icon" href="icons/icon-128x128.png" sizes="128x128" type="image/png" />
+  <link rel="icon" href="icons/icon-144x144.png" sizes="144x144" type="image/png" />
+  <link rel="icon" href="icons/icon-152x152.png" sizes="152x152" type="image/png" />
+  <link rel="icon" href="icons/icon-192x192.png" sizes="192x192" type="image/png" />
+  <link rel="icon" href="icons/icon-384x384.png" sizes="384x384" type="image/png" />
+  <link rel="icon" href="icons/icon-512x512.png" sizes="512x512" type="image/png" />
+  <!-- ios support -->
+  <link rel="apple-touch-icon" href="icons/icon-72x72.png" sizes="72x72" type="image/png" />
+  <link rel="apple-touch-icon" href="icons/icon-96x96.png" sizes="96x96" type="image/png" />
+  <link rel="apple-touch-icon" href="icons/icon-128x128.png" sizes="128x128" type="image/png" />
+  <link rel="apple-touch-icon" href="icons/icon-144x144.png" sizes="144x144" type="image/png" />
+  <link rel="apple-touch-icon" href="icons/icon-152x152.png" sizes="152x152" type="image/png" />
+  <link rel="apple-touch-icon" href="icons/icon-192x192.png" sizes="192x192" type="image/png" />
+  <link rel="apple-touch-icon" href="icons/icon-384x384.png" sizes="384x384" type="image/png" />
+  <link rel="apple-touch-icon" href="icons/icon-512x512.png" sizes="512x512" type="image/png" />
+
+  <meta name="theme-color" content="#000" />
+
+  <style>
+    html {
+      background: #444;
+      font-family: sans-serif;
+    }
+
+    body, html {
+      overscroll-behavior: none;
+    }
+
+    #canvas, #overlayDiv {
+      position: absolute;
+      top: 0px;
+      left: 0px;
+
+      width: 100%;
+      height: 100%;
+
+      border: 0 none;
+    }
+
+    #canvas {
+      background: #000;
+    }
+
+    .visible {
+      visibility: visible;
+      opacity: 1.0;
+      transition: opacity .1s linear;
+    }
+
+    .hidden {
+      visibility: hidden;
+      opacity: 0;
+      transition: visibility 0s .25s, opacity .25s linear;
+    }
+
+    #statusDiv, #inputDiv {
+      background: rgba(0, 0, 0, 0.75);
+      width: 50%;
+      margin: auto;
+      min-width: 340px;
+      padding: 10px;
+
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+
+      border-radius: 0 0 5px 5px;
+    }
+
+    #statusTextDiv {
+      overflow: auto;
+      max-height: 40vh;
+      color: #ccc;
+      font-size: 14px;
+    }
+
+    #statusProgress {
+      display: none;
+      width: 100%;
+    }
+
+    #inputDiv {
+      width: 65%;
+      padding-left: 10px;
+      padding-right: 20px;
+    }
+
+    #inputPrompt {
+      color: #eee;
+      font-size: 150%;
+      margin-bottom: 1em;
+      margin-top: 1em;
+
+    }
+
+    #inputText {
+      width: 100%;
+      font-size: 175%;
+      padding: 5px;
+      background: inherit;
+      color: #eee;
+    }
+
+    #inputText:focus {
+      color: #ffffff;
+    }
+
+    #ContextContainer {
+      position: absolute;
+      left: 0px;
+      top: 0px;
+      color: white;
+      z-index: 1000;
+    }
+
+    #ContextContainer.shown {
+      background: rgba(0, 0, 0, 0.5);
+      border-radius: 0px 0px 5px 0px;
+    }
+
+    #ContextButton {
+      text-decoration: none;
+      color: lightgrey;
+      font-size: xx-large;
+      cursor: pointer;
+      user-select: none;
+      -moz-user-select: none;
+      padding: 10px 10px;
+      opacity: .75;
+    }
+
+    #ContextButton:focus {
+      outline: none;
+      color: #ffffff;
+      opacity: 1.0;
+    }
+
+    #ContextMenu {
+      display: none;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      background: rgba(0, 0, 0, 0.7);
+      border-radius: 0 0 5px 0;
+      padding: 5px;
+      z-index: 1001;
+    }
+
+    #ContextMenu.visible {
+      display: block;
+    }
+
+    #ContextMenu a {
+      text-decoration: none;
+      color: lightgrey;
+      background: #444;
+      height: 48px;
+      width: 250px;
+      border-radius: 5px;
+      border: 1px solid lightgrey;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 5px 0;
+      opacity: 1.0;
+      text-align: center;
+    }
+
+    #ContextMenu a:hover {
+      text-decoration: none;
+      background: #666666;
+      color: #ffffff;
+      cursor: pointer;
+    }
+
+    #presplash {
+        position: absolute;
+        top: 0;
+        left: 0;
+        display: block;
+        margin: auto;
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+    }
+    
+    /* Добавленное сообщение о повороте */
+    #rotate-message {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.95);
+      color: white;
+      font-size: 24px;
+      text-align: center;
+      z-index: 9999;
+      font-family: sans-serif;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    @media (orientation: portrait) {
+      #rotate-message {
+        display: flex;
+      }
+      #presplash, #canvas, #overlayDiv, #ContextContainer,
+      #statusDiv, #inputDiv {
+        display: none;
+      }
+    }
+
+  </style>
+
+</head>
+
+<body>
+  <canvas id="canvas" oncontextmenu="event.preventDefault()" tabindex=-1></canvas>
+  <div id="overlayDiv"></div>
+
+  <img id="presplash" src="web-presplash.jpg">
+  
+  <!-- Добавленный блок сообщения о повороте -->
+  <div id="rotate-message">
+    <div style="max-width: 90%; padding: 20px;">
+      <div style="font-size: 72px; margin-bottom: 30px;">↻</div>
+      <div style="font-size: 32px; margin-bottom: 20px;">Поверните устройство</div>
+      <div style="font-size: 24px; margin-bottom: 30px; line-height: 1.4;">
+        Для игры требуется альбомная ориентация экрана
+      </div>
+    </div>
+  </div>
+
+  <div id="ContextContainer">
+    <a id="ContextButton">&#8801;</a>
+    <div id="ContextMenu">
+      <input id="ID_SavegamesImport" type="file" onchange="onSavegamesImport(this)" accept="application/zip"
+        style=display:none></input>
+      <a href="games.html">back</a>
+      <a id="FullscreenButton" href="#">fullscreen</a>
+    </div>
+  </div>
+
+  <div id="statusDiv" class="hidden">
+    <div id="statusTextDiv"></div>
+    <progress id="statusProgress" value="0" max="100"></progress>
+  </div>
+
+  <div id="inputDiv" class="hidden">
+    <form id="inputForm">
+      <div id="inputPrompt"></div>
+      <input id="inputText" type="text">
+    </form>
+  </div>
+
+  <script>
+    // The URL to game.zip, relative to the URL of this file.
+    window.gameZipURL = 'game.zip';
+
+    // Register the service worker.
+    if (navigator.serviceWorker) {
+        if (!navigator.serviceWorker.controller) {
+            navigator.serviceWorker.register('./service-worker.js', { updateViaCache: 'all' });
+        }
+    }
+  </script>
+  <script src="renpy-pre.js"></script>
+  <script async type="text/javascript" src="renpy.js"></script>
+  
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      // Функция проверки iOS устройства
+      function isIOS() {
+        return /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+      }
+
+      // Элементы интерфейса
+      const contextButton = document.getElementById('ContextButton');
+      const contextMenu = document.getElementById('ContextMenu');
+      const fullscreenButton = document.getElementById('FullscreenButton');
+      
+      // Скрываем кнопку fullscreen если не iOS
+      if (!isIOS()) {
+        fullscreenButton.style.display = 'none';
+      }
+      
+      // Обработчик открытия/закрытия меню
+      contextButton.addEventListener('click', function(e) {
+        e.stopPropagation();
+        contextMenu.classList.toggle('visible');
+      });
+      
+      // Закрываем меню при клике вне его
+      document.addEventListener('click', function(e) {
+        if (contextMenu.classList.contains('visible') && 
+            !contextMenu.contains(e.target) && 
+            e.target !== contextButton) {
+          contextMenu.classList.remove('visible');
+        }
+      });
+      
+      // Обработчик полноэкранного режима
+      fullscreenButton.addEventListener('click', function(e) {
+        e.preventDefault();
+        const element = document.documentElement;
+        
+        if (element.requestFullscreen) {
+          element.requestFullscreen();
+        } else if (element.webkitRequestFullscreen) {
+          element.webkitRequestFullscreen();
+        }
+        
+        // Закрываем меню после выбора
+        contextMenu.classList.remove('visible');
+      });
+      
+      // Обработчик для кнопки "back"
+      const backButton = document.querySelector('#ContextMenu a[href="games.html"]');
+      if (backButton) {
+        backButton.addEventListener('click', function(e) {
+          // Закрываем меню при переходе
+          contextMenu.classList.remove('visible');
+        });
+      }
+      
+      // Добавленный код для обработки поворота экрана
+      function isMobileDevice() {
+        return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+      }
+
+      function updateRotateMessage() {
+        const isMobile = isMobileDevice();
+        const isPortrait = window.innerHeight > window.innerWidth;
+        const rotateMessage = document.getElementById('rotate-message');
+        
+        if (isMobile && isPortrait) {
+          rotateMessage.style.display = 'flex';
+        } else {
+          rotateMessage.style.display = 'none';
+        }
+      }
+
+      function handleEvents() {
+        updateRotateMessage();
+      }
+
+      // Инициализация обработчиков поворота
+      updateRotateMessage();
+      window.addEventListener('resize', handleEvents);
+      window.addEventListener('orientationchange', handleEvents);
+    });
+  </script>
+</body>
+
+</html>

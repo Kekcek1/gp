@@ -1,202 +1,70 @@
 <!doctype html>
-<html lang="en-us">
+<html lang="ru">
 
 <head>
   <meta charset="utf-8">
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
   <title>Призраки Везенбергского квартала</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <link rel="manifest" href="manifest.json" crossorigin="use-credentials" />
-  <link rel="icon" href="icons/icon-72x72.png" sizes="72x72" type="image/png" />
-  <link rel="icon" href="icons/icon-96x96.png" sizes="96x96" type="image/png" />
-  <link rel="icon" href="icons/icon-128x128.png" sizes="128x128" type="image/png" />
-  <link rel="icon" href="icons/icon-144x144.png" sizes="144x144" type="image/png" />
-  <link rel="icon" href="icons/icon-152x152.png" sizes="152x152" type="image/png" />
   <link rel="icon" href="icons/icon-192x192.png" sizes="192x192" type="image/png" />
-  <link rel="icon" href="icons/icon-384x384.png" sizes="384x384" type="image/png" />
-  <link rel="icon" href="icons/icon-512x512.png" sizes="512x512" type="image/png" />
-  <!-- ios support -->
-  <link rel="apple-touch-icon" href="icons/icon-72x72.png" sizes="72x72" type="image/png" />
-  <link rel="apple-touch-icon" href="icons/icon-96x96.png" sizes="96x96" type="image/png" />
-  <link rel="apple-touch-icon" href="icons/icon-128x128.png" sizes="128x128" type="image/png" />
-  <link rel="apple-touch-icon" href="icons/icon-144x144.png" sizes="144x144" type="image/png" />
-  <link rel="apple-touch-icon" href="icons/icon-152x152.png" sizes="152x152" type="image/png" />
-  <link rel="apple-touch-icon" href="icons/icon-192x192.png" sizes="192x192" type="image/png" />
-  <link rel="apple-touch-icon" href="icons/icon-384x384.png" sizes="384x384" type="image/png" />
-  <link rel="apple-touch-icon" href="icons/icon-512x512.png" sizes="512x512" type="image/png" />
-
-  <meta name="theme-color" content="#000" />
-
+  
+  <!-- iOS мета-теги -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  
   <style>
-    html {
-      background: #444;
-      font-family: sans-serif;
+    /* Обновленные стили */
+    :root {
+      --text-color: #f0f0f0;
+      --bg-dark: rgba(0, 0, 0, 0.85);
+      --accent-color: #8a6d3b;
     }
-
-    body, html {
+    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      touch-action: manipulation;
+    }
+    
+    html, body {
+      width: 100%;
+      height: 100%;
+      background: #222;
+      overflow: hidden;
       overscroll-behavior: none;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      -webkit-tap-highlight-color: transparent;
+      -webkit-touch-callout: none;
+      user-select: none;
     }
 
     #canvas, #overlayDiv {
       position: absolute;
-      top: 0px;
-      left: 0px;
-
+      top: 0;
+      left: 0;
       width: 100%;
       height: 100%;
-
       border: 0 none;
     }
 
     #canvas {
       background: #000;
-    }
-
-    .visible {
-      visibility: visible;
-      opacity: 1.0;
-      transition: opacity .1s linear;
-    }
-
-    .hidden {
-      visibility: hidden;
-      opacity: 0;
-      transition: visibility 0s .25s, opacity .25s linear;
-    }
-
-    #statusDiv, #inputDiv {
-      background: rgba(0, 0, 0, 0.75);
-      width: 50%;
-      margin: auto;
-      min-width: 340px;
-      padding: 10px;
-
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-
-      border-radius: 0 0 5px 5px;
-    }
-
-    #statusTextDiv {
-      overflow: auto;
-      max-height: 40vh;
-      color: #ccc;
-      font-size: 14px;
-    }
-
-    #statusProgress {
-      display: none;
-      width: 100%;
-    }
-
-    #inputDiv {
-      width: 65%;
-      padding-left: 10px;
-      padding-right: 20px;
-    }
-
-    #inputPrompt {
-      color: #eee;
-      font-size: 150%;
-      margin-bottom: 1em;
-      margin-top: 1em;
-
-    }
-
-    #inputText {
-      width: 100%;
-      font-size: 175%;
-      padding: 5px;
-      background: inherit;
-      color: #eee;
-    }
-
-    #inputText:focus {
-      color: #ffffff;
-    }
-
-    #ContextContainer {
-      position: absolute;
-      left: 0px;
-      top: 0px;
-      color: white;
-      z-index: 1000;
-    }
-
-    #ContextContainer.shown {
-      background: rgba(0, 0, 0, 0.5);
-      border-radius: 0px 0px 5px 0px;
-    }
-
-    #ContextButton {
-      text-decoration: none;
-      color: lightgrey;
-      font-size: xx-large;
-      cursor: pointer;
-      user-select: none;
-      -moz-user-select: none;
-      padding: 10px 10px;
-      opacity: .75;
-    }
-
-    #ContextButton:focus {
-      outline: none;
-      color: #ffffff;
-      opacity: 1.0;
-    }
-
-    #ContextMenu {
-      display: none;
-      position: absolute;
-      top: 100%;
-      left: 0;
-      background: rgba(0, 0, 0, 0.7);
-      border-radius: 0 0 5px 0;
-      padding: 5px;
-      z-index: 1001;
-    }
-
-    #ContextMenu.visible {
-      display: block;
-    }
-
-    #ContextMenu a {
-      text-decoration: none;
-      color: lightgrey;
-      background: #444;
-      height: 48px;
-      width: 250px;
-      border-radius: 5px;
-      border: 1px solid lightgrey;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 5px 0;
-      opacity: 1.0;
-      text-align: center;
-    }
-
-    #ContextMenu a:hover {
-      text-decoration: none;
-      background: #666666;
-      color: #ffffff;
-      cursor: pointer;
+      z-index: 1;
     }
 
     #presplash {
-        position: absolute;
-        top: 0;
-        left: 0;
-        display: block;
-        margin: auto;
-        width: 100%;
-        height: 100%;
-        object-fit: contain;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: 10;
     }
     
-    /* Добавленное сообщение о повороте */
+    /* Сообщение о повороте */
     #rotate-message {
       display: none;
       position: fixed;
@@ -204,109 +72,266 @@
       left: 0;
       width: 100%;
       height: 100%;
-      background-color: rgba(0,0,0,0.95);
-      color: white;
-      font-size: 24px;
-      text-align: center;
+      background: linear-gradient(135deg, #1a1a1a, #0a0a0a);
+      color: var(--text-color);
       z-index: 9999;
-      font-family: sans-serif;
-      display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
+      text-align: center;
+      padding: 20px;
     }
-
+    
+    .rotate-icon {
+      font-size: 80px;
+      margin-bottom: 30px;
+      color: var(--accent-color);
+      animation: rotateAnimation 2s infinite ease-in-out;
+    }
+    
+    .rotate-title {
+      font-size: 28px;
+      font-weight: 600;
+      margin-bottom: 20px;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+    }
+    
+    .rotate-text {
+      font-size: 18px;
+      line-height: 1.6;
+      max-width: 500px;
+      opacity: 0.9;
+    }
+    
+    /* Контекстное меню */
+    #ContextContainer {
+      position: absolute;
+      left: 0;
+      top: 0;
+      color: white;
+      z-index: 100;
+      transition: opacity 0.3s ease;
+    }
+    
+    #ContextButton {
+      display: block;
+      width: 50px;
+      height: 50px;
+      text-align: center;
+      line-height: 50px;
+      font-size: 28px;
+      color: rgba(255, 255, 255, 0.8);
+      background: var(--bg-dark);
+      border-radius: 0 0 8px 0;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    
+    #ContextButton:hover, #ContextButton:focus {
+      color: #fff;
+      background: rgba(30, 30, 30, 0.9);
+    }
+    
+    #ContextMenu {
+      display: none;
+      background: var(--bg-dark);
+      border-radius: 0 0 8px 0;
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    }
+    
+    #ContextMenu.visible {
+      display: block;
+      animation: fadeIn 0.3s ease;
+    }
+    
+    .context-item {
+      display: block;
+      padding: 14px 25px;
+      color: var(--text-color);
+      text-decoration: none;
+      font-size: 16px;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      transition: all 0.2s ease;
+      white-space: nowrap;
+    }
+    
+    .context-item:last-child {
+      border-bottom: none;
+    }
+    
+    .context-item:hover {
+      background: rgba(255,255,255,0.1);
+      color: #fff;
+    }
+    
+    .context-item i {
+      margin-right: 10px;
+      width: 20px;
+      text-align: center;
+    }
+    
+    /* Статус и ввод */
+    #statusDiv, #inputDiv {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--bg-dark);
+      width: 90%;
+      max-width: 600px;
+      padding: 15px;
+      border-radius: 0 0 10px 10px;
+      z-index: 50;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+    }
+    
+    #statusTextDiv {
+      max-height: 40vh;
+      overflow-y: auto;
+      color: #ddd;
+      font-size: 15px;
+      line-height: 1.5;
+    }
+    
+    #inputPrompt {
+      color: var(--text-color);
+      font-size: 18px;
+      margin-bottom: 12px;
+    }
+    
+    #inputText {
+      width: 100%;
+      padding: 12px 15px;
+      font-size: 16px;
+      background: rgba(50, 50, 50, 0.7);
+      color: var(--text-color);
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 6px;
+      outline: none;
+      transition: border-color 0.3s;
+    }
+    
+    #inputText:focus {
+      border-color: var(--accent-color);
+    }
+    
+    /* Анимации */
+    @keyframes rotateAnimation {
+      0%, 100% { transform: rotate(0deg); }
+      25% { transform: rotate(90deg); }
+      50% { transform: rotate(180deg); }
+      75% { transform: rotate(270deg); }
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    /* Адаптация под портретный режим */
     @media (orientation: portrait) {
       #rotate-message {
         display: flex;
       }
-      #presplash, #canvas, #overlayDiv, #ContextContainer,
-      #statusDiv, #inputDiv {
+      #presplash, #canvas, #overlayDiv, 
+      #ContextContainer, #statusDiv, #inputDiv {
         display: none;
       }
     }
-
+    
+    /* Мобильная адаптация */
+    @media (max-width: 768px) {
+      #ContextButton {
+        width: 45px;
+        height: 45px;
+        line-height: 45px;
+        font-size: 24px;
+      }
+      
+      .context-item {
+        padding: 12px 20px;
+        font-size: 15px;
+      }
+      
+      #inputText {
+        padding: 10px 12px;
+        font-size: 16px;
+      }
+    }
   </style>
-
 </head>
 
 <body>
   <canvas id="canvas" oncontextmenu="event.preventDefault()" tabindex=-1></canvas>
   <div id="overlayDiv"></div>
 
-  <img id="presplash" src="web-presplash.jpg">
-  
-  <!-- Добавленный блок сообщения о повороте -->
+  <img id="presplash" src="web-presplash.jpg" alt="Загрузка игры">
+
   <div id="rotate-message">
-    <div style="max-width: 90%; padding: 20px;">
-      <div style="font-size: 72px; margin-bottom: 30px;">↻</div>
-      <div style="font-size: 32px; margin-bottom: 20px;">Поверните устройство</div>
-      <div style="font-size: 24px; margin-bottom: 30px; line-height: 1.4;">
-        Для игры требуется альбомная ориентация экрана
-      </div>
+    <div class="rotate-icon">↻</div>
+    <div class="rotate-title">Поверните устройство</div>
+    <div class="rotate-text">
+      Для наилучшего игрового опыта используйте альбомную ориентацию экрана
     </div>
   </div>
 
   <div id="ContextContainer">
-    <a id="ContextButton">&#8801;</a>
+    <a id="ContextButton">≡</a>
     <div id="ContextMenu">
-      <input id="ID_SavegamesImport" type="file" onchange="onSavegamesImport(this)" accept="application/zip"
-        style=display:none></input>
-      <a href="games.html">back</a>
-      <a id="FullscreenButton" href="#">fullscreen</a>
+      <input id="ID_SavegamesImport" type="file" onchange="onSavegamesImport(this)" accept="application/zip" hidden>
+      <a href="games.html" class="context-item">← Назад к играм</a>
+      <a id="FullscreenButton" href="#" class="context-item">⛶ Полноэкранный режим</a>
     </div>
   </div>
 
   <div id="statusDiv" class="hidden">
     <div id="statusTextDiv"></div>
-    <progress id="statusProgress" value="0" max="100"></progress>
+    <progress id="statusProgress" value="0" max="100" hidden></progress>
   </div>
 
   <div id="inputDiv" class="hidden">
     <form id="inputForm">
       <div id="inputPrompt"></div>
-      <input id="inputText" type="text">
+      <input id="inputText" type="text" autocomplete="off">
     </form>
   </div>
 
   <script>
-    // The URL to game.zip, relative to the URL of this file.
+    // Настройки игры
     window.gameZipURL = 'game.zip';
-
-    // Register the service worker.
-    if (navigator.serviceWorker) {
-        if (!navigator.serviceWorker.controller) {
-            navigator.serviceWorker.register('./service-worker.js', { updateViaCache: 'all' });
-        }
+    
+    // Регистрация Service Worker
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('./service-worker.js', {
+        scope: './',
+        updateViaCache: 'all'
+      });
     }
-  </script>
-  <script src="renpy-pre.js"></script>
-  <script async type="text/javascript" src="renpy.js"></script>
-  
-  <script>
-    document.addEventListener("DOMContentLoaded", function() {
-      // Функция проверки iOS устройства
-      function isIOS() {
-        return /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-      }
-
+    
+    // Инициализация при загрузке
+    document.addEventListener('DOMContentLoaded', function() {
+      // Определение устройств
+      const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent);
+      const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
+      
       // Элементы интерфейса
       const contextButton = document.getElementById('ContextButton');
       const contextMenu = document.getElementById('ContextMenu');
       const fullscreenButton = document.getElementById('FullscreenButton');
+      const backButton = document.querySelector('.context-item[href="games.html"]');
       
-      // Скрываем кнопку fullscreen если не iOS
-      if (!isIOS()) {
+      // Скрыть кнопку полноэкранного режима для десктопов
+      if (!isMobile) {
         fullscreenButton.style.display = 'none';
       }
       
-      // Обработчик открытия/закрытия меню
+      // Управление контекстным меню
       contextButton.addEventListener('click', function(e) {
         e.stopPropagation();
         contextMenu.classList.toggle('visible');
       });
       
-      // Закрываем меню при клике вне его
       document.addEventListener('click', function(e) {
         if (contextMenu.classList.contains('visible') && 
             !contextMenu.contains(e.target) && 
@@ -315,57 +340,106 @@
         }
       });
       
-      // Обработчик полноэкранного режима
+      // Полноэкранный режим
       fullscreenButton.addEventListener('click', function(e) {
         e.preventDefault();
-        const element = document.documentElement;
-        
-        if (element.requestFullscreen) {
-          element.requestFullscreen();
-        } else if (element.webkitRequestFullscreen) {
-          element.webkitRequestFullscreen();
-        }
-        
-        // Закрываем меню после выбора
+        toggleFullscreen();
         contextMenu.classList.remove('visible');
       });
       
-      // Обработчик для кнопки "back"
-      const backButton = document.querySelector('#ContextMenu a[href="games.html"]');
+      // Обработка кнопки "Назад"
       if (backButton) {
-        backButton.addEventListener('click', function(e) {
-          // Закрываем меню при переходе
+        backButton.addEventListener('click', function() {
           contextMenu.classList.remove('visible');
         });
       }
       
-      // Добавленный код для обработки поворота экрана
-      function isMobileDevice() {
-        return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-      }
-
+      // Обработка поворота экрана
       function updateRotateMessage() {
-        const isMobile = isMobileDevice();
-        const isPortrait = window.innerHeight > window.innerWidth;
         const rotateMessage = document.getElementById('rotate-message');
-        
-        if (isMobile && isPortrait) {
+        if (isMobile && window.innerHeight > window.innerWidth) {
           rotateMessage.style.display = 'flex';
         } else {
           rotateMessage.style.display = 'none';
         }
       }
-
-      function handleEvents() {
+      
+      // Переключение полноэкранного режима
+      function toggleFullscreen() {
+        const elem = document.documentElement;
+        
+        if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+          if (elem.requestFullscreen) {
+            elem.requestFullscreen();
+          } else if (elem.webkitRequestFullscreen) {
+            elem.webkitRequestFullscreen();
+          } else if (elem.msRequestFullscreen) {
+            elem.msRequestFullscreen();
+          } else if (elem.mozRequestFullScreen) {
+            elem.mozRequestFullScreen();
+          }
+        } else {
+          if (document.exitFullscreen) {
+            document.exitFullscreen();
+          } else if (document.webkitExitFullscreen) {
+            document.webkitExitFullscreen();
+          } else if (document.msExitFullscreen) {
+            document.msExitFullscreen();
+          } else if (document.mozCancelFullScreen) {
+            document.mozCancelFullScreen();
+          }
+        }
+      }
+      
+      // Фикс для iOS (touch → click)
+      function setupTouchFix() {
+        const canvas = document.getElementById('canvas');
+        if (!canvas) return;
+        
+        canvas.addEventListener('touchstart', function(e) {
+          if (e.touches.length > 1) return;
+          
+          const clickEvent = new MouseEvent('click', {
+            bubbles: true,
+            cancelable: true,
+            clientX: e.touches[0].clientX,
+            clientY: e.touches[0].clientY
+          });
+          
+          canvas.dispatchEvent(clickEvent);
+          e.preventDefault();
+        }, { passive: false });
+      }
+      
+      // Адаптация интерфейса
+      function resizeHandler() {
+        const canvas = document.getElementById('canvas');
+        if (canvas) {
+          canvas.width = window.innerWidth;
+          canvas.height = window.innerHeight;
+        }
         updateRotateMessage();
       }
-
-      // Инициализация обработчиков поворота
-      updateRotateMessage();
-      window.addEventListener('resize', handleEvents);
-      window.addEventListener('orientationchange', handleEvents);
+      
+      // Инициализация
+      if (isIOS) setupTouchFix();
+      resizeHandler();
+      
+      // Обработчики событий
+      window.addEventListener('resize', resizeHandler);
+      window.addEventListener('orientationchange', resizeHandler);
+      
+      // Автоматический фокус на канвасе для клавиатуры
+      setTimeout(() => {
+        const canvas = document.getElementById('canvas');
+        if (canvas) canvas.focus();
+      }, 1000);
     });
   </script>
+  
+  <!-- Скрипты Ren'Py -->
+  <script src="renpy-pre.js"></script>
+  <script async src="renpy.js"></script>
 </body>
 
 </html>
