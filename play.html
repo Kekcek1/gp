@@ -122,7 +122,7 @@
       left: 0px;
       top: 0px;
       color: white;
-      z-index: 1000; /* Убедимся что меню поверх игры */
+      z-index: 1000;
     }
 
     #ContextContainer.shown {
@@ -150,12 +150,16 @@
     #ContextMenu {
       display: none;
       position: absolute;
-      top: 100%; /* Располагаем под кнопкой */
+      top: 100%;
       left: 0;
       background: rgba(0, 0, 0, 0.7);
       border-radius: 0 0 5px 0;
       padding: 5px;
       z-index: 1001;
+    }
+
+    #ContextMenu.visible {
+      display: block;
     }
 
     #ContextMenu a {
@@ -208,7 +212,6 @@
       <input id="ID_SavegamesImport" type="file" onchange="onSavegamesImport(this)" accept="application/zip"
         style=display:none></input>
       <a href="games.html">back</a>
-      <!-- Добавленная кнопка для полноэкранного режима -->
       <a id="FullscreenButton" href="#">fullscreen</a>
     </div>
   </div>
@@ -239,7 +242,6 @@
   <script src="renpy-pre.js"></script>
   <script async type="text/javascript" src="renpy.js"></script>
   
-  <!-- Исправленный скрипт для работы контекстного меню -->
   <script>
     document.addEventListener("DOMContentLoaded", function() {
       // Функция проверки iOS устройства
@@ -259,16 +261,16 @@
       
       // Обработчик открытия/закрытия меню
       contextButton.addEventListener('click', function(e) {
-        e.stopPropagation(); // Предотвращаем всплытие
-        contextMenu.style.display = contextMenu.style.display === 'block' ? 'none' : 'block';
+        e.stopPropagation();
+        contextMenu.classList.toggle('visible');
       });
       
       // Закрываем меню при клике вне его
       document.addEventListener('click', function(e) {
-        if (contextMenu.style.display === 'block' && 
+        if (contextMenu.classList.contains('visible') && 
             !contextMenu.contains(e.target) && 
             e.target !== contextButton) {
-          contextMenu.style.display = 'none';
+          contextMenu.classList.remove('visible');
         }
       });
       
@@ -279,13 +281,22 @@
         
         if (element.requestFullscreen) {
           element.requestFullscreen();
-        } else if (element.webkitRequestFullscreen) { // Для Safari
+        } else if (element.webkitRequestFullscreen) {
           element.webkitRequestFullscreen();
         }
         
         // Закрываем меню после выбора
-        contextMenu.style.display = 'none';
+        contextMenu.classList.remove('visible');
       });
+      
+      // Обработчик для кнопки "back"
+      const backButton = document.querySelector('#ContextMenu a[href="games.html"]');
+      if (backButton) {
+        backButton.addEventListener('click', function(e) {
+          // Закрываем меню при переходе
+          contextMenu.classList.remove('visible');
+        });
+      }
     });
   </script>
 </body>
