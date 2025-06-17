@@ -20,6 +20,7 @@
   <link rel="preload" href="web-presplash.jpg" as="image">
 
   <style>
+    /* Стили остаются без изменений */
     :root {
       --bg-color: #000;
       --ui-bg: rgba(0, 0, 0, 0.75);
@@ -435,6 +436,51 @@
         }
       };
       
+      // Управление контекстным меню
+      const contextButton = document.getElementById('ContextButton');
+      const contextMenu = document.getElementById('ContextMenu');
+      
+      const toggleContextMenu = () => {
+        contextMenu.classList.toggle('visible');
+      };
+      
+      const closeContextMenu = () => {
+        contextMenu.classList.remove('visible');
+      };
+      
+      contextButton.addEventListener('click', (e) => {
+        e.stopPropagation();
+        toggleContextMenu();
+      });
+      
+      // Обработка кликов вне меню
+      document.addEventListener('click', (e) => {
+        const isClickInsideMenu = contextMenu.contains(e.target);
+        const isClickOnButton = e.target === contextButton;
+        
+        if (!isClickInsideMenu && !isClickOnButton) {
+          closeContextMenu();
+        }
+      });
+      
+      // Закрытие меню при выборе пунктов
+      const contextItems = document.querySelectorAll('.context-menu-item');
+      contextItems.forEach(item => {
+        item.addEventListener('click', (e) => {
+          e.stopPropagation();
+          closeContextMenu();
+        });
+      });
+      
+      // Обработка импорта сохранений
+      const importButton = document.getElementById('ID_SavegamesImport');
+      if (importButton) {
+        importButton.addEventListener('change', function() {
+          closeContextMenu();
+          onSavegamesImport(this);
+        });
+      }
+      
       // Обработка полноэкранного режима
       const setupFullscreen = () => {
         const fullscreenButton = document.getElementById('FullscreenButton');
@@ -463,11 +509,13 @@
               document.msExitFullscreen();
             }
           }
-          
-          contextMenu.classList.remove('visible');
         };
         
-        fullscreenButton.addEventListener('click', toggleFullscreen);
+        fullscreenButton.addEventListener('click', (e) => {
+          e.stopPropagation();
+          toggleFullscreen();
+          closeContextMenu();
+        });
         
         // Обновление текста кнопки при изменении состояния
         const updateFullscreenButton = () => {
@@ -485,40 +533,6 @@
         document.addEventListener('webkitfullscreenchange', updateFullscreenButton);
         document.addEventListener('mozfullscreenchange', updateFullscreenButton);
         document.addEventListener('MSFullscreenChange', updateFullscreenButton);
-      };
-      
-      // Управление контекстным меню
-      const contextButton = document.getElementById('ContextButton');
-      const contextMenu = document.getElementById('ContextMenu');
-      
-      const toggleContextMenu = () => {
-        contextMenu.classList.toggle('visible');
-      };
-      
-      const closeContextMenu = () => {
-        contextMenu.classList.remove('visible');
-      };
-      
-      contextButton.addEventListener('click', (e) => {
-        e.stopPropagation();
-        toggleContextMenu();
-      });
-      
-      document.addEventListener('click', (e) => {
-        if (!contextMenu.contains(e.target) && e.target !== contextButton) {
-          closeContextMenu();
-        }
-      });
-      
-      // Обработка поворота экрана
-      const handleOrientation = () => {
-        const rotateMessage = document.getElementById('rotate-message');
-        if (!rotateMessage) return;
-        
-        const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-        const isPortrait = window.innerHeight > window.innerWidth;
-        
-        rotateMessage.style.display = (isMobile && isPortrait) ? 'flex' : 'none';
       };
       
       // Оптимизация для iOS
@@ -547,6 +561,17 @@
           });
           e.target.dispatchEvent(clickEvent);
         }, { passive: true });
+      };
+      
+      // Обработка поворота экрана
+      const handleOrientation = () => {
+        const rotateMessage = document.getElementById('rotate-message');
+        if (!rotateMessage) return;
+        
+        const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+        const isPortrait = window.innerHeight > window.innerWidth;
+        
+        rotateMessage.style.display = (isMobile && isPortrait) ? 'flex' : 'none';
       };
       
       // Инициализация
