@@ -20,7 +20,6 @@
   <link rel="preload" href="web-presplash.jpg" as="image">
 
   <style>
-    /* Стили остаются без изменений */
     :root {
       --bg-color: #000;
       --ui-bg: rgba(0, 0, 0, 0.75);
@@ -453,12 +452,14 @@
         toggleContextMenu();
       });
       
-      // Обработка кликов вне меню
+      // Исправленный обработчик кликов вне меню
       document.addEventListener('click', (e) => {
+        // Проверяем, был ли клик внутри контекстного меню или на кнопке меню
         const isClickInsideMenu = contextMenu.contains(e.target);
         const isClickOnButton = e.target === contextButton;
         
-        if (!isClickInsideMenu && !isClickOnButton) {
+        // Если клик был вне меню и не на кнопке, закрываем меню
+        if (!isClickInsideMenu && !isClickOnButton && contextMenu.classList.contains('visible')) {
           closeContextMenu();
         }
       });
