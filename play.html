@@ -143,6 +143,7 @@
       box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.3);
     }
 
+    /* Контейнер для меню (левый верхний угол) */
     #ContextContainer {
       position: absolute;
       top: 0;
@@ -157,29 +158,46 @@
       border-radius: 0 0 var(--border-radius) 0;
     }
 
-    #ContextButton {
+    /* Контейнер для кнопки полноэкранного режима (правый верхний угол) */
+    #TopRightContainer {
+      position: absolute;
+      top: 0;
+      right: 0;
+      z-index: 1000;
+      padding: 10px;
+    }
+
+    .icon-button {
       display: flex;
       align-items: center;
       justify-content: center;
       width: 44px;
       height: 44px;
-      font-size: 28px;
       color: lightgrey;
       background: rgba(0, 0, 0, 0.5);
       border-radius: var(--border-radius);
       cursor: pointer;
       user-select: none;
       transition: var(--transition);
+      border: none;
+      padding: 0;
+      font-size: 24px;
     }
 
-    #ContextButton:hover, #ContextButton:focus {
+    .icon-button:hover, .icon-button:focus {
       color: var(--highlight-color);
       background: rgba(0, 0, 0, 0.7);
       outline: none;
     }
 
-    #ContextButton:active {
+    .icon-button:active {
       transform: scale(0.9);
+    }
+
+    .icon-button img {
+      width: 24px;
+      height: 24px;
+      pointer-events: none;
     }
 
     #ContextMenu {
@@ -238,49 +256,6 @@
       animation: fadeIn 1s ease-out;
     }
     
-    /* Сообщение о повороте */
-    #rotate-message {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(135deg, #1a1a2e, #16213e);
-      color: white;
-      z-index: 9999;
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
-      padding: 20px;
-    }
-
-    .rotate-icon {
-      font-size: 72px;
-      margin-bottom: 30px;
-      animation: pulse 2s infinite;
-    }
-
-    .rotate-title {
-      font-size: 28px;
-      margin-bottom: 20px;
-      font-weight: 600;
-    }
-
-    .rotate-text {
-      font-size: 18px;
-      line-height: 1.5;
-      max-width: 90%;
-    }
-
-    @keyframes pulse {
-      0% { transform: scale(1); opacity: 0.7; }
-      50% { transform: scale(1.1); opacity: 1; }
-      100% { transform: scale(1); opacity: 0.7; }
-    }
-
     /* Индикатор загрузки */
     .loader {
       position: fixed;
@@ -320,16 +295,16 @@
         padding: 10px 12px;
         font-size: 1rem;
       }
-    }
-
-    @media (orientation: portrait) {
-      #rotate-message {
-        display: flex;
+      
+      .icon-button {
+        width: 40px;
+        height: 40px;
+        font-size: 20px;
       }
       
-      #presplash, #canvas, #overlayDiv, 
-      #ContextContainer, #statusDiv, #inputDiv {
-        display: none;
+      .icon-button img {
+        width: 20px;
+        height: 20px;
       }
     }
   </style>
@@ -344,22 +319,20 @@
   <img id="presplash" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1' height='1' viewBox='0 0 1 1'%3E%3C/svg%3E" 
        data-src="web-presplash.jpg" alt="Загрузка игры...">
 
-  <div id="rotate-message">
-    <div class="rotate-icon">↻</div>
-    <div class="rotate-title">Поверните устройство</div>
-    <div class="rotate-text">
-      Для игры требуется альбомная ориентация экрана.<br>
-      Пожалуйста, поверните ваше устройство горизонтально.
-    </div>
-  </div>
-
+  <!-- Левый верхний угол - меню -->
   <div id="ContextContainer">
-    <button id="ContextButton" aria-label="Меню">≡</button>
+    <button id="ContextButton" class="icon-button" aria-label="Меню">≡</button>
     <div id="ContextMenu">
       <input id="ID_SavegamesImport" type="file" onchange="onSavegamesImport(this)" accept="application/zip" hidden>
       <a href="games.html" class="context-menu-item">Назад к играм</a>
-      <button id="FullscreenButton" class="context-menu-item">Полноэкранный режим</button>
     </div>
+  </div>
+
+  <!-- Правый верхний угол - полноэкранный режим -->
+  <div id="TopRightContainer">
+    <button id="FullscreenButton" class="icon-button" aria-label="Полноэкранный режим">
+      <img id="FullscreenIcon" src="icons/fullscreen.png" alt="Полноэкранный режим">
+    </button>
   </div>
 
   <div id="statusDiv" class="hidden">
@@ -456,7 +429,8 @@
       document.addEventListener('click', (e) => {
         // Проверяем, был ли клик внутри контекстного меню или на кнопке меню
         const isClickInsideMenu = contextMenu.contains(e.target);
-        const isClickOnButton = e.target === contextButton;
+        const isClickOnButton = e.target === contextButton || 
+                               e.target.closest('.icon-button') === contextButton;
         
         // Если клик был вне меню и не на кнопке, закрываем меню
         if (!isClickInsideMenu && !isClickOnButton && contextMenu.classList.contains('visible')) {
@@ -485,10 +459,15 @@
       // Обработка полноэкранного режима
       const setupFullscreen = () => {
         const fullscreenButton = document.getElementById('FullscreenButton');
-        if (!fullscreenButton) return;
+        const fullscreenIcon = document.getElementById('FullscreenIcon');
+        if (!fullscreenButton || !fullscreenIcon) return;
         
+        // Функция переключения полноэкранного режима
         const toggleFullscreen = () => {
-          if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+          if (!document.fullscreenElement && 
+              !document.webkitFullscreenElement && 
+              !document.mozFullScreenElement && 
+              !document.msFullscreenElement) {
             const element = document.documentElement;
             if (element.requestFullscreen) {
               element.requestFullscreen();
@@ -512,28 +491,39 @@
           }
         };
         
-        fullscreenButton.addEventListener('click', (e) => {
-          e.stopPropagation();
-          toggleFullscreen();
-          closeContextMenu();
-        });
-        
-        // Обновление текста кнопки при изменении состояния
-        const updateFullscreenButton = () => {
+        // Обновление иконки при изменении состояния
+        const updateFullscreenIcon = () => {
           const isFullscreen = document.fullscreenElement || 
                              document.webkitFullscreenElement ||
                              document.mozFullScreenElement ||
                              document.msFullscreenElement;
           
-          fullscreenButton.textContent = isFullscreen ? 
-            'Выйти из полноэкранного режима' : 
-            'Полноэкранный режим';
+          // Переключаем иконку
+          fullscreenIcon.src = isFullscreen ? 
+            'icons/unfullscreen.png' : 
+            'icons/fullscreen.png';
+          
+          // Обновляем подсказку
+          fullscreenButton.setAttribute(
+            'aria-label', 
+            isFullscreen ? 'Выйти из полноэкранного режима' : 'Полноэкранный режим'
+          );
         };
         
-        document.addEventListener('fullscreenchange', updateFullscreenButton);
-        document.addEventListener('webkitfullscreenchange', updateFullscreenButton);
-        document.addEventListener('mozfullscreenchange', updateFullscreenButton);
-        document.addEventListener('MSFullscreenChange', updateFullscreenButton);
+        // Обработчик клика по кнопке
+        fullscreenButton.addEventListener('click', (e) => {
+          e.stopPropagation();
+          toggleFullscreen();
+        });
+        
+        // Обновление иконки при изменении состояния
+        document.addEventListener('fullscreenchange', updateFullscreenIcon);
+        document.addEventListener('webkitfullscreenchange', updateFullscreenIcon);
+        document.addEventListener('mozfullscreenchange', updateFullscreenIcon);
+        document.addEventListener('MSFullscreenChange', updateFullscreenIcon);
+        
+        // Инициализация иконки
+        updateFullscreenIcon();
       };
       
       // Оптимизация для iOS
@@ -564,32 +554,14 @@
         }, { passive: true });
       };
       
-      // Обработка поворота экрана
-      const handleOrientation = () => {
-        const rotateMessage = document.getElementById('rotate-message');
-        if (!rotateMessage) return;
-        
-        const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-        const isPortrait = window.innerHeight > window.innerWidth;
-        
-        rotateMessage.style.display = (isMobile && isPortrait) ? 'flex' : 'none';
-      };
-      
       // Инициализация
       const init = () => {
         loadResources();
         setupFullscreen();
         setupIOSFix();
-        handleOrientation();
         
         // Обработчики событий
-        window.addEventListener('resize', handleOrientation);
-        window.addEventListener('orientationchange', handleOrientation);
-        
-        // Скрытие лоадера при загрузке игры
         window.addEventListener('load', hideLoader);
-        
-        // Скрытие лоадера при ошибке
         window.addEventListener('error', hideLoader);
       };
       
