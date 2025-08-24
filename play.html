@@ -13,6 +13,7 @@
   <meta name="theme-color" content="#000">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Призраки Везенберга">
 
   <!-- Предзагрузка критических ресурсов -->
   <link rel="preload" href="renpy-pre.js" as="script">
@@ -275,6 +276,89 @@
       to { transform: translate(-50%, -50%) rotate(360deg); }
     }
 
+    /* Модальное окно для установки */
+    #installModal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.85);
+      z-index: 2000;
+      backdrop-filter: blur(5px);
+      justify-content: center;
+      align-items: center;
+    }
+
+    #installModal.visible {
+      display: flex;
+      animation: fadeIn 0.3s ease-out;
+    }
+
+    .modal-content {
+      background: var(--ui-bg);
+      padding: 25px;
+      border-radius: var(--border-radius);
+      max-width: 90%;
+      width: 400px;
+      text-align: center;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    }
+
+    .modal-title {
+      font-size: 1.5rem;
+      margin-bottom: 15px;
+      color: var(--highlight-color);
+    }
+
+    .modal-text {
+      margin-bottom: 20px;
+      line-height: 1.5;
+      color: var(--text-color);
+    }
+
+    .modal-steps {
+      text-align: left;
+      margin-bottom: 20px;
+      padding-left: 20px;
+    }
+
+    .modal-steps li {
+      margin-bottom: 10px;
+      line-height: 1.4;
+    }
+
+    .modal-buttons {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+    }
+
+    .modal-button {
+      padding: 10px 20px;
+      border-radius: var(--border-radius);
+      border: none;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: var(--transition);
+    }
+
+    .modal-button.primary {
+      background: #4a90e2;
+      color: white;
+    }
+
+    .modal-button.secondary {
+      background: rgba(255, 255, 255, 0.1);
+      color: var(--text-color);
+    }
+
+    .modal-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    }
+
     /* Адаптивные стили */
     @media (max-width: 768px) {
       #statusDiv, #inputDiv {
@@ -306,6 +390,15 @@
         width: 20px;
         height: 20px;
       }
+
+      .modal-content {
+        padding: 20px;
+        width: 95%;
+      }
+
+      .modal-title {
+        font-size: 1.3rem;
+      }
     }
   </style>
 </head>
@@ -325,6 +418,7 @@
     <div id="ContextMenu">
       <input id="ID_SavegamesImport" type="file" onchange="onSavegamesImport(this)" accept="application/zip" hidden>
       <a href="games.html" class="context-menu-item">Назад к играм</a>
+      <button id="installMenuItem" class="context-menu-item">Установить приложение</button>
     </div>
   </div>
 
@@ -333,6 +427,25 @@
     <button id="FullscreenButton" class="icon-button" aria-label="Полноэкранный режим">
       <img id="FullscreenIcon" src="icons/fullscreen.png" alt="Полноэкранный режим">
     </button>
+  </div>
+
+  <!-- Модальное окно для установки -->
+  <div id="installModal">
+    <div class="modal-content">
+      <h2 class="modal-title">Установите приложение</h2>
+      <p class="modal-text">Добавьте "Призраки Везенбергского квартала" на главный экран для быстрого доступа и лучшего опыта:</p>
+      
+      <ol class="modal-steps">
+        <li>Нажмите кнопку "Поделиться" внизу браузера</li>
+        <li>Прокрутите меню вниз и выберите "На экран «Домой»"</li>
+        <li>Нажмите "Добавить" в правом верхнем углу</li>
+      </ol>
+      
+      <div class="modal-buttons">
+        <button class="modal-button secondary" id="closeInstallModal">Закрыть</button>
+        <button class="modal-button primary" id="showIOSInstructions">Показать инструкции</button>
+      </div>
+    </div>
   </div>
 
   <div id="statusDiv" class="hidden">
@@ -416,6 +529,10 @@
         contextMenu.classList.toggle('visible');
       };
       
+      const openContextMenu = () => {
+        contextMenu.classList.add('visible');
+      };
+      
       const closeContextMenu = () => {
         contextMenu.classList.remove('visible');
       };
@@ -462,6 +579,15 @@
         const fullscreenIcon = document.getElementById('FullscreenIcon');
         if (!fullscreenButton || !fullscreenIcon) return;
         
+        // Проверяем, является ли устройство iOS
+        const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+        
+        // Скрываем кнопку полноэкранного режима на iOS
+        if (isIOS) {
+          fullscreenButton.style.display = 'none';
+          return;
+        }
+        
         // Функция переключения полноэкранного режима
         const toggleFullscreen = () => {
           if (!document.fullscreenElement && 
@@ -498,7 +624,7 @@
                              document.mozFullScreenElement ||
                              document.msFullscreenElement;
           
-          // Переключаем иконку
+          // Переключаем иконку (используем PNG)
           fullscreenIcon.src = isFullscreen ? 
             'icons/unfullscreen.png' : 
             'icons/fullscreen.png';
@@ -524,6 +650,65 @@
         
         // Инициализация иконки
         updateFullscreenIcon();
+      };
+      
+      // Установка приложения на домашний экран
+      const setupInstallPrompt = () => {
+        const installMenuItem = document.getElementById('installMenuItem');
+        const installModal = document.getElementById('installModal');
+        const closeInstallModal = document.getElementById('closeInstallModal');
+        const showIOSInstructions = document.getElementById('showIOSInstructions');
+        
+        if (!installMenuItem || !installModal) return;
+        
+        // Проверяем, является ли устройство iOS
+        const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+        
+        // Проверяем, не установлено ли уже приложение
+        const isStandalone = window.navigator.standalone;
+        
+        // Показываем пункт меню установки только на iOS и если приложение еще не установлено
+        if (isIOS && !isStandalone) {
+          installMenuItem.style.display = 'flex';
+          
+          // Автоматически открываем меню при загрузке на iOS, если приложение не установлено
+          setTimeout(() => {
+            openContextMenu();
+          }, 2000); // Задержка 2 секунды после загрузки
+        } else {
+          installMenuItem.style.display = 'none';
+        }
+        
+        // Функция показа инструкций
+        const showInstallInstructions = () => {
+          installModal.classList.add('visible');
+        };
+        
+        // Функция скрытия инструкций
+        const hideInstallInstructions = () => {
+          installModal.classList.remove('visible');
+        };
+        
+        // Обработчик клика по пункту меню
+        installMenuItem.addEventListener('click', (e) => {
+          e.stopPropagation();
+          closeContextMenu();
+          showInstallInstructions();
+        });
+        
+        closeInstallModal.addEventListener('click', hideInstallInstructions);
+        
+        // Показать подробные инструкции для iOS
+        showIOSInstructions.addEventListener('click', () => {
+          alert('Для установки приложения:\n1. Нажмите кнопку "Поделиться" (иконка квадрата со стрелкой вверх)\n2. Прокрутите меню вниз и найдите "На экран «Домой»"\n3. Нажмите на эту опцию и подтвердите добавление');
+        });
+        
+        // Закрытие модального окна при клике вне его
+        installModal.addEventListener('click', (e) => {
+          if (e.target === installModal) {
+            hideInstallInstructions();
+          }
+        });
       };
       
       // Оптимизация для iOS
@@ -558,6 +743,7 @@
       const init = () => {
         loadResources();
         setupFullscreen();
+        setupInstallPrompt();
         setupIOSFix();
         
         // Обработчики событий
