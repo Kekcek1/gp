@@ -138,7 +138,7 @@ html, body {
   top: 0;
   right: 0;
   z-index: 1000;
-  padding: 10px;
+  padding: 20px 35px;
 }
 
 .icon-button {
