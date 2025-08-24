@@ -15,6 +15,7 @@
   <link rel="apple-touch-icon" href="icons/icon-192x192.png">
   <meta name="theme-color" content="#000">
   <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Призраки Везенберга">
 
@@ -40,7 +41,7 @@
     <div id="ContextMenu">
       <input id="ID_SavegamesImport" type="file" onchange="onSavegamesImport(this)" accept="application/zip" hidden>
       <a href="index.html" class="context-menu-item">Назад к играм</a>
-      <button id="installMenuItem" class="context-menu-item">Установить приложение</button>
+      <button id="installMenuItem" class="context-menu-item">Инструкция для iPhone</button>
     </div>
   </div>
 
@@ -54,18 +55,18 @@
   <!-- Модальное окно для установки -->
   <div id="installModal">
     <div class="modal-content">
-      <h2 class="modal-title">Установите приложение</h2>
-      <p class="modal-text">Добавьте "Призраки Везенбергского квартала" на главный экран для быстрого доступа и лучшего опыта:</p>
+      <h2 class="modal-title">Инструкция для iPhone</h2>
+      <p class="modal-text">Для установки приложения на главный экран:</p>
       
-      <ol class="modal-steps">
+      <ol class="modal-text">
         <li>Нажмите кнопку "Поделиться" внизу браузера</li>
         <li>Прокрутите меню вниз и выберите "На экран «Домой»"</li>
         <li>Нажмите "Добавить" в правом верхнем углу</li>
+        <li>Далее зайдите в приложение и начните играть в полноэкранном режиме</li>
       </ol>
       
       <div class="modal-buttons">
         <button class="modal-button secondary" id="closeInstallModal">Закрыть</button>
-        <button class="modal-button primary" id="showIOSInstructions">Показать инструкции</button>
       </div>
     </div>
   </div>
@@ -83,6 +84,9 @@
   </div>
 
   <script>
+    // Глобальные переменные для функций меню
+    let closeContextMenu, openContextMenu;
+    
     // Основной код JavaScript остается здесь, но будет реорганизован
     // URL игры и регистрация Service Worker
     window.gameZipURL = 'game.zip';
@@ -155,30 +159,37 @@
       const contextButton = document.getElementById('ContextButton');
       const contextMenu = document.getElementById('ContextMenu');
       
-      const toggleContextMenu = () => {
-        contextMenu.classList.toggle('visible');
+      openContextMenu = () => {
+        contextMenu.classList.add('visible');
+        // Добавляем обработчик для закрытия при клике вне меню
+        document.addEventListener('click', closeMenuOnClickOutside);
       };
       
-      const closeContextMenu = () => {
+      closeContextMenu = () => {
         contextMenu.classList.remove('visible');
+        // Убираем обработчик при закрытии меню
+        document.removeEventListener('click', closeMenuOnClickOutside);
+      };
+      
+      // Функция для закрытия меню при клике вне его
+      function closeMenuOnClickOutside(e) {
+        // Проверяем, был ли клик вне меню и не по кнопке меню
+        if (!contextMenu.contains(e.target) && e.target !== contextButton) {
+          closeContextMenu();
+        }
+      }
+      
+      const toggleContextMenu = () => {
+        if (contextMenu.classList.contains('visible')) {
+          closeContextMenu();
+        } else {
+          openContextMenu();
+        }
       };
       
       contextButton.addEventListener('click', (e) => {
         e.stopPropagation();
         toggleContextMenu();
-      });
-      
-      // Исправленный обработчик кликов вне меню
-      document.addEventListener('click', (e) => {
-        // Проверяем, был ли клик внутри контекстного меню или на кнопке меню
-        const isClickInsideMenu = contextMenu.contains(e.target);
-        const isClickOnButton = e.target === contextButton || 
-                               e.target.closest('.icon-button') === contextButton;
-        
-        // Если клик был вне меню и не на кнопке, закрываем меню
-        if (!isClickInsideMenu && !isClickOnButton && contextMenu.classList.contains('visible')) {
-          closeContextMenu();
-        }
       });
       
       // Закрытие меню при выборе пунктов
@@ -282,7 +293,6 @@
       const installMenuItem = document.getElementById('installMenuItem');
       const installModal = document.getElementById('installModal');
       const closeInstallModal = document.getElementById('closeInstallModal');
-      const showIOSInstructions = document.getElementById('showIOSInstructions');
       
       if (!installMenuItem || !installModal) return;
       
@@ -317,11 +327,6 @@
       });
       
       closeInstallModal.addEventListener('click', hideInstallInstructions);
-      
-      // Показать подробные инструкции для iOS
-      showIOSInstructions.addEventListener('click', () => {
-        alert('Для установки приложения:\n1. Нажмите кнопку "Поделиться" (иконка квадрата со стрелкой вверх)\n2. Прокрутите меню вниз и найдите "На экран «Домой»"\n3. Нажмите на эту опцию и подтвердите добавление');
-      });
       
       // Закрытие модального окна при клике вне его
       installModal.addEventListener('click', (e) => {
@@ -378,6 +383,19 @@
       }, { passive: true });
     }
     
+    // Автоматическое открытие меню на iOS при загрузке
+    function autoOpenMenuOnIOS() {
+      const isIOSDevice = isIOS();
+      const isStandalone = isRunningInStandaloneMode();
+      
+      // Открываем меню автоматически на iOS, если не в standalone режиме
+      if (isIOSDevice && !isStandalone && typeof openContextMenu === 'function') {
+        setTimeout(() => {
+          openContextMenu();
+        }, 1000);
+      }
+    }
+    
     // Инициализация приложения
     function init() {
       loadResources();
@@ -385,7 +403,8 @@
       setupFullscreen();
       setupInstallPrompt();
       setupIOSFix();
-      setupIOSBehavior(); // Добавляем проверку режима iOS
+      setupIOSBehavior();
+      autoOpenMenuOnIOS(); // Автоматическое открытие меню на iOS
       
       // Обработчики событий
       window.addEventListener('load', hideLoader);

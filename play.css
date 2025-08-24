@@ -2,7 +2,7 @@
 :root {
   --bg-color: #000;
   --ui-bg: rgba(0, 0, 0, 0.75);
-  --text-color: #eee;
+  --text-color: #ffffff;
   --highlight-color: #fff;
   --border-radius: 10px;
   --transition: all 0.3s ease;
@@ -125,20 +125,18 @@ html, body {
 /* Контейнер для меню (левый верхний угол) */
 #ContextContainer {
   position: absolute;
-  top: 0;
-  left: 0;
+  top: 20px;
+  left: 20px;
   color: white;
   z-index: 1000;
-  padding: 20px 35px; /* Увеличиваем левый отступ для сдвига вправо */
 }
 
 /* Контейнер для кнопки полноэкранного режима (правый верхний угол) */
 #TopRightContainer {
   position: absolute;
-  top: 0;
-  right: 0;
+  top: 20px;
+  right: 20px;
   z-index: 1000;
-  padding: 20px 35px;
 }
 
 .icon-button {
@@ -180,7 +178,7 @@ html, body {
   top: 100%;
   left: 0;
   background: rgba(0, 0, 0, 0.85);
-  border-radius: 0 var(--border-radius) var(--border-radius) 0;
+  border-radius: 0 var(--border-radius) var(--border-radius) var(--border-radius);
   padding: 8px;
   z-index: 1001;
   backdrop-filter: blur(10px);
@@ -210,6 +208,9 @@ html, body {
   transition: var(--transition);
   font-size: 1.1rem;
   border: 1px solid rgba(255, 255, 255, 0.1);
+  cursor: pointer;
+  width: 100%;
+  text-align: left;
 }
 
 .context-menu-item:hover {
@@ -291,16 +292,6 @@ html, body {
   color: var(--text-color);
 }
 
-.modal-steps {
-  text-align: left;
-  margin-bottom: 20px;
-  padding-left: 20px;
-}
-
-.modal-steps li {
-  margin-bottom: 10px;
-  line-height: 1.4;
-}
 
 .modal-buttons {
   display: flex;
@@ -334,6 +325,18 @@ html, body {
 
 /* Адаптивные стили */
 @media (max-width: 768px) {
+  #ContextContainer, #TopRightContainer {
+    top: 15px;
+  }
+  
+  #ContextContainer {
+    left: 15px;
+  }
+  
+  #TopRightContainer {
+    right: 15px;
+  }
+  
   #statusDiv, #inputDiv {
     width: 95%;
     padding: 10px;
