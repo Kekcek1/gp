@@ -11,15 +11,53 @@
 * {
   margin: 0;
   padding: 0;
-  box-sizing: border-box;
+  box-sizing: border-box; /* Добавлено */
 }
 
 html, body {
-  height: 100%;
-  background: #444;
+  width: 100%;
+  /* height: 100%; */ /* Убираем height у html/body */
+  /* position: fixed; */ /* Убираем position: fixed у html/body, может мешать */
+  overflow: hidden;
+  background: #000;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   overscroll-behavior: none;
   touch-action: manipulation;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-text-size-adjust: none;
+  text-size-adjust: none;
+  -webkit-tap-highlight-color: transparent;
+  /* Убираем фиксированную высоту у body, используем min-height */
+  min-height: 100vh; /* fallback */
+  min-height: 100dvh; /* для динамического viewport height */
+}
+
+/* Контейнер игры - будет позиционироваться и масштабироваться JS */
+#game-container {
+  /* width: 100vw; */ /* Ширина будет устанавливаться JS */
+  /* height: 100vh; */ /* Высота будет устанавливаться JS */
+  overflow: hidden;
+  background: #000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box; /* Очень важно */
+  /* Начальные размеры и позиционирование из CSS, но будут переопределены JS */
+  width: 100vw;
+  height: 100vh;
+  margin: 0 auto;
+}
+
+/* Контент игры с фиксированным соотношением сторон */
+#game-content {
+  position: relative; /* Оставляем relative */
+  width: 100%; /* Ширина 100% от родителя (#game-container) */
+  height: 0; /* Высота 0, padding-bottom определяет высоту */
+  padding-bottom: 56.25%; /* 16:9 aspect ratio */
+  overflow: hidden;
+  background: #000;
+  transition: var(--transition);
 }
 
 #canvas, #overlayDiv {
@@ -292,7 +330,6 @@ html, body {
   color: var(--text-color);
 }
 
-
 .modal-buttons {
   display: flex;
   gap: 10px;
@@ -323,56 +360,92 @@ html, body {
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
 }
 
+/* Сообщение о беззвучном режиме */
+.silent-warning {
+  position: fixed;
+  top: 70px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2000;
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 10px 20px;
+  border-radius: var(--border-radius);
+  text-align: center;
+  backdrop-filter: blur(5px);
+}
+
+.silent-warning-content p {
+  margin: 0;
+  font-size: 14px;
+}
+
 /* Адаптивные стили */
 @media (max-width: 768px) {
   #ContextContainer, #TopRightContainer {
     top: 15px;
   }
-  
   #ContextContainer {
     left: 15px;
   }
-  
   #TopRightContainer {
     right: 15px;
   }
-  
   #statusDiv, #inputDiv {
     width: 95%;
     padding: 10px;
   }
-  
   #inputPrompt {
     font-size: 1.2rem;
   }
-  
   #inputText {
     font-size: 1rem;
     padding: 8px 12px;
   }
-  
   .context-menu-item {
     padding: 10px 12px;
     font-size: 1rem;
   }
-  
   .icon-button {
     width: 40px;
     height: 40px;
     font-size: 20px;
   }
-  
   .icon-button img {
     width: 20px;
     height: 20px;
   }
-
   .modal-content {
     padding: 20px;
     width: 95%;
   }
-
   .modal-title {
     font-size: 1.3rem;
   }
+  /* Адаптация безопасных зон для iOS - оставлено как есть, но может быть не нужно */
+  @supports (padding: max(0px)) {
+    #ContextContainer {
+      top: max(15px, env(safe-area-inset-top));
+      left: max(15px, env(safe-area-inset-left));
+    }
+    #TopRightContainer {
+      top: max(15px, env(safe-area-inset-top));
+      right: max(15px, env(safe-area-inset-right));
+    }
+    .silent-warning {
+      top: max(70px, calc(env(safe-area-inset-top) + 50px));
+    }
+  }
 }
+/* УДАЛЕНЫ специальные стили .standalone-mode, так как padding применяется через JS */
+/* .standalone-mode #game-container {
+  padding-top: env(safe-area-inset-top);
+  padding-bottom: env(safe-area-inset-bottom);
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
+}
+.standalone-mode.landscape #game-content {
+  width: auto !important;
+  height: 100% !important;
+  padding-bottom: 0 !important;
+} */
