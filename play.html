@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <title>Призраки Везенбергского квартала</title>
+  <!-- ВАЖНО: Убедитесь, что viewport-fit=cover -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <link rel="manifest" href="manifest.json" crossorigin="use-credentials">
+  <!-- Подключение CSS -->
+  <link rel="stylesheet" href="play.css">
+  <!-- Оптимизация загрузки иконок -->
+  <link rel="icon" href="icons/icon-512x512.png" sizes="512x512" type="image/png">
+  <link rel="apple-touch-icon" href="icons/icon-512x512.png">
+  <meta name="theme-color" content="#000">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Призраки Везенберга">
+  <!-- Предзагрузка критических ресурсов -->
+  <link rel="preload" href="renpy-pre.js" as="script">
+  <link rel="preload" href="renpy.js" as="script">
+  <link rel="preload" href="web-presplash.jpg" as="image">
+</head>
+<body>
+  <div class="loader"></div>
+  <div id="game-container">
+    <div id="game-content">
+      <canvas id="canvas" oncontextmenu="event.preventDefault()" tabindex="-1"></canvas>
+      <div id="overlayDiv"></div>
+      <img id="presplash" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1' height='1' viewBox='0 0 1 1'%3E%3C/svg%3E"
+           data-src="web-presplash.jpg" alt="Загрузка игры...">
+    </div>
+  </div>
+  <!-- Левый верхний угол - меню -->
+  <div id="ContextContainer">
+    <button id="ContextButton" class="icon-button" aria-label="Меню">≡</button>
+    <div id="ContextMenu">
+      <input id="ID_SavegamesImport" type="file" onchange="onSavegamesImport(this)" accept="application/zip" hidden>
+      <a href="index.html" class="context-menu-item">Назад к играм</a>
+      <button id="installMenuItem" class="context-menu-item">Инструкция для iPhone</button>
+    </div>
+  </div>
+  <!-- Правый верхний угол - полноэкранный режим -->
+  <div id="TopRightContainer">
+    <button id="FullscreenButton" class="icon-button" aria-label="Полноэкранный режим">
+      <img id="FullscreenIcon" src="icons/fullscreen.png" alt="Полноэкранный режим">
+    </button>
+  </div>
+  <!-- Модальное окно для установки -->
+  <div id="installModal">
+    <div class="modal-content">
+      <h2 class="modal-title">Инструкция для iPhone</h2>
+      <p class="modal-text">Для установка приложения на главный экран:</p>
+      <ol class="modal-text">
+        <li>Нажмите кнопку "Поделиться" внизу браузера</li>
+        <li>Прокрутите меню вниз и выберите "На экран «Домой»"</li>
+        <li>Нажмите "Добавить" в правом верхнем углу</li>
+        <li>Далее зайдите в приложение и начните играть в полноэкранном режима</li>
+      </ol>
+      <div class="modal-buttons">
+        <button class="modal-button secondary" id="closeInstallModal">Закрыть</button>
+      </div>
+    </div>
+  </div>
+  <!-- Сообщение о беззвучном режиме для iOS -->
+  <div id="silentModeWarning" class="silent-warning hidden">
+    <div class="silent-warning-content">
+      <p>С бесшумным режимом вы не услышите музыки</p>
+    </div>
+  </div>
+  <div id="statusDiv" class="hidden">
+    <div id="statusTextDiv"></div>
+    <progress id="statusProgress" value="0" max="100"></progress>
+  </div>
+  <div id="inputDiv" class="hidden">
+    <form id="inputForm">
+      <div id="inputPrompt"></div>
+      <input id="inputText" type="text" autocomplete="off">
+    </form>
+  </div>
+  <script>
+    // Глобальные переменные для функций меню
+    let closeContextMenu, openContextMenu;
+    // Глобальные переменные для управления аудио
+    let audioContext = null;
+    let isAudioPausedByApp = false;
+    // Глобальные переменные для предотвращения масштабирования
+    let gameStarted = false;
+    let lastTouchEnd = 0;
+    // Глобальные переменные для отслеживания ориентации и размера
+    let lastOrientation = window.orientation;
+    let lastWidth = window.innerWidth;
+    let lastHeight = window.innerHeight;
+    let resizeCheckInterval;
+    let isStandalone = false;
+
+    window.gameZipURL = 'game.zip';
+
+    // Функции для предотвращения масштабирования
+    function preventZoom(event) {
+      if (gameStarted) return;
+      if (event.touches.length > 1) {
+        event.preventDefault();
+      }
+    }
+    function preventDoubleTapZoom(event) {
+      if (gameStarted) return;
+      const now = Date.now();
+      if (now - lastTouchEnd <= 300) {
+        event.preventDefault();
+      }
+      lastTouchEnd = now;
+    }
+    function preventGesture(event) {
+      if (!gameStarted) event.preventDefault();
+    }
+
+    // Функция для определения standalone режима
+    function checkStandaloneMode() {
+      isStandalone = (window.navigator.standalone === true || window.matchMedia('(display-mode: standalone)').matches);
+      console.log(`checkStandaloneMode: ${isStandalone}`);
+      return isStandalone;
+    }
+
+    // Функция для получения реальных размеров экрана
+    function getScreenDimensions() {
+      return {
+        width: window.innerWidth,
+        height: window.innerHeight,
+        availWidth: window.screen.availWidth,
+        availHeight: window.screen.availHeight
+      };
+    }
+
+    // --- ОБЪЕДИНЁННАЯ ФУНКЦИЯ handleOrientationChange ---
+    function handleOrientationChange() {
+        console.log("handleOrientationChange called");
+        const container = document.getElementById('game-container');
+        const content = document.getElementById('game-content');
+        const canvas = document.getElementById('canvas');
+        if (!container || !content) return;
+
+        // Получаем реальные размеры viewport
+        const dims = getScreenDimensions();
+        const isPortrait = dims.height > dims.width;
+        const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+
+        console.log(`Viewport: ${dims.width}x${dims.height}, Orientation: ${isPortrait ? 'Portrait' : 'Landscape'}, Standalone: ${isStandalone}, iOS: ${isIOS}`);
+
+        // --- Сброс стилей перед применением новых ---
+        container.style.width = '';
+        container.style.height = '';
+        container.style.top = '';
+        container.style.left = '';
+        container.style.transform = '';
+        container.style.margin = '0 auto'; // Центрирование по умолчанию для браузера
+        container.style.position = 'fixed'; // По умолчанию fixed
+        container.style.paddingTop = '';
+        container.style.paddingBottom = '';
+        container.style.paddingLeft = '';
+        container.style.paddingRight = '';
+        container.style.boxSizing = '';
+
+        content.style.width = '100%';
+        content.style.height = '0'; // Для padding-bottom
+        content.style.paddingBottom = '56.25%'; // 16:9 aspect ratio
+        content.style.transform = '';
+        content.style.margin = '0 auto'; // Центрирование по умолчанию
+
+        if (canvas) {
+            canvas.style.width = '100%';
+            canvas.style.height = '100%';
+        }
+
+        // --- Логика для PWA (Standalone Mode) ---
+        if (isStandalone) {
+            console.log("Configuring for PWA (Standalone Mode)");
+            // Используем 100vw и 100vh
+            container.style.width = '100vw';
+            container.style.height = '100vh';
+            container.style.position = 'fixed';
+            container.style.top = '0';
+            container.style.left = '0';
+            container.style.margin = '0'; // Отменяем margin
+
+            // Применяем padding для безопасных зон
+            container.style.paddingTop = 'env(safe-area-inset-top, 0px)';
+            container.style.paddingBottom = 'env(safe-area-inset-bottom, 0px)';
+            container.style.paddingLeft = 'env(safe-area-inset-left, 0px)';
+            container.style.paddingRight = 'env(safe-area-inset-right, 0px)';
+            container.style.boxSizing = 'border-box';
+
+            // Убедимся, что content растягивается
+            content.style.width = '100%';
+            content.style.height = '100%';
+            content.style.paddingBottom = '0'; // Убираем padding-bottom, так как height 100%
+
+            if (canvas) {
+                canvas.style.width = '100%';
+                canvas.style.height = '100%';
+            }
+
+        } else {
+            // --- Логика для браузерной вкладки (включая Safari) ---
+            console.log("Configuring for Browser Tab");
+            const ASPECT_RATIO = 16 / 9;
+            let gameWidth, gameHeight;
+
+            // Рассчитываем размеры, предполагая, что ширина ограничивающая
+            const widthBasedHeight = dims.width / ASPECT_RATIO;
+            // Рассчитываем размеры, предполагая, что высота ограничивающая
+            const heightBasedWidth = dims.height * ASPECT_RATIO;
+
+            if (widthBasedHeight <= dims.height) {
+                // Ширина определяющая
+                gameWidth = dims.width;
+                gameHeight = widthBasedHeight;
+                console.log("Width is limiting factor in browser");
+            } else {
+                // Высота определяющая
+                gameWidth = heightBasedWidth;
+                gameHeight = dims.height;
+                console.log("Height is limiting factor in browser");
+            }
+
+            console.log(`Calculated Game Size for browser: ${gameWidth}x${gameHeight}`);
+
+            // Устанавливаем размеры контейнера
+            container.style.width = `${gameWidth}px`;
+            container.style.height = `${gameHeight}px`;
+            container.style.position = 'fixed';
+            container.style.top = '50%';
+            container.style.left = '50%';
+            container.style.transform = 'translate(-50%, -50%)';
+            container.style.margin = '0'; // Отменяем margin для центрирования через transform
+
+            // Для iOS в браузере добавляем минимальный padding как фоллбэк
+            // (Это может помочь с адресной строкой, но не основная логика)
+            if (isIOS) {
+                 console.log("Applying fallback padding for iOS browser (optional)");
+                 // container.style.paddingTop = 'env(safe-area-inset-top, 0px)';
+                 // container.style.paddingBottom = 'env(safe-area-inset-bottom, 0px)';
+                 // container.style.boxSizing = 'border-box';
+            }
+        }
+
+        // Вызываем событие resize для обновления рендера игры
+        setTimeout(() => {
+            console.log("Dispatching resize event");
+            window.dispatchEvent(new Event('resize'));
+        }, 100); // Небольшая задержка для применения стилей
+    }
+
+
+    // Функция для постоянной проверки размера (может быть полезна)
+    function startResizeChecking() {
+      // Останавливаем предыдущий интервал, если он был
+      if (resizeCheckInterval) clearInterval(resizeCheckInterval);
+      // Запускаем проверку каждые 100ms
+      resizeCheckInterval = setInterval(() => {
+        const dims = getScreenDimensions();
+        const sizeChanged = dims.width !== lastWidth || dims.height !== lastHeight;
+        const orientationChanged = window.orientation !== lastOrientation;
+        if (sizeChanged || orientationChanged) {
+          lastWidth = dims.width;
+          lastHeight = dims.height;
+          lastOrientation = window.orientation;
+          handleOrientationChange();
+        }
+      }, 100);
+    }
+
+    // Функция для принудительной проверки безопасных зон (вызывается из handleOrientationChange)
+    function checkSafeAreas() {
+      // Логика перенесена в handleOrientationChange
+    }
+
+    // Перехватываем функцию presplashEnd из renpy-pre.js
+    const originalPresplashEnd = window.presplashEnd;
+    window.presplashEnd = function() {
+      if (originalPresplashEnd) originalPresplashEnd();
+      // Игра загружена, можно снять ограничения на масштабирование
+      gameStarted = true;
+      // Останавливаем проверку изменений размера
+      if (resizeCheckInterval) clearInterval(resizeCheckInterval);
+      // Убираем обработчики предотвращения масштабирования
+      document.removeEventListener('touchstart', preventZoom);
+      document.removeEventListener('touchmove', preventZoom);
+      document.removeEventListener('touchend', preventDoubleTapZoom);
+      document.removeEventListener('gesturestart', preventGesture);
+      // window.removeEventListener('orientationchange', handleOrientationChange); // Оставляем для standalone
+    };
+
+    // Регистрация Service Worker
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        if (!navigator.serviceWorker.controller) {
+          navigator.serviceWorker.register('./service-worker.js', {
+            updateViaCache: 'all',
+            scope: './'
+          });
+        }
+      });
+    }
+
+    // Функция проверки, запущено ли приложение с домашнего экрана
+    function isRunningInStandaloneMode() {
+      return window.navigator.standalone === true || window.matchMedia('(display-mode: standalone)').matches;
+    }
+
+    // Функция проверки iOS устройства
+    function isIOS() {
+      return /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+    }
+
+    // Показ сообщения о беззвучном режиме на iOS
+    function showSilentModeWarning() {
+      const warning = document.getElementById('silentModeWarning');
+      if (!warning) return;
+      // Проверяем, не показывали ли уже сообщение в этой сессии
+      if (sessionStorage.getItem('silentWarningShown')) return;
+      warning.classList.remove('hidden');
+      // Скрываем сообщение через 5 секунд
+      const hideTimeout = setTimeout(() => {
+        hideSilentModeWarning();
+      }, 5000);
+      // Скрываем при клике в любом месте
+      warning.addEventListener('click', function hideOnClick() {
+        clearTimeout(hideTimeout);
+        hideSilentModeWarning();
+        warning.removeEventListener('click', hideOnClick);
+      });
+      // Также скрываем, если пользователь открыл инструкцию
+      const installMenuItem = document.getElementById('installMenuItem');
+      const installModal = document.getElementById('installModal');
+      if (installMenuItem && installModal) {
+        installMenuItem.addEventListener('click', function hideOnInstruction() {
+          clearTimeout(hideTimeout);
+          hideSilentModeWarning();
+          installMenuItem.removeEventListener('click', hideOnInstruction);
+        });
+        installModal.addEventListener('click', function(e) {
+          if (e.target === installModal || e.target.id === 'closeInstallModal') {
+            clearTimeout(hideTimeout);
+            hideSilentModeWarning();
+          }
+        });
+      }
+      sessionStorage.setItem('silentWarningShown', 'true');
+    }
+    function hideSilentModeWarning() {
+      const warning = document.getElementById('silentModeWarning');
+      if (warning) {
+        warning.classList.add('hidden');
+      }
+    }
+
+    // Функции для управления аудио
+    function setupAudioManagement() {
+      // Получаем аудиоконтекст игры, если доступен
+      function getGameAudioContext() {
+        if (typeof Module !== 'undefined' && Module.SDL2 && Module.SDL2.audioContext) {
+          return Module.SDL2.audioContext;
+        }
+        return null;
+      }
+      // Приостановка аудио
+      function pauseAudio() {
+        audioContext = getGameAudioContext();
+        if (audioContext && audioContext.state === 'running') {
+          audioContext.suspend().then(() => {
+            console.log('Аудио приостановлено');
+            isAudioPausedByApp = true;
+          }).catch(error => {
+            console.error('Ошибка при приостановке аудио:', error);
+          });
+        }
+        // Также приостанавливаем все HTML5 audio элементы
+        document.querySelectorAll('audio, video').forEach(media => {
+          if (!media.paused) {
+            media.pause();
+          }
+        });
+      }
+      // Возобновление аудио
+      function resumeAudio() {
+        if (audioContext && audioContext.state === 'suspended' && isAudioPausedByApp) {
+          audioContext.resume().then(() => {
+            console.log('Аудио возобновлено');
+            isAudioPausedByApp = false;
+          }).catch(error => {
+            console.error('Ошибка при возобновлении аудио:', error);
+          });
+        }
+      }
+      // Полная остановка аудио
+      function stopAudio() {
+        if (audioContext && audioContext.state !== 'closed') {
+          audioContext.close().then(() => {
+            console.log('Аудиоконтекст полностью закрыт');
+          }).catch(error => {
+            console.error('Ошибка при закрытии аудиоконтекста:', error);
+          });
+        }
+        // Останавливаем все HTML5 audio элементы
+        document.querySelectorAll('audio, video').forEach(media => {
+          media.pause();
+          media.currentTime = 0;
+        });
+      }
+      // Обработчики событий видимости страницы
+      document.addEventListener('visibilitychange', () => {
+        if (document.hidden) {
+          // Страница скрыта (свернута или переключена вкладка)
+          pauseAudio();
+        } else {
+          // Страница снова видна
+          resumeAudio();
+        }
+      });
+      // Обработчик события beforeunload (закрытие страницы)
+      window.addEventListener('beforeunload', () => {
+        stopAudio();
+      });
+      // Обработчик события pagehide (для мобильных устройств)
+      window.addEventListener('pagehide', () => {
+        stopAudio();
+      });
+      // Обработчик для iOS - при переходе в режим ожидания
+      document.addEventListener('webkitvisibilitychange', () => {
+        if (document.webkitHidden) {
+          pauseAudio();
+        } else {
+          resumeAudio();
+        }
+      });
+    }
+
+    // Функция для предотвращения дублирования музыки
+    function preventAudioDuplication() {
+      // Проверяем, был ли уже инициализирован аудиоконтекст
+      if (typeof Module !== 'undefined' && Module.SDL2) {
+        // Если аудиоконтекст уже существует, закрываем его перед созданием нового
+        if (Module.SDL2.audioContext && Module.SDL2.audioContext.state !== 'closed') {
+          Module.SDL2.audioContext.close().catch(() => {});
+        }
+        // Перехватываем создание нового аудиоконтекста
+        const originalConstructor = window.AudioContext || window.webkitAudioContext;
+        if (originalConstructor) {
+          window.AudioContext = function() {
+            // Закрываем предыдущий контекст, если он есть
+            if (Module.SDL2.audioContext && Module.SDL2.audioContext.state !== 'closed') {
+              Module.SDL2.audioContext.close().catch(() => {});
+            }
+            const context = new originalConstructor();
+            Module.SDL2.audioContext = context;
+            return context;
+          };
+          window.AudioContext.prototype = originalConstructor.prototype;
+          if (window.webkitAudioContext) {
+            window.webkitAudioContext = window.AudioContext;
+          }
+        }
+      }
+    }
+
+    // Основные функции приложения
+    function loadResources() {
+      // Загрузка прелоада с отложенным стартом
+      const presplash = document.getElementById('presplash');
+      if (presplash && presplash.dataset.src) {
+        const img = new Image();
+        img.src = presplash.dataset.src;
+        img.onload = () => {
+          presplash.src = img.src;
+        };
+      }
+      // Динамическая загрузка скриптов
+      const loadScript = (src) => {
+        return new Promise((resolve, reject) => {
+          const script = document.createElement('script');
+          script.src = src;
+          script.defer = true;
+          script.onload = resolve;
+          script.onerror = reject;
+          document.head.appendChild(script);
+        });
+      };
+      Promise.all([
+        loadScript('renpy-pre.js'),
+        loadScript('renpy.js')
+      ]).catch(error => {
+        console.error('Ошибка загрузки скриптов:', error);
+      });
+    }
+    function hideLoader() {
+      const loader = document.querySelector('.loader');
+      if (loader) {
+        loader.style.opacity = '0';
+        setTimeout(() => {
+          loader.style.display = 'none';
+        }, 300);
+      }
+    }
+    function setupContextMenu() {
+      const contextButton = document.getElementById('ContextButton');
+      const contextMenu = document.getElementById('ContextMenu');
+      openContextMenu = () => {
+        contextMenu.classList.add('visible');
+        // Добавляем обработчик для закрытия при клике вне меню
+        document.addEventListener('click', closeMenuOnClickOutside);
+      };
+      closeContextMenu = () => {
+        contextMenu.classList.remove('visible');
+        // Убираем обработчик при закрытии меню
+        document.removeEventListener('click', closeMenuOnClickOutside);
+      };
+      // Функция для закрытия меню при клике вне его
+      function closeMenuOnClickOutside(e) {
+        // Проверяем, был ли клик вне меню и не по кнопке меню
+        if (!contextMenu.contains(e.target) && e.target !== contextButton) {
+          closeContextMenu();
+        }
+      }
+      const toggleContextMenu = () => {
+        if (contextMenu.classList.contains('visible')) {
+          closeContextMenu();
+        } else {
+          openContextMenu();
+        }
+      };
+      contextButton.addEventListener('click', (e) => {
+        e.stopPropagation();
+        toggleContextMenu();
+      });
+      // Закрытие меню при выборе пунктов
+      const contextItems = document.querySelectorAll('.context-menu-item');
+      contextItems.forEach(item => {
+        item.addEventListener('click', (e) => {
+          e.stopPropagation();
+          closeContextMenu();
+        });
+      });
+      // Обработка импорта сохранений
+      const importButton = document.getElementById('ID_SavegamesImport');
+      if (importButton) {
+        importButton.addEventListener('change', function() {
+          closeContextMenu();
+          onSavegamesImport(this);
+        });
+      }
+    }
+    function setupFullscreen() {
+      const fullscreenButton = document.getElementById('FullscreenButton');
+      const fullscreenIcon = document.getElementById('FullscreenIcon');
+      if (!fullscreenButton || !fullscreenIcon) return;
+      // Проверяем, является ли устройство iOS
+      const isIOSDevice = isIOS();
+      // Скрываем кнопку полноэкранного режима на iOS
+      if (isIOSDevice) {
+        fullscreenButton.style.display = 'none';
+        return;
+      }
+      // Функция переключения полноэкранного режима
+      const toggleFullscreen = () => {
+        if (!document.fullscreenElement &&
+            !document.webkitFullscreenElement &&
+            !document.mozFullScreenElement &&
+            !document.msFullscreenElement) {
+          const element = document.documentElement;
+          if (element.requestFullscreen) {
+            element.requestFullscreen();
+          } else if (element.webkitRequestFullscreen) {
+            element.webkitRequestFullscreen();
+          } else if (element.mozRequestFullScreen) {
+            element.mozRequestFullScreen();
+          } else if (element.msRequestFullscreen) {
+            element.msRequestFullscreen();
+          }
+        } else {
+          if (document.exitFullscreen) {
+            document.exitFullscreen();
+          } else if (document.webkitExitFullscreen) {
+            document.webkitExitFullscreen();
+          } else if (document.mozCancelFullScreen) {
+            document.mozCancelFullScreen();
+          } else if (document.msExitFullscreen) {
+            document.msExitFullscreen();
+          }
+        }
+      };
+      // Обновление иконки при изменении состояния
+      const updateFullscreenIcon = () => {
+        const isFullscreen = document.fullscreenElement ||
+                           document.webkitFullscreenElement ||
+                           document.mozFullScreenElement ||
+                           document.msFullscreenElement;
+        // Переключаем иконку (используем PNG)
+        fullscreenIcon.src = isFullscreen ?
+          'icons/unfullscreen.png' :
+          'icons/fullscreen.png';
+        // Обновляем подсказку
+        fullscreenButton.setAttribute(
+          'aria-label',
+          isFullscreen ? 'Выйти из полноэкранного режима' : 'Полноэкранный режим'
+        );
+      };
+      // Обработчик клика по кнопке
+      fullscreenButton.addEventListener('click', (e) => {
+        e.stopPropagation();
+        toggleFullscreen();
+      });
+      // Обновление иконки при изменении состояния
+      document.addEventListener('fullscreenchange', updateFullscreenIcon);
+      document.addEventListener('webkitfullscreenchange', updateFullscreenIcon);
+      document.addEventListener('mozfullscreenchange', updateFullscreenIcon);
+      document.addEventListener('MSFullscreenChange', updateFullscreenIcon);
+      // Инициализация иконки
+      updateFullscreenIcon();
+    }
+    function setupInstallPrompt() {
+      const installMenuItem = document.getElementById('installMenuItem');
+      const installModal = document.getElementById('installModal');
+      const closeInstallModal = document.getElementById('closeInstallModal');
+      if (!installMenuItem || !installModal) return;
+      // Проверяем, является ли устройство iOS
+      const isIOSDevice = isIOS();
+      // Проверяем, не установлено ли уже приложение
+      const isStandalone = isRunningInStandaloneMode();
+      // Показываем пункт меню установки только на iOS и если приложение еще не установлено
+      if (isIOSDevice && !isStandalone) {
+        installMenuItem.style.display = 'flex';
+      } else {
+        installMenuItem.style.display = 'none';
+      }
+      // Функция показа инструкций
+      const showInstallInstructions = () => {
+        installModal.classList.add('visible');
+      };
+      // Функция скрытия инструкций
+      const hideInstallInstructions = () => {
+        installModal.classList.remove('visible');
+      };
+      // Обработчик клика по пункту меню
+      installMenuItem.addEventListener('click', (e) => {
+        e.stopPropagation();
+        closeContextMenu();
+        showInstallInstructions();
+      });
+      closeInstallModal.addEventListener('click', hideInstallInstructions);
+      // Закрытие модального окна при клике вне его
+      installModal.addEventListener('click', (e) => {
+        if (e.target === installModal) {
+          hideInstallInstructions();
+        }
+      });
+    }
+    function setupIOSBehavior() {
+      const isIOSDevice = isIOS();
+      const isStandalone = isRunningInStandaloneMode();
+      // Если это iOS и приложение запущено с домашнего экрана
+      if (isIOSDevice && isStandalone) {
+        console.log("Setting up iOS standalone behavior");
+        // Скрываем все элементы интерфейса
+        const contextContainer = document.getElementById('ContextContainer');
+        const topRightContainer = document.getElementById('TopRightContainer');
+        if (contextContainer) contextContainer.style.display = 'none';
+        if (topRightContainer) topRightContainer.style.display = 'none';
+        // Убедимся, что игра занимает весь экран
+        document.body.style.margin = '0';
+        document.body.style.padding = '0';
+        document.body.style.overflow = 'hidden';
+
+        // Добавляем класс для стилей CSS
+        document.body.classList.add('standalone-mode');
+      } else {
+          document.body.classList.remove('standalone-mode');
+      }
+    }
+    function setupIOSFix() {
+      if (!isIOS()) return;
+      const canvas = document.getElementById('canvas');
+      if (!canvas) return;
+      // Фикс для полноэкранного режима на iOS
+      document.documentElement.style.height = '100%';
+      document.body.style.height = '100%';
+      document.body.style.overflow = 'hidden';
+      // Фикс для touch-событий
+      let lastTouchTime = 0;
+      canvas.addEventListener('touchend', (e) => {
+        const now = Date.now();
+        if (now - lastTouchTime < 300) return;
+        lastTouchTime = now;
+        const clickEvent = new MouseEvent('click', {
+          view: window,
+          bubbles: true,
+          cancelable: true
+        });
+        e.target.dispatchEvent(clickEvent);
+      }, { passive: true });
+    }
+    // Автоматическое открытие меню на iOS при загрузке
+    function autoOpenMenuOnIOS() {
+      const isIOSDevice = isIOS();
+      const isStandalone = isRunningInStandaloneMode();
+      // Открываем меню автоматически на iOS, если не в standalone режиме
+      if (isIOSDevice && !isStandalone && typeof openContextMenu === 'function') {
+        setTimeout(() => {
+          openContextMenu();
+        }, 1000);
+      }
+    }
+    // Настройка предотвращения масштабирования
+    function setupZoomPrevention() {
+      // Добавляем обработчики для предотвращения масштабирования
+      document.addEventListener('touchstart', preventZoom, { passive: false });
+      document.addEventListener('touchmove', preventZoom, { passive: false });
+      document.addEventListener('touchend', preventDoubleTapZoom, { passive: false });
+      document.addEventListener('gesturestart', preventGesture, { passive: false });
+      // Отмечаем начало игры при клике на канвас
+      const canvas = document.getElementById('canvas');
+      if (canvas) {
+        canvas.addEventListener('click', function() {
+          gameStarted = true;
+        });
+      }
+      // Через 5 секунд считаем, что игра началась (fallback)
+      setTimeout(() => {
+        gameStarted = true;
+      }, 5000);
+    }
+    // Инициализация приложения
+    function init() {
+      console.log("Initializing app");
+      loadResources();
+      setupContextMenu();
+      setupFullscreen();
+      setupInstallPrompt();
+      setupIOSFix();
+      setupIOSBehavior(); // Вызываем раньше
+      autoOpenMenuOnIOS(); // Автоматическое открытие меню на iOS
+
+      // Настройка предотвращения масштабирования
+      setupZoomPrevention();
+
+      // Проверяем standalone режим
+      checkStandaloneMode();
+      // Проверяем безопасные зоны
+      // checkSafeAreas(); // Вызывается внутри handleOrientationChange
+
+      // Вызываем первоначальную настройку ориентации/размера
+      handleOrientationChange();
+
+      // Обработчики событий изменения размера и ориентации
+       if (isStandalone) {
+           // В standalone режиме слушаем resize и orientationchange
+           window.addEventListener('resize', handleOrientationChange);
+           window.addEventListener('orientationchange', () => {
+               console.log("Orientation changed in standalone");
+               // checkSafeAreas(); // Логика внутри handleOrientationChange
+               handleOrientationChange();
+           });
+       } else {
+           // В браузере слушаем resize (который включает orientationchange)
+           window.addEventListener('resize', handleOrientationChange);
+       }
+
+      // Настройка управления аудио
+      setupAudioManagement();
+      preventAudioDuplication();
+
+      // Показываем предупреждение о беззвучном режиме на iOS
+      if (isIOS()) {
+        showSilentModeWarning();
+      }
+
+      // Обработчики событий
+      window.addEventListener('load', () => {
+          console.log("Window loaded");
+          hideLoader();
+          // Принудительно вызываем handleOrientationChange после полной загрузки
+          setTimeout(handleOrientationChange, 100);
+      });
+      window.addEventListener('error', hideLoader);
+    }
+    // Запуск приложения после загрузки DOM
+    document.addEventListener("DOMContentLoaded", init);
+  </script>
+</body>
+</html>
