@@ -966,7 +966,58 @@ Module.preRun = Module.preRun || [ ];
 
     };
 
+    // --- Логика загрузки автосохранения из JS ---
+    Module.postRun.push(() => {
+        console.log("Module.postRun: Инициализация логики автосохранения.");
 
+        // Функция для проверки и загрузки автосохранения
+        // Эта функция будет вызываться из Ren'Py скрипта
+        Module.checkAndLoadAutosave = function () {
+            console.log("Module.checkAndLoadAutosave: Проверка флага Module.shouldLoadAutosave...");
+            // Проверяем флаг, установленный в JS (play.html)
+            const shouldLoad = Module.shouldLoadAutosave === true;
+            console.log("Module.checkAndLoadAutosave: Module.shouldLoadAutosave =", shouldLoad);
+
+            if (shouldLoad) {
+                try {
+                    const autosaveFilename = Module.autosaveToLoad || 'auto.save'; // Имя файла из JS или по умолчанию
+                    console.log(`Module.checkAndLoadAutosave: Попытка загрузки из файла: ${autosaveFilename}`);
+
+                    // Сбрасываем флаг в JS, чтобы не спрашивать снова при перезапуске внутри одной сессии
+                    Module.shouldLoadAutosave = false;
+                    console.log("Module.checkAndLoadAutosave: Флаг Module.shouldLoadAutosave сброшен.");
+
+                    // Выполняем команду Ren'Py для загрузки из автосохранения
+                    // Используем renpy.executable.run, чтобы выполнить команду Ren'Py
+                    // 'load' команда пытается загрузить из слота. Имя слота обычно совпадает с именем файла без .save
+                    // Например, для 'auto.save' слот будет 'auto'.
+                    const slotName = autosaveFilename.replace(/\.save$/, '');
+                    console.log(`Module.checkAndLoadAutosave: Вызов renpy.run("load ${slotName}")`);
+                    
+                    // renpy.run("load auto") - это стандартная команда
+                    renpy.run(`load ${slotName}`);
+                    
+                    console.log(`Module.checkAndLoadAutosave: Запрошена загрузка из слота '${slotName}'.`);
+                    // ВАЖНО: renpy.run асинхронна. Игра продолжит выполнение.
+                    // Если вам нужно что-то сделать после успешной загрузки,
+                    // это сложнее и требует обработки событий Ren'Py.
+
+                    // Альтернатива: если вы используете конкретный слот с renpy.save(...)
+                    // renpy.load("_last_good_place"); // Если вы сохраняли туда
+
+                } catch (e) {
+                    console.error("Module.checkAndLoadAutosave: Ошибка при попытке загрузки автосохранения:", e);
+                    Module.printErr("Ошибка при загрузке автосохранения: " + e.message);
+                    // Можно показать сообщение пользователю через Ren'Py
+                    // renpy.notify("Не удалось загрузить автосохранение.");
+                }
+            } else {
+                console.log("Module.checkAndLoadAutosave: Загрузка автосохранения не требуется.");
+            }
+        };
+
+        console.log("Module.postRun: Логика автосохранения инициализирована.");
+    });
 
 
 
