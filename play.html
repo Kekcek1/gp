@@ -940,13 +940,34 @@
 
     // --- Функция-обертка для добавления в Module.preRun ---
     function runCheckSessionRestore() {
-         console.log("runCheckSessionRestore: Вызов checkAndPromptForSessionRestore.");
-         // Вызываем асинхронную функцию. Она сама управляет Module.add/removeRunDependency.
-         // Нам не нужно ждать её завершения здесь, так как она это делает внутри.
-         checkAndPromptForSessionRestore().catch(err => {
-             console.error("runCheckSessionRestore: Ошибка в checkAndPromptForSessionRestore:", err);
-         });
+        console.log("runCheckSessionRestore: Вызов checkAndPromptForSessionRestore.");
+        // Вызываем асинхронную функцию. Она сама управляет Module.add/removeRunDependency.
+        // Нам не нужно ждать её завершения здесь, так как она это делает внутри.
+        checkAndPromptForSessionRestore().catch(err => {
+            console.error("runCheckSessionRestore: Ошибка в checkAndPromptForSessionRestore:", err);
+        });
     }
+
+    // --- Добавляем проверку восстановления сессии в очередь preRun ---
+    Module['preRun'].push(runCheckSessionRestore);
+
+    // --- Новый код: Выполняем загрузку автосохранения после инициализации ---
+    // Этот код выполняется после всех инициализаций, но перед запуском Ren'Py
+    // Он должен быть добавлен в конец списка preRun
+    Module['preRun'].push(function () {
+        console.log("Module.preRun: Запуск проверки и загрузки автосохранения из JS.");
+        // Вызываем функцию, которую мы определили в renpy-pre.js
+        if (typeof Module !== 'undefined' && typeof Module.checkAndLoadAutosave === 'function') {
+            try {
+                Module.checkAndLoadAutosave();
+                console.log("Module.preRun: Автосохранение загружено из JS.");
+            } catch (e) {
+                console.error("Module.preRun: Ошибка при загрузке автосохранения из JS:", e);
+            }
+        } else {
+            console.warn("Module.preRun: Функция Module.checkAndLoadAutosave не найдена или не является функцией.");
+        }
+    });
 
     
     // Настройка предотвращения масштабирования
