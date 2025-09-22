@@ -17,10 +17,12 @@
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Призраки Везенберга">
-  <!-- Предзагрузка критических ресурсов -->
+  <!-- Предзагрузка критических ресурсов УДАЛЕНА для устранения предупреждений -->
+  <!--
   <link rel="preload" href="renpy-pre.js" as="script">
   <link rel="preload" href="renpy.js" as="script">
   <link rel="preload" href="web-presplash.jpg" as="image">
+  -->
 </head>
 <body>
   <div class="loader"></div>
@@ -465,6 +467,241 @@
       }
     }
 
+    // --- Логика восстановления сессии ---
+    let sessionRestoreChecked = false; // Флаг, чтобы проверка выполнялась только один раз
+
+    /**
+     * Проверяет, существует ли файл автосохранения, и предлагает пользователю загрузить его.
+     * Эта функция должна вызываться после инициализации FS, но до полного запуска игры.
+     * @returns {Promise<boolean>} Promise, который разрешается в true, если проверка была выполнена.
+     */
+    function checkAndPromptForSessionRestore() {
+        // Убедимся, что FS и IDBFS доступны и проверка выполняется только один раз
+        // Также проверяем, что Module определен
+        if (sessionRestoreChecked || typeof Module === 'undefined' || typeof FS === 'undefined' || typeof IDBFS === 'undefined') {
+            console.log("checkAndPromptForSessionRestore: Пропущено (уже проверено, Module/FS не готовы)");
+            // Даже если пропущено, считаем, что "проверка завершена", чтобы не блокировать Module
+            if (!sessionRestoreChecked && typeof Module !== 'undefined') {
+                 sessionRestoreChecked = true;
+                 // Сообщаем Emscripten, что зависимость завершена, если она была добавлена
+                 if (typeof Module.removeRunDependency === 'function') {
+                     try {
+                         Module.removeRunDependency('checkSessionRestore');
+                         console.log("checkAndPromptForSessionRestore: Зависимость Module 'checkSessionRestore' удалена (пропущено).");
+                     } catch (e) {
+                         console.warn("Не удалось удалить зависимость 'checkSessionRestore' при пропуске:", e);
+                     }
+                 }
+            }
+            return Promise.resolve(true);
+        }
+
+        console.log("checkAndPromptForSessionRestore: Начало проверки...");
+        sessionRestoreChecked = true; // Устанавливаем флаг сразу, чтобы не повторяться
+
+        // Сообщаем Emscripten, что начали асинхронную операцию
+        // Это важно, чтобы игра не запускалась, пока мы не примем решение.
+        if (typeof Module.addRunDependency === 'function') {
+            try {
+                Module.addRunDependency('checkSessionRestore');
+                console.log("checkAndPromptForSessionRestore: Добавлена зависимость Module 'checkSessionRestore'.");
+            } catch (e) {
+                console.error("Ошибка при добавлении зависимости 'checkSessionRestore':", e);
+            }
+        }
+
+        return new Promise((resolveMain) => {
+            // Проверяем, смонтирована ли уже папка сохранений
+            // Предполагаем, что initFs уже выполнилась и смонтировала /home/web_user/.renpy
+            // Если нет, это может быть проблемой, но мы попробуем продолжить.
+
+            // Функция для проверки существования файла автосохранения
+            // Путь к автосохранению Ren'Py по умолчанию внутри виртуальной FS
+            const possibleAutosaveNames = [
+                'auto.save', // Стандартное имя автосохранения Ren'Py
+                'quick.save', // Быстрое сохранение
+                '_last_good_place.save' // Наше пользовательское имя, если используется
+            ];
+
+            // Функция для проверки одного имени файла
+            const checkFileExists = (filename) => {
+                return new Promise((resolve) => {
+                    const fullPath = `/home/web_user/.renpy/${filename}`;
+                    try {
+                        // FS.lookupPath пытается найти файл. Если не найден, бросает исключение.
+                        const lookup = FS.lookupPath(fullPath, { parent: false });
+                        if (lookup.node && lookup.node.usedBytes > 0) {
+                            console.log(`checkAndPromptForSessionRestore: Найден файл автосохранения: ${fullPath}`);
+                            resolve({ exists: true, path: fullPath, filename: filename });
+                        } else {
+                            console.log(`checkAndPromptForSessionRestore: Файл ${fullPath} найден, но пуст.`);
+                            resolve({ exists: false, path: fullPath, filename: filename });
+                        }
+                    } catch (err) {
+                        // ENOENT означает "No such file or directory"
+                        if (err && err.errno === FS.ErrnoError.ERRNO_CODES.ENOENT) {
+                            console.log(`checkAndPromptForSessionRestore: Файл автосохранения ${fullPath} не найден.`);
+                        } else {
+                            console.warn(`checkAndPromptForSessionRestore: Ошибка при проверке ${fullPath}:`, err);
+                        }
+                        resolve({ exists: false, path: fullPath, filename: filename });
+                    }
+                });
+            };
+
+            // Функция для отображения модального окна
+            const showRestorePrompt = (autosaveInfo) => {
+                return new Promise((resolveModal) => {
+                    console.log("checkAndPromptForSessionRestore: Отображение модального окна.");
+
+                    // Создаем элементы модального окна
+                    const modal = document.createElement('div');
+                    modal.id = 'sessionRestoreModal';
+                    modal.style.cssText = `
+                        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+                        background: rgba(0, 0, 0, 0.85); display: flex; justify-content: center;
+                        align-items: center; z-index: 10000; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+                        backdrop-filter: blur(5px);
+                    `;
+
+                    const modalContent = document.createElement('div');
+                    modalContent.style.cssText = `
+                        background: rgba(30, 30, 30, 0.95); padding: 30px; border-radius: 15px;
+                        text-align: center; color: white; max-width: 90%; width: 400px;
+                        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+                    `;
+
+                    const title = document.createElement('h2');
+                    title.textContent = 'Продолжить игру?';
+                    title.style.cssText = 'margin-top: 0; margin-bottom: 20px; font-size: 1.5rem;';
+
+                    const message = document.createElement('p');
+                    message.textContent = 'Найдено недавнее сохранение. Хотите продолжить с этого момента?';
+                    message.style.cssText = 'margin-bottom: 25px; line-height: 1.5;';
+
+                    const buttonContainer = document.createElement('div');
+                    buttonContainer.style.cssText = 'display: flex; gap: 15px; justify-content: center;';
+
+                    const yesButton = document.createElement('button');
+                    yesButton.id = 'restoreYesBtn';
+                    yesButton.textContent = 'Продолжить';
+                    yesButton.style.cssText = `
+                        padding: 12px 24px; border-radius: 8px; border: none; cursor: pointer;
+                        font-size: 1rem; background: #4a90e2; color: white;
+                        transition: background 0.2s ease;
+                    `;
+                    yesButton.onmouseenter = () => { yesButton.style.background = '#3a7bc8'; };
+                    yesButton.onmouseleave = () => { yesButton.style.background = '#4a90e2'; };
+
+                    const noButton = document.createElement('button');
+                    noButton.id = 'restoreNoBtn';
+                    noButton.textContent = 'Начать заново';
+                    noButton.style.cssText = `
+                        padding: 12px 24px; border-radius: 8px; border: 1px solid #aaa; cursor: pointer;
+                        font-size: 1rem; background: transparent; color: #ddd;
+                        transition: background 0.2s ease, color 0.2s ease;
+                    `;
+                    noButton.onmouseenter = () => { noButton.style.background = 'rgba(255, 255, 255, 0.1)'; noButton.style.color = 'white'; };
+                    noButton.onmouseleave = () => { noButton.style.background = 'transparent'; noButton.style.color = '#ddd'; };
+
+                    // События для кнопок
+                    yesButton.addEventListener('click', function() {
+                        console.log("checkAndPromptForSessionRestore: Пользователь выбрал 'Продолжить'.");
+                        modal.remove();
+                        // Устанавливаем флаг в Module для Ren'Py
+                        if (typeof Module !== 'undefined') {
+                            Module.shouldLoadAutosave = true;
+                            Module.autosaveToLoad = autosaveInfo.filename; // Передаем имя файла
+                            console.log(`checkAndPromptForSessionRestore: Module.shouldLoadAutosave = true, Module.autosaveToLoad = ${autosaveInfo.filename}`);
+                        }
+                        resolveModal(true); // Разрешаем промис модального окна
+                    });
+
+                    noButton.addEventListener('click', function() {
+                        console.log("checkAndPromptForSessionRestore: Пользователь выбрал 'Начать заново'.");
+                        modal.remove();
+                        // Удаляем файл автосохранения, чтобы не спрашивать снова при след. запуске?
+                        // Это спорное решение. Лучше оставить его.
+                        // if (typeof Module !== 'undefined') {
+                        //     Module.shouldLoadAutosave = false;
+                        // }
+                        resolveModal(false); // Разрешаем промис модального окна
+                    });
+
+                    // Сборка DOM
+                    buttonContainer.appendChild(yesButton);
+                    buttonContainer.appendChild(noButton);
+                    modalContent.appendChild(title);
+                    modalContent.appendChild(message);
+                    modalContent.appendChild(buttonContainer);
+                    modal.appendChild(modalContent);
+                    document.body.appendChild(modal);
+
+                    // Фокус на кнопку "Продолжить" для удобства
+                    yesButton.focus();
+                });
+            };
+
+            // Основная логика проверки
+            console.log("checkAndPromptForSessionRestore: Поиск файлов автосохранения...");
+            let foundAutosave = null;
+
+            // Проверяем файлы по очереди
+            const checkPromises = possibleAutosaveNames.map(name => checkFileExists(name));
+
+            Promise.all(checkPromises)
+                .then(results => {
+                    // Ищем первый существующий файл
+                    foundAutosave = results.find(res => res.exists);
+                    if (foundAutosave) {
+                        console.log("checkAndPromptForSessionRestore: Найдено автосохранение для предложения:", foundAutosave);
+                        // Показываем модальное окно и ждем выбора пользователя
+                        return showRestorePrompt(foundAutosave);
+                    } else {
+                        console.log("checkAndPromptForSessionRestore: Файлы автосохранения не найдены.");
+                        return false; // Не нужно восстанавливать
+                    }
+                })
+                .then(userWantsToRestore => {
+                    // Этот блок выполняется после закрытия модального окна
+                    console.log("checkAndPromptForSessionRestore: Результат выбора пользователя:", userWantsToRestore);
+                    // Независимо от выбора пользователя, мы завершаем эту асинхронную операцию
+                    if (typeof Module !== 'undefined' && typeof Module.removeRunDependency === 'function') {
+                        try {
+                            Module.removeRunDependency('checkSessionRestore');
+                            console.log("checkAndPromptForSessionRestore: Зависимость Module 'checkSessionRestore' удалена.");
+                        } catch (e) {
+                            console.error("Ошибка при удалении зависимости 'checkSessionRestore':", e);
+                        }
+                    }
+                    resolveMain(true); // Разрешаем основной промис
+                })
+                .catch(error => {
+                    console.error("checkAndPromptForSessionRestore: Критическая ошибка:", error);
+                    // Всё равно завершаем зависимость, чтобы не блокировать запуск
+                    if (typeof Module !== 'undefined' && typeof Module.removeRunDependency === 'function') {
+                        try {
+                            Module.removeRunDependency('checkSessionRestore');
+                        } catch (e) {
+                            console.error("Ошибка при удалении зависимости 'checkSessionRestore' после ошибки:", e);
+                        }
+                    }
+                    resolveMain(true); // Разрешаем основной промис даже при ошибке
+                });
+        });
+    }
+
+    // --- Функция-обертка для добавления в Module.preRun ---
+    function runCheckSessionRestore() {
+         console.log("runCheckSessionRestore: Вызов checkAndPromptForSessionRestore.");
+         // Вызываем асинхронную функцию. Она сама управляет Module.add/removeRunDependency.
+         // Нам не нужно ждать её завершения здесь, так как она это делает внутри.
+         checkAndPromptForSessionRestore().catch(err => {
+             console.error("runCheckSessionRestore: Ошибка в checkAndPromptForSessionRestore:", err);
+         });
+    }
+
+
     // Основные функции приложения
     function loadResources() {
       // Загрузка прелоада с отложенным стартом
@@ -711,265 +948,6 @@
         }, 1000);
       }
     }
-
-    // --- Логика восстановления сессии ---
-    let sessionRestoreChecked = false; // Флаг, чтобы проверка выполнялась только один раз
-
-    /**
-     * Проверяет, существует ли файл автосохранения, и предлагает пользователю загрузить его.
-     * Эта функция должна вызываться после инициализации FS, но до полного запуска игры.
-     * @returns {Promise<boolean>} Promise, который разрешается в true, если проверка была выполнена.
-     */
-    function checkAndPromptForSessionRestore() {
-        // Убедимся, что FS и IDBFS доступны и проверка выполняется только один раз
-        if (sessionRestoreChecked || typeof FS === 'undefined' || typeof IDBFS === 'undefined') {
-            console.log("checkAndPromptForSessionRestore: Пропущено (уже проверено или FS не готова)");
-            // Даже если пропущено, считаем, что "проверка завершена", чтобы не блокировать Module
-            if (!sessionRestoreChecked) {
-                 sessionRestoreChecked = true;
-                 // Сообщаем Emscripten, что зависимость завершена, если она была добавлена
-                 if (typeof Module !== 'undefined' && Module.removeRunDependency) {
-                     try {
-                         Module.removeRunDependency('checkSessionRestore');
-                         console.log("checkAndPromptForSessionRestore: Зависимость Module 'checkSessionRestore' удалена (пропущено).");
-                     } catch (e) {
-                         console.warn("Не удалось удалить зависимость 'checkSessionRestore' при пропуске:", e);
-                     }
-                 }
-            }
-            return Promise.resolve(true);
-        }
-
-        console.log("checkAndPromptForSessionRestore: Начало проверки...");
-        sessionRestoreChecked = true; // Устанавливаем флаг сразу, чтобы не повторяться
-
-        // Сообщаем Emscripten, что начали асинхронную операцию
-        // Это важно, чтобы игра не запускалась, пока мы не примем решение.
-        if (typeof Module !== 'undefined' && Module.addRunDependency) {
-            try {
-                Module.addRunDependency('checkSessionRestore');
-                console.log("checkAndPromptForSessionRestore: Добавлена зависимость Module 'checkSessionRestore'.");
-            } catch (e) {
-                console.error("Ошибка при добавлении зависимости 'checkSessionRestore':", e);
-            }
-        }
-
-        return new Promise((resolveMain) => {
-            // Проверяем, смонтирована ли уже папка сохранений
-            // Предполагаем, что initFs уже выполнилась и смонтировала /home/web_user/.renpy
-            // Если нет, это может быть проблемой, но мы попробуем продолжить.
-
-            // Функция для проверки существования файла автосохранения
-            // Путь к автосохранению Ren'Py по умолчанию внутри виртуальной FS
-            // Обычно это что-то вроде '1-autosave-X-XX-XXXX-XX-XX-XX.save'
-            // или просто 'auto.save'. Мы проверим несколько возможных имён.
-            const possibleAutosaveNames = [
-                'auto.save', // Стандартное имя автосохранения Ren'Py
-                'quick.save', // Быстрое сохранение
-                '_last_good_place.save' // Наше пользовательское имя, если используется
-                // Можно добавить больше имён, если вы используете специфичные слоты
-            ];
-
-            // Функция для проверки одного имени файла
-            const checkFileExists = (filename) => {
-                return new Promise((resolve) => {
-                    const fullPath = `/home/web_user/.renpy/${filename}`;
-                    try {
-                        // FS.lookupPath пытается найти файл. Если не найден, бросает исключение.
-                        const lookup = FS.lookupPath(fullPath, { parent: false });
-                        if (lookup.node && lookup.node.usedBytes > 0) {
-                            console.log(`checkAndPromptForSessionRestore: Найден файл автосохранения: ${fullPath}`);
-                            resolve({ exists: true, path: fullPath, filename: filename });
-                        } else {
-                            console.log(`checkAndPromptForSessionRestore: Файл ${fullPath} найден, но пуст.`);
-                            resolve({ exists: false, path: fullPath, filename: filename });
-                        }
-                    } catch (err) {
-                        // ENOENT означает "No such file or directory"
-                        if (err && err.errno === FS.ErrnoError.ERRNO_CODES.ENOENT) {
-                            console.log(`checkAndPromptForSessionRestore: Файл автосохранения ${fullPath} не найден.`);
-                        } else {
-                            console.warn(`checkAndPromptForSessionRestore: Ошибка при проверке ${fullPath}:`, err);
-                        }
-                        resolve({ exists: false, path: fullPath, filename: filename });
-                    }
-                });
-            };
-
-            // Функция для отображения модального окна
-            const showRestorePrompt = (autosaveInfo) => {
-                return new Promise((resolveModal) => {
-                    console.log("checkAndPromptForSessionRestore: Отображение модального окна.");
-
-                    // Создаем элементы модального окна
-                    const modal = document.createElement('div');
-                    modal.id = 'sessionRestoreModal';
-                    modal.style.cssText = `
-                        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-                        background: rgba(0, 0, 0, 0.85); display: flex; justify-content: center;
-                        align-items: center; z-index: 10000; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-                        backdrop-filter: blur(5px);
-                    `;
-
-                    const modalContent = document.createElement('div');
-                    modalContent.style.cssText = `
-                        background: rgba(30, 30, 30, 0.95); padding: 30px; border-radius: 15px;
-                        text-align: center; color: white; max-width: 90%; width: 400px;
-                        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-                    `;
-
-                    const title = document.createElement('h2');
-                    title.textContent = 'Продолжить игру?';
-                    title.style.cssText = 'margin-top: 0; margin-bottom: 20px; font-size: 1.5rem;';
-
-                    const message = document.createElement('p');
-                    message.textContent = 'Найдено недавнее сохранение. Хотите продолжить с этого момента?';
-                    message.style.cssText = 'margin-bottom: 25px; line-height: 1.5;';
-
-                    const buttonContainer = document.createElement('div');
-                    buttonContainer.style.cssText = 'display: flex; gap: 15px; justify-content: center;';
-
-                    const yesButton = document.createElement('button');
-                    yesButton.id = 'restoreYesBtn';
-                    yesButton.textContent = 'Продолжить';
-                    yesButton.style.cssText = `
-                        padding: 12px 24px; border-radius: 8px; border: none; cursor: pointer;
-                        font-size: 1rem; background: #4a90e2; color: white;
-                        transition: background 0.2s ease;
-                    `;
-                    yesButton.onmouseenter = () => { yesButton.style.background = '#3a7bc8'; };
-                    yesButton.onmouseleave = () => { yesButton.style.background = '#4a90e2'; };
-
-                    const noButton = document.createElement('button');
-                    noButton.id = 'restoreNoBtn';
-                    noButton.textContent = 'Начать заново';
-                    noButton.style.cssText = `
-                        padding: 12px 24px; border-radius: 8px; border: 1px solid #aaa; cursor: pointer;
-                        font-size: 1rem; background: transparent; color: #ddd;
-                        transition: background 0.2s ease, color 0.2s ease;
-                    `;
-                    noButton.onmouseenter = () => { noButton.style.background = 'rgba(255, 255, 255, 0.1)'; noButton.style.color = 'white'; };
-                    noButton.onmouseleave = () => { noButton.style.background = 'transparent'; noButton.style.color = '#ddd'; };
-
-                    // События для кнопок
-                    yesButton.addEventListener('click', function() {
-                        console.log("checkAndPromptForSessionRestore: Пользователь выбрал 'Продолжить'.");
-                        modal.remove();
-                        // Устанавливаем флаг в Module для Ren'Py
-                        if (typeof Module !== 'undefined') {
-                            Module.shouldLoadAutosave = true;
-                            Module.autosaveToLoad = autosaveInfo.filename; // Передаем имя файла
-                            console.log(`checkAndPromptForSessionRestore: Module.shouldLoadAutosave = true, Module.autosaveToLoad = ${autosaveInfo.filename}`);
-                        }
-                        resolveModal(true); // Разрешаем промис модального окна
-                    });
-
-                    noButton.addEventListener('click', function() {
-                        console.log("checkAndPromptForSessionRestore: Пользователь выбрал 'Начать заново'.");
-                        modal.remove();
-                        // Удаляем файл автосохранения, чтобы не спрашивать снова при след. запуске?
-                        // Это спорное решение. Лучше оставить его.
-                        // if (typeof Module !== 'undefined') {
-                        //     Module.shouldLoadAutosave = false;
-                        // }
-                        resolveModal(false); // Разрешаем промис модального окна
-                    });
-
-                    // Сборка DOM
-                    buttonContainer.appendChild(yesButton);
-                    buttonContainer.appendChild(noButton);
-                    modalContent.appendChild(title);
-                    modalContent.appendChild(message);
-                    modalContent.appendChild(buttonContainer);
-                    modal.appendChild(modalContent);
-                    document.body.appendChild(modal);
-
-                    // Фокус на кнопку "Продолжить" для удобства
-                    yesButton.focus();
-                });
-            };
-
-            // Основная логика проверки
-            console.log("checkAndPromptForSessionRestore: Поиск файлов автосохранения...");
-            let foundAutosave = null;
-
-            // Проверяем файлы по очереди
-            const checkPromises = possibleAutosaveNames.map(name => checkFileExists(name));
-
-            Promise.all(checkPromises)
-                .then(results => {
-                    // Ищем первый существующий файл
-                    foundAutosave = results.find(res => res.exists);
-                    if (foundAutosave) {
-                        console.log("checkAndPromptForSessionRestore: Найдено автосохранение для предложения:", foundAutosave);
-                        // Показываем модальное окно и ждем выбора пользователя
-                        return showRestorePrompt(foundAutosave);
-                    } else {
-                        console.log("checkAndPromptForSessionRestore: Файлы автосохранения не найдены.");
-                        return false; // Не нужно восстанавливать
-                    }
-                })
-                .then(userWantsToRestore => {
-                    // Этот блок выполняется после закрытия модального окна
-                    console.log("checkAndPromptForSessionRestore: Результат выбора пользователя:", userWantsToRestore);
-                    // Независимо от выбора пользователя, мы завершаем эту асинхронную операцию
-                    if (typeof Module !== 'undefined' && Module.removeRunDependency) {
-                        try {
-                            Module.removeRunDependency('checkSessionRestore');
-                            console.log("checkAndPromptForSessionRestore: Зависимость Module 'checkSessionRestore' удалена.");
-                        } catch (e) {
-                            console.error("Ошибка при удалении зависимости 'checkSessionRestore':", e);
-                        }
-                    }
-                    resolveMain(true); // Разрешаем основной промис
-                })
-                .catch(error => {
-                    console.error("checkAndPromptForSessionRestore: Критическая ошибка:", error);
-                    // Всё равно завершаем зависимость, чтобы не блокировать запуск
-                    if (typeof Module !== 'undefined' && Module.removeRunDependency) {
-                        try {
-                            Module.removeRunDependency('checkSessionRestore');
-                        } catch (e) {
-                            console.error("Ошибка при удалении зависимости 'checkSessionRestore' после ошибки:", e);
-                        }
-                    }
-                    resolveMain(true); // Разрешаем основной промис даже при ошибке
-                });
-        });
-    }
-
-    // --- Функция-обертка для добавления в Module.preRun ---
-    function runCheckSessionRestore() {
-        console.log("runCheckSessionRestore: Вызов checkAndPromptForSessionRestore.");
-        // Вызываем асинхронную функцию. Она сама управляет Module.add/removeRunDependency.
-        // Нам не нужно ждать её завершения здесь, так как она это делает внутри.
-        checkAndPromptForSessionRestore().catch(err => {
-            console.error("runCheckSessionRestore: Ошибка в checkAndPromptForSessionRestore:", err);
-        });
-    }
-
-    // --- Добавляем проверку восстановления сессии в очередь preRun ---
-    Module['preRun'].push(runCheckSessionRestore);
-
-    // --- Новый код: Выполняем загрузку автосохранения после инициализации ---
-    // Этот код выполняется после всех инициализаций, но перед запуском Ren'Py
-    // Он должен быть добавлен в конец списка preRun
-    Module['preRun'].push(function () {
-        console.log("Module.preRun: Запуск проверки и загрузки автосохранения из JS.");
-        // Вызываем функцию, которую мы определили в renpy-pre.js
-        if (typeof Module !== 'undefined' && typeof Module.checkAndLoadAutosave === 'function') {
-            try {
-                Module.checkAndLoadAutosave();
-                console.log("Module.preRun: Автосохранение загружено из JS.");
-            } catch (e) {
-                console.error("Module.preRun: Ошибка при загрузке автосохранения из JS:", e);
-            }
-        } else {
-            console.warn("Module.preRun: Функция Module.checkAndLoadAutosave не найдена или не является функцией.");
-        }
-    });
-
-    
     // Настройка предотвращения масштабирования
     function setupZoomPrevention() {
       // Добавляем обработчики для предотвращения масштабирования
@@ -1010,6 +988,18 @@
 
       // Вызываем первоначальную настройку ориентации/размера
       handleOrientationChange();
+
+       // --- Добавление проверки восстановления сессии ---
+       // Убедимся, что Module доступен перед добавлением в preRun
+       if (typeof Module !== 'undefined') {
+           // Добавляем проверку восстановления сессии в очередь preRun, чтобы она шла после загрузки game.zip и инициализации FS
+           Module['preRun'].push(runCheckSessionRestore);
+           console.log("init: Добавлена проверка восстановления сессии в Module.preRun.");
+       } else {
+           console.warn("init: Module не определен. Проверка восстановления сессии не добавлена в preRun.");
+           // Можно попробовать добавить позже, но это рискованно
+       }
+       // -----------------------------------------------
 
       // Обработчики событий изменения размера и ориентации
        if (isStandalone) {
