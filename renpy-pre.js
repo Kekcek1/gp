@@ -1,1 +1,976 @@
-const _0x89777f=_0x2b78;(function(_0x2d3fd0,_0xdc57bd){const _0x119b7e=_0x2b78,_0x507767=_0x2d3fd0();while(!![]){try{const _0x3e7d64=parseInt(_0x119b7e(0x24d))/0x1+-parseInt(_0x119b7e(0x23d))/0x2*(parseInt(_0x119b7e(0x192))/0x3)+-parseInt(_0x119b7e(0x1f3))/0x4+parseInt(_0x119b7e(0x190))/0x5*(-parseInt(_0x119b7e(0x1d6))/0x6)+parseInt(_0x119b7e(0x24b))/0x7*(-parseInt(_0x119b7e(0x234))/0x8)+-parseInt(_0x119b7e(0x199))/0x9*(parseInt(_0x119b7e(0x1be))/0xa)+parseInt(_0x119b7e(0x19b))/0xb*(parseInt(_0x119b7e(0x241))/0xc);if(_0x3e7d64===_0xdc57bd)break;else _0x507767['push'](_0x507767['shift']());}catch(_0x256948){_0x507767['push'](_0x507767['shift']());}}}(_0x291c,0xa9e63),Module=window['Module']||{},Module[_0x89777f(0x214)]=Module[_0x89777f(0x214)]||[],(function(){const _0x31ca51=_0x89777f;let _0x58dc7b=document[_0x31ca51(0x18e)](_0x31ca51(0x205)),_0x8a70d3=document[_0x31ca51(0x18e)](_0x31ca51(0x1db)),_0x227f80=document[_0x31ca51(0x18e)](_0x31ca51(0x1c7)),_0x5d05b5=document[_0x31ca51(0x18e)](_0x31ca51(0x185)),_0x5d1e6e=null,_0xd926ec='';const _0x23b7b4=0x1388;let _0x29ab1c=0x0,_0x2dcebc=![],_0x40f71a=![];function _0x383616(){const _0x2c0f37=_0x31ca51;if(_0x2dcebc)return;_0x58dc7b[_0x2c0f37(0x244)][_0x2c0f37(0x243)](_0x2c0f37(0x18a)),_0x58dc7b[_0x2c0f37(0x244)][_0x2c0f37(0x1fa)](_0x2c0f37(0x19f)),_0x5d1e6e=setTimeout(()=>{_0xd926ec='';},0xfa);}function _0x20a95b(){const _0x26dc35=_0x31ca51;_0x58dc7b[_0x26dc35(0x244)][_0x26dc35(0x243)]('hidden'),_0x58dc7b[_0x26dc35(0x244)][_0x26dc35(0x1fa)](_0x26dc35(0x18a)),_0x8a70d3[_0x26dc35(0x1c2)]=_0x8a70d3['scrollHeight'],_0x227f80['style'][_0x26dc35(0x1b5)]=_0x26dc35(0x223);}function _0x4a747b(){_0x5d1e6e&&(clearTimeout(_0x5d1e6e),_0x5d1e6e=null);}function _0x43e2fc(){_0x4a747b(),_0x5d1e6e=setTimeout(_0x383616,_0x23b7b4);}function _0x3374b8(_0x11f64b){const _0x4e7141=_0x31ca51;_0x4a747b(),_0x29ab1c=0x0;_0xd926ec&&(_0xd926ec+=_0x4e7141(0x1a6));if(_0x11f64b==''&&!_0x2dcebc){_0xd926ec='';return;}for(let _0x50e609 of _0x11f64b[_0x4e7141(0x1c4)]('\x0a')){_0x50e609[_0x4e7141(0x181)]>0x0&&console['log'](_0x50e609);}if(_0x40f71a)return;_0x11f64b=String(_0x11f64b),_0x11f64b=_0x11f64b[_0x4e7141(0x242)](/&/g,_0x4e7141(0x1e4)),_0x11f64b=_0x11f64b[_0x4e7141(0x242)](/</g,'&lt;'),_0x11f64b=_0x11f64b['replace'](/>/g,_0x4e7141(0x222)),_0x11f64b=_0x11f64b[_0x4e7141(0x242)]('\x0a',_0x4e7141(0x1e8),'g'),_0xd926ec+=_0x11f64b,_0x8a70d3[_0x4e7141(0x1f0)]=_0xd926ec,_0x20a95b();}function _0x528e15(_0x469be2){const _0x36dc2c=_0x31ca51;if(_0x469be2[_0x36dc2c(0x232)](_0x36dc2c(0x183))||_0x469be2[_0x36dc2c(0x232)](_0x36dc2c(0x24c))||_0x469be2[_0x36dc2c(0x232)](_0x36dc2c(0x22a))){console[_0x36dc2c(0x231)](_0x469be2);return;}_0x3374b8(_0x469be2),_0x43e2fc();}function _0x434230(_0x4f9159,_0x2fc2c8){const _0xef70b=_0x31ca51;_0x2fc2c8&&(console[_0xef70b(0x230)](_0x2fc2c8,_0x2fc2c8[_0xef70b(0x19e)]),_0x4f9159+=':\x20'+_0x2fc2c8['message']);_0x4f9159+='\x0aMore\x20information\x20may\x20be\x20available\x20in\x20the\x20browser\x20console\x20or\x20contained\x20in\x20the\x20log.',_0x3374b8(_0x4f9159),_0x2dcebc=!![];try{Module['addRunDependency'](_0xef70b(0x230));}catch(_0x21a1df){window[_0xef70b(0x195)]();}}function _0x16c05b(_0x22ec7f,_0x1cc227){const _0x156be9=_0x31ca51;if(_0x2dcebc)return;let _0x3facc9=+Date[_0x156be9(0x184)]();if(_0x3facc9<_0x29ab1c+0x20&&_0x22ec7f<_0x1cc227&&_0x22ec7f>0x1)return;_0x29ab1c=_0x3facc9,_0x4a747b(),_0x20a95b(),_0x1cc227&&(_0x227f80[_0x156be9(0x227)]=_0x22ec7f,_0x227f80['max']=_0x1cc227,_0x227f80[_0x156be9(0x22f)][_0x156be9(0x1b5)]=_0x156be9(0x1cf)),_0x43e2fc();}window[_0x31ca51(0x1a5)]=_0x16c05b,Module['print']=_0x528e15,Module['printErr']=_0x528e15;typeof WebAssembly!==_0x31ca51(0x1a3)&&_0x434230(_0x31ca51(0x19a));typeof fetch!==_0x31ca51(0x21a)&&_0x434230(_0x31ca51(0x249));location['href'][_0x31ca51(0x232)](_0x31ca51(0x1ed))&&_0x434230(_0x31ca51(0x1aa));let _0x9dad14=document[_0x31ca51(0x18e)](_0x31ca51(0x1d3));window[_0x31ca51(0x191)]=![],window[_0x31ca51(0x1bc)]=![],_0x9dad14[_0x31ca51(0x203)](_0x31ca51(0x1f2),_0x53c7c0=>{const _0x32e71f=_0x31ca51;window[_0x32e71f(0x1bc)]=![],window[_0x32e71f(0x191)]=!![],_0x53c7c0[_0x32e71f(0x209)]();},![]),_0x9dad14[_0x31ca51(0x203)](_0x31ca51(0x23b),_0x721746=>{const _0x265ad1=_0x31ca51;window[_0x265ad1(0x191)]=![],window[_0x265ad1(0x1bc)]=!![];},![]),_0x9dad14[_0x31ca51(0x203)](_0x31ca51(0x1d4),function(_0x4f3a09){window['focus']();}),_0x9dad14['addEventListener'](_0x31ca51(0x1b0),function(_0x9ae51a){window['focus']();}),Module[_0x31ca51(0x1d3)]=_0x9dad14,window['presplashEnd']=()=>{const _0x51a284=_0x31ca51;_0x5d05b5[_0x51a284(0x243)](),_0x4a747b(),_0x383616();},window[_0x31ca51(0x1ab)]=()=>{const _0x5b4f68=_0x31ca51;_0x9dad14[_0x5b4f68(0x243)](),_0x434230(_0x5b4f68(0x211));},Module[_0x31ca51(0x246)]=()=>{const _0x4d7165=_0x31ca51;_0x9dad14[_0x4d7165(0x243)](),_0x434230(_0x4d7165(0x212));};function _0xa1cb54(){const _0x5d1d34=_0x31ca51;try{Module[_0x5d1d34(0x1da)](_0x5d1d34(0x1e6)),FS['mkdir'](_0x5d1d34(0x202)),FS[_0x5d1d34(0x1cb)](IDBFS,{},_0x5d1d34(0x202)),FS[_0x5d1d34(0x1b4)](!![],_0x29b672=>{const _0xcc0e14=_0x5d1d34;_0x29b672&&(_0x528e15(_0xcc0e14(0x22d)+_0x29b672),_0x528e15('The\x20game\x20may\x20not\x20be\x20able\x20to\x20save\x20properly.')),Module[_0xcc0e14(0x1e1)](_0xcc0e14(0x1e6));});}catch(_0x124d61){_0x434230(_0x5d1d34(0x194),_0x124d61);}}Module[_0x31ca51(0x214)][_0x31ca51(0x1ca)](_0xa1cb54);let _0x554ed2=0x0,_0x351407=0x0,_0x35d427=0x0,_0x568e77=0x0,_0x498743=![],_0x3c5e98=![];function _0x382d24(){const _0x38387b=_0x31ca51;if(_0x554ed2==0x0)return;if(_0x35d427<_0x554ed2||_0x351407==0x0){!_0x498743&&(_0x528e15(''),_0x528e15(_0x38387b(0x182)),_0x498743=!![]);_0x16c05b(_0x35d427,_0x554ed2);return;}!_0x3c5e98&&(_0x528e15(''),_0x528e15(_0x38387b(0x17d)),_0x3c5e98=!![]),_0x16c05b(_0x568e77,_0x351407);}Module[_0x31ca51(0x1ec)]=function(_0x59b724){const _0x238697=_0x31ca51;var _0x3529c3=_0x59b724[_0x238697(0x1fb)](/([^(]+)\((\d+(\.\d+)?)\/(\d+)\)/);if(_0x3529c3){_0x35d427=parseInt(_0x3529c3[0x2]),_0x554ed2=parseInt(_0x3529c3[0x4]),_0x382d24();return;}console[_0x238697(0x231)](_0x59b724);};async function _0x422812(){const _0x5ef031=_0x31ca51;try{let _0x17caf2=await fetch(window[_0x5ef031(0x1dd)]);!_0x17caf2['ok']&&_0x434230(_0x5ef031(0x1a1)+_0x17caf2[_0x5ef031(0x1dc)]+'\x20'+_0x17caf2[_0x5ef031(0x1d1)]);_0x351407=parseInt(_0x17caf2[_0x5ef031(0x1c5)]['get'](_0x5ef031(0x1fe)),0xa);if(Number[_0x5ef031(0x1fc)](_0x351407))_0x351407=0x0;let _0xbab2ca=await _0x17caf2[_0x5ef031(0x1ce)][_0x5ef031(0x219)](),_0x1c529b=FS[_0x5ef031(0x20b)]('/game.zip','w');while(!![]){let {done:_0x5034e8,value:_0x3540bf}=await _0xbab2ca['read']();if(_0x5034e8)break;FS[_0x5ef031(0x20a)](_0x1c529b,_0x3540bf,0x0,_0x3540bf['length']),_0x568e77+=_0x3540bf[_0x5ef031(0x181)],_0x382d24();}FS['close'](_0x1c529b);}catch(_0x35a157){_0x434230(_0x5ef031(0x224),_0x35a157);}}function _0x4fc970(){const _0x1484c7=_0x31ca51;Module[_0x1484c7(0x1da)]('loadGameZip'),_0x422812()['then'](()=>{const _0x24b38e=_0x1484c7;Module['removeRunDependency'](_0x24b38e(0x240));});}Module['preRun'][_0x31ca51(0x1ca)](_0x4fc970);let _0x3f5849=[],_0x4a2d7f=undefined,_0x445173=![];function _0x53c5a3(..._0x1cdcda){const _0x1ddf6c=_0x31ca51;if(_0x445173)console[_0x1ddf6c(0x19c)](..._0x1cdcda);}function _0x326c63(_0x31b01e){const _0x602fed=_0x31ca51;_0x53c5a3(_0x602fed(0x1d8),_0x31b01e);if(_0x4a2d7f===undefined){console['error'](_0x602fed(0x186),_0x31b01e);return;}try{if(_0x31b01e[_0x602fed(0x230)]!==undefined){_0x53c5a3(_0x602fed(0x1ac),_0x31b01e[_0x602fed(0x1f7)],_0x31b01e['error'],_0x31b01e['traceback']);const _0x47b3a9=new Error(_0x31b01e[_0x602fed(0x230)]);_0x47b3a9[_0x602fed(0x1f7)]=_0x31b01e[_0x602fed(0x1f7)],_0x47b3a9['traceback']=_0x31b01e[_0x602fed(0x1e2)],_0x4a2d7f[_0x602fed(0x1b3)](_0x47b3a9);}else _0x53c5a3(_0x602fed(0x22b),_0x31b01e[_0x602fed(0x1a2)]),_0x4a2d7f[_0x602fed(0x247)](_0x31b01e['data']);}finally{_0x4a2d7f=undefined,_0x11cf7d();}}window[_0x31ca51(0x21d)]=_0x326c63;function _0x11cf7d(){const _0x2b6615=_0x31ca51;if(_0x3f5849['length']==0x0)return;_0x4a2d7f=_0x3f5849[_0x2b6615(0x18d)](),_0x53c5a3(_0x2b6615(0x235),_0x4a2d7f);const _0x58d13d=btoa(_0x4a2d7f[_0x2b6615(0x18c)]),_0x3482e5='import\x20base64,\x20emscripten,\x20json,\x20traceback;\x0a'+'try:'+_0x2b6615(0x21b)+'exec(base64.b64decode(\x27'+_0x58d13d+'\x27).decode(\x27utf-8\x27));'+_0x2b6615(0x1e9)+'\x0a'+_0x2b6615(0x1c6)+_0x2b6615(0x1b9)+'\x0a'+_0x2b6615(0x1d9);_0x53c5a3(_0x3482e5),window[_0x2b6615(0x1eb)]=_0x3482e5;}function _0x12bded(_0x3b359a,_0x2e1d81,_0x5ef471){const _0x4950eb=_0x31ca51,_0x1c217a={'py_script':_0x3b359a,'resolve':_0x2e1d81,'reject':_0x5ef471};_0x53c5a3(_0x4950eb(0x20d),_0x1c217a),_0x3f5849[_0x4950eb(0x1ca)](_0x1c217a);if(_0x4a2d7f===undefined)_0x11cf7d();}renpy_exec=function(_0x25ddfb){return new Promise((_0x250d80,_0x5a448d)=>{_0x12bded(_0x25ddfb,_0x250d80,_0x5a448d);});},window[_0x31ca51(0x1cc)]=renpy_exec,renpy_get=function(_0x2ac13e){return new Promise((_0x585fa5,_0x36dc5d)=>{const _0x202a0e=_0x2b78;renpy_exec('result\x20=\x20'+_0x2ac13e)['then'](_0x585fa5)[_0x202a0e(0x197)](_0x36dc5d);});},window[_0x31ca51(0x1bb)]=renpy_get,renpy_set=function(_0x56e203,_0x233995,_0x5ac9d9){const _0x328e2d=_0x31ca51;let _0x1555ee;return _0x5ac9d9?_0x1555ee=_0x56e203+_0x328e2d(0x237)+_0x233995+_0x328e2d(0x1ef):_0x1555ee='import\x20base64,\x20json;\x20'+_0x56e203+_0x328e2d(0x210)+btoa(JSON['stringify'](_0x233995))+'\x27).decode(\x27utf-8\x27));\x20result\x20=\x20True',new Promise((_0xc21a1f,_0x3939b6)=>{const _0x675fb=_0x328e2d;renpy_exec(_0x1555ee)[_0x675fb(0x236)](_0xc21a1f)[_0x675fb(0x197)](_0x3939b6);});},window[_0x31ca51(0x1bf)]=renpy_set;const _0x3ba823=document[_0x31ca51(0x18e)]('ContextMenu'),_0xc4304a=document['getElementById'](_0x31ca51(0x1b2));document['getElementById']('ContextButton')[_0x31ca51(0x203)](_0x31ca51(0x1b0),function(_0x2e5ae1){const _0xeca70e=_0x31ca51;_0x3ba823[_0xeca70e(0x22f)]['display']==_0xeca70e(0x223)?(_0x3ba823[_0xeca70e(0x22f)]['display']=_0xeca70e(0x1cf),_0xc4304a[_0xeca70e(0x244)]['add'](_0xeca70e(0x1c3))):(_0x3ba823[_0xeca70e(0x22f)][_0xeca70e(0x1b5)]=_0xeca70e(0x223),_0xc4304a['classList']['remove'](_0xeca70e(0x1c3))),_0x2e5ae1[_0xeca70e(0x209)]();}),_0x3ba823[_0x31ca51(0x203)](_0x31ca51(0x1b0),function(_0xcb9680){const _0x6ee6d6=_0x31ca51;_0xcb9680[_0x6ee6d6(0x1d0)]['tagName']=='A'&&(_0x3ba823['style'][_0x6ee6d6(0x1b5)]='none');});async function _0x5ec744(_0x31616c){const _0x568a81=_0x31ca51;reader=new FileReader(),reader['onload']=function(_0x229bdb){const _0x5a48ba=_0x2b78;FS[_0x5a48ba(0x1f9)]('savegames.zip',new Uint8Array(_0x229bdb['target']['result'])),renpy_exec(_0x5a48ba(0x180))['then'](_0x1d1105=>{const _0x23f9f3=_0x5a48ba;FS[_0x23f9f3(0x1b4)](![],function(_0x270a14){const _0xf59ffe=_0x23f9f3;_0x270a14?(console['trace'](),console[_0xf59ffe(0x231)](_0x270a14,_0x270a14[_0xf59ffe(0x1d5)]),_0x528e15(_0xf59ffe(0x204)+_0x270a14[_0xf59ffe(0x1d5)])):renpy_exec('renpy.loadsave.location.scan()')[_0xf59ffe(0x236)](_0x15a5d9=>{const _0x5783c8=_0xf59ffe;_0x528e15(_0x5783c8(0x239));})[_0xf59ffe(0x197)](_0x1c40b8=>{const _0x1c11f0=_0xf59ffe;console[_0x1c11f0(0x230)](_0x1c11f0(0x1ad),_0x1c40b8),_0x528e15('Saves\x20imported\x20-\x20restart\x20game\x20to\x20apply.');});});})[_0x5a48ba(0x197)](_0x45ea93=>{const _0x104013=_0x5a48ba;console[_0x104013(0x230)](_0x104013(0x200),_0x45ea93),_0x528e15(_0x104013(0x213)+_0x45ea93['message']);});},reader[_0x568a81(0x23a)](_0x31616c[_0x568a81(0x1a8)][0x0]),_0x31616c['type']='',_0x31616c[_0x568a81(0x188)]='file';}window[_0x31ca51(0x220)]=_0x5ec744;function _0x33c7b1(){const _0x166e30=_0x31ca51;renpy_exec('result\x20=\x20renpy.savelocation.zip_saves()')[_0x166e30(0x236)](_0x562585=>{const _0x5d0806=_0x166e30;_0x562585&&(_0x230a4e('savegames.zip',_0x5d0806(0x19d)),_0x528e15(_0x5d0806(0x21f)));});}window[_0x31ca51(0x23f)]=_0x33c7b1;function _0x230a4e(_0x2b0579,_0x54818a){const _0x274e4c=_0x31ca51;console[_0x274e4c(0x231)]('download',_0x2b0579);var _0x24dcfd=document['createElement']('a');_0x24dcfd[_0x274e4c(0x1c9)]=_0x2b0579[_0x274e4c(0x242)](/.*\//,'');try{_0x24dcfd[_0x274e4c(0x1df)]=window[_0x274e4c(0x17e)]['createObjectURL'](new Blob([FS[_0x274e4c(0x1de)](_0x2b0579)],{'type':_0x54818a||''}));}catch(_0xa360d7){Module[_0x274e4c(0x21c)](_0x274e4c(0x20f)+_0x2b0579+'\x0a');return;}document[_0x274e4c(0x1ce)][_0x274e4c(0x1d2)](_0x24dcfd),_0x24dcfd['click'](),setTimeout(function(){const _0x201507=_0x274e4c;window[_0x201507(0x17e)][_0x201507(0x1a4)](_0x24dcfd['href']),document['body'][_0x201507(0x1b7)](_0x24dcfd);},0x3e8);}window[_0x31ca51(0x218)]=_0x230a4e;function _0x390ea8(){const _0xae2b90=_0x31ca51;try{navigator[_0xae2b90(0x1b6)][_0xae2b90(0x196)][_0xae2b90(0x17f)](['loadCache']);}catch(_0x20ef49){}async function _0x4f6fd8(){const _0x58596d=_0xae2b90;let _0x40062e=await fetch('pwa_catalog.json'),_0x266f7b=await _0x40062e['json'](),_0x3c7d47;try{let _0x50a7e9=await fetch(_0x58596d(0x1fd));_0x3c7d47=await _0x50a7e9['json']();}catch(_0x4892c4){console['log'](_0x58596d(0x20e)),_0x3c7d47={'version':-0x1};}if(_0x3c7d47[_0x58596d(0x1b8)]==_0x266f7b[_0x58596d(0x1b8)])return;_0x528e15(''),_0x528e15(_0x58596d(0x217)),_0x16c05b(0x0,_0x266f7b[_0x58596d(0x1a8)][_0x58596d(0x181)]);for(let _0x342fed=0x0;_0x342fed<_0x266f7b[_0x58596d(0x1a8)][_0x58596d(0x181)];_0x342fed++){let _0x5b44b0=await fetch(_0x266f7b[_0x58596d(0x1a8)][_0x342fed]);await _0x5b44b0[_0x58596d(0x1f6)](),_0x16c05b(_0x342fed+0x1,_0x266f7b[_0x58596d(0x1a8)][_0x58596d(0x181)]);}_0x4a747b(),_0x383616(),fetch('pwa_catalog.json?uncached');}_0x4f6fd8();}window[_0x31ca51(0x1c8)]=_0x390ea8;function _0xddadee(){const _0x2ece97=_0x31ca51;try{navigator[_0x2ece97(0x1b6)][_0x2ece97(0x196)][_0x2ece97(0x17f)]([_0x2ece97(0x18f)]);}catch(_0x130799){}localStorage[_0x2ece97(0x22c)]=-0x1;}window['clearCache']=_0xddadee;const _0x50bb39=document['getElementById'](_0x31ca51(0x22e)),_0x45fae1=document[_0x31ca51(0x18e)](_0x31ca51(0x225)),_0x2e18cb=document['getElementById'](_0x31ca51(0x189)),_0x2fa23c=document['getElementById'](_0x31ca51(0x17c));window['inputResult']=null;function _0x4915ba(_0x291e44){const _0x15d940=_0x31ca51;_0x291e44[_0x15d940(0x209)](),window[_0x15d940(0x1b1)]=_0x2fa23c[_0x15d940(0x227)];}_0x45fae1[_0x31ca51(0x203)]('submit',_0x4915ba),_0x50bb39[_0x31ca51(0x203)]('keydown',function(_0x3c9ddf){const _0x7a8d7=_0x31ca51;_0x3c9ddf[_0x7a8d7(0x1ea)]();}),_0x50bb39[_0x31ca51(0x203)](_0x31ca51(0x1f8),function(_0x174c88){const _0x37c2cf=_0x31ca51;_0x174c88[_0x37c2cf(0x1ea)]();}),_0x50bb39[_0x31ca51(0x203)](_0x31ca51(0x1c0),function(_0x428399){const _0xe246bb=_0x31ca51;_0x428399[_0xe246bb(0x1ea)]();}),_0x50bb39[_0x31ca51(0x203)](_0x31ca51(0x198),function(_0x3fd0fe){const _0x318392=_0x31ca51;_0x3fd0fe[_0x318392(0x1ea)]();}),_0x50bb39[_0x31ca51(0x203)](_0x31ca51(0x238),function(_0x4fc4cd){const _0x426378=_0x31ca51;_0x4fc4cd[_0x426378(0x1ea)]();}),_0x50bb39[_0x31ca51(0x203)](_0x31ca51(0x1f1),function(_0x5402b9){const _0x35ae9a=_0x31ca51;_0x5402b9[_0x35ae9a(0x1ea)]();}),_0x50bb39[_0x31ca51(0x203)]('touchstart',function(_0x3b1838){const _0x53d646=_0x31ca51;_0x3b1838[_0x53d646(0x1ea)]();}),_0x50bb39['addEventListener'](_0x31ca51(0x187),function(_0x14f17a){const _0xbf5ca8=_0x31ca51;_0x14f17a[_0xbf5ca8(0x1ea)]();}),_0x50bb39[_0x31ca51(0x203)](_0x31ca51(0x201),function(_0x523b45){_0x523b45['stopPropagation']();}),_0x50bb39[_0x31ca51(0x203)]('touchmove',function(_0x5f2b3a){const _0xb7dd44=_0x31ca51;_0x5f2b3a[_0xb7dd44(0x1ea)]();});let _0x5b925f=null,_0x4dd68e=null;_0x2fa23c[_0x31ca51(0x203)](_0x31ca51(0x1d7),_0x41def6=>{const _0x1bf9ee=_0x31ca51;let _0x289f71='';for(let _0x44d570 of _0x2fa23c[_0x1bf9ee(0x227)]){if(_0x5b925f&&!_0x5b925f[_0x1bf9ee(0x20c)](_0x44d570))continue;if(_0x4dd68e&&_0x4dd68e[_0x1bf9ee(0x20c)](_0x44d570))continue;_0x289f71+=_0x44d570;}if(_0x289f71!=_0x2fa23c[_0x1bf9ee(0x227)]){let _0x4dc4fd=_0x2fa23c[_0x1bf9ee(0x228)];_0x2fa23c[_0x1bf9ee(0x227)]=_0x289f71,_0x2fa23c[_0x1bf9ee(0x1e5)](_0x4dc4fd-0x1,_0x4dc4fd-0x1);}});function _0x18d60f(_0x15255a,_0x3431e1,_0x53f7e0,_0x3a568d,_0x55b031){const _0x232882=_0x31ca51;window[_0x232882(0x1b1)]=null,_0x50bb39[_0x232882(0x244)]['remove']('hidden'),_0x50bb39[_0x232882(0x244)][_0x232882(0x1fa)]('visible');while(_0x2e18cb[_0x232882(0x221)]){_0x2e18cb[_0x232882(0x1b7)](_0x2e18cb['firstChild']);}let _0x4c77c9=document[_0x232882(0x1f5)](_0x15255a);_0x2e18cb['appendChild'](_0x4c77c9),_0x2fa23c['value']=_0x3431e1,_0x2fa23c[_0x232882(0x229)](),_0x5b925f=_0x53f7e0,_0x4dd68e=_0x3a568d,_0x55b031?_0x2fa23c['type']=_0x232882(0x18b):_0x2fa23c[_0x232882(0x188)]=_0x232882(0x1c1);}window[_0x31ca51(0x1e7)]=_0x18d60f;function _0x3c1580(){const _0x520be2=_0x31ca51;_0x50bb39[_0x520be2(0x244)]['remove'](_0x520be2(0x18a)),_0x50bb39[_0x520be2(0x244)]['add'](_0x520be2(0x19f)),_0x2fa23c[_0x520be2(0x245)]();}window[_0x31ca51(0x216)]=_0x3c1580;let _0x5e60a7=0x1,_0x54fcda={};function _0x27aed0(_0x2863d2,_0x132f93,_0x298729,_0x34c587,_0x354b49,_0x1245db){const _0x433bf0=_0x31ca51;let _0x2d165a=_0x5e60a7++;_0x54fcda[_0x2d165a]=_0x433bf0(0x17b);_0x1245db?_0x1245db=JSON[_0x433bf0(0x1e3)](_0x1245db):_0x1245db={};_0x1245db={..._0x1245db};async function _0x4b1967(){const _0x29683d=_0x433bf0;try{let _0x5edbc8='';_0x298729&&(_0x1245db[_0x29683d(0x226)]=_0x354b49||_0x29683d(0x23c));let _0x48387a={'method':_0x2863d2,'headers':_0x1245db};_0x298729&&(_0x48387a[_0x29683d(0x1ce)]=FS[_0x29683d(0x1de)](_0x298729,{'encoding':_0x29683d(0x1ff)}));let _0x1e8ade=await fetch(_0x132f93,_0x48387a);if(_0x1e8ade['ok']){if(_0x34c587){let _0x37209e=await _0x1e8ade[_0x29683d(0x24e)]();FS[_0x29683d(0x1f9)](_0x34c587,new Uint8Array(_0x37209e));}_0x54fcda[_0x2d165a]=_0x29683d(0x1af)+_0x1e8ade[_0x29683d(0x1dc)]+'\x20'+_0x1e8ade['statusText'];}else _0x54fcda[_0x2d165a]='ERROR\x20'+_0x1e8ade[_0x29683d(0x1dc)]+'\x20'+_0x1e8ade['statusText'];}catch(_0x8274ce){_0x54fcda[_0x2d165a]=_0x29683d(0x1e0)+_0x8274ce,console[_0x29683d(0x230)](_0x8274ce);}}return _0x4b1967(),_0x2d165a;}function _0x55820b(_0x387c10){const _0x55d9e8=_0x31ca51;let _0x38a3e9=_0x54fcda[_0x387c10];return!_0x38a3e9['startsWith'](_0x55d9e8(0x21e))&&delete _0x54fcda[_0x387c10],_0x38a3e9||_0x55d9e8(0x248);}window[_0x31ca51(0x1ba)]=_0x27aed0,window[_0x31ca51(0x206)]=_0x55820b;let _0x365ee7=0x0;function _0x4ed671(){let _0x29a6d4=+new Date();return document['fullscreenElement']?0x1:0x0;}window[_0x31ca51(0x1a7)]=_0x4ed671;function _0x559764(_0x4f2e78){const _0x4d1fc3=_0x31ca51;let _0x4fdfa6=document[_0x4d1fc3(0x1cd)]!==null;if(_0x4f2e78==_0x4fdfa6)return;let _0x20e7f7=+new Date();if(_0x365ee7+0xfa>+new Date())return;_0x365ee7=_0x20e7f7,setTimeout(function(){const _0x31ea0a=_0x4d1fc3;if(_0x4f2e78){let _0x3a6875=document[_0x31ea0a(0x1ae)](_0x31ea0a(0x208))[0x0];_0x3a6875['requestFullscreen']()[_0x31ea0a(0x197)](function(_0x13dee8){_0x365ee7=_0x20e7f7+0x3a98;});}else document[_0x31ea0a(0x1a9)]();},0x0);}window[_0x31ca51(0x233)]=_0x559764;function _0x52b639(){const _0x2a81a3=_0x31ca51;_0x230a4e(_0x2a81a3(0x207),_0x2a81a3(0x23c));}window[_0x31ca51(0x1ee)]=_0x52b639;function _0x3394cf(){_0x40f71a=!![],renpy_exec('import\x20emscripten;\x20emscripten.TRACE\x20=\x20True');}window['traceSleep']=_0x3394cf;function _0x4e6c22(){const _0x10df03=_0x31ca51;let _0x494a09=_0x9dad14['getContext'](_0x10df03(0x1f4))[_0x10df03(0x23e)](_0x10df03(0x215));_0x494a09[_0x10df03(0x1a0)](),setTimeout(function(){const _0x164af8=_0x10df03;_0x494a09[_0x164af8(0x1bd)]();},0x3e8);}window[_0x31ca51(0x1a0)]=_0x4e6c22;let _0xe946e1=document[_0x31ca51(0x18e)](_0x31ca51(0x193));for(let _0x48dfea of[_0x31ca51(0x238),_0x31ca51(0x1f1),_0x31ca51(0x198)]){_0xe946e1[_0x31ca51(0x203)](_0x48dfea,function(_0x3aaee1){const _0x370fd5=_0x31ca51;_0x9dad14[_0x370fd5(0x24a)](new MouseEvent(_0x3aaee1[_0x370fd5(0x188)],_0x3aaee1)),_0x3aaee1[_0x370fd5(0x188)]==_0x370fd5(0x1f1)&&_0xe946e1['remove']();});};}()));function _0x2b78(_0x2feecc,_0x4b2163){const _0x291c21=_0x291c();return _0x2b78=function(_0x2b7800,_0x5d1fc2){_0x2b7800=_0x2b7800-0x17b;let _0xe7d54e=_0x291c21[_0x2b7800];return _0xe7d54e;},_0x2b78(_0x2feecc,_0x4b2163);}function _0x291c(){const _0x33ea3f=['This\x20browser\x20does\x20not\x20support\x20WebAssembly.','979SmrzMr','debug','application/zip','stack','hidden','loseContext','Could\x20not\x20load\x20game.zip:\x20','data','object','revokeObjectURL','progress','<br>','isFullscreen','files','exitFullscreen','This\x20browser\x20requires\x20the\x20game\x20to\x20be\x20run\x20from\x20a\x20web\x20server\x20(i.e.\x20double-clicking\x20on\x20index.html\x20won\x27t\x20work).','atExit','ERROR','Cannot\x20rescan\x20saves\x20folder:','getElementsByTagName','OK\x20','click','inputResult','ContextContainer','reject','syncfs','display','serviceWorker','removeChild','version','result\x20=\x20json.dumps(dict(error=str(e),\x20name=e.__class__.__name__,\x20traceback=traceback.format_exc()));','fetchFile','renpy_get','webglContextRestored','restoreContext','220bcKqOE','renpy_set','keypress','text','scrollTop','shown','split','headers','except\x20Exception\x20as\x20e:','statusProgress','loadCache','download','push','mount','renpy_exec','fullscreenElement','body','block','target','statusText','appendChild','canvas','mouseenter','message','24VsQDVn','input','cmd_callback','emscripten.run_script(\x27_renpy_cmd_callback(%s)\x27\x20%\x20(result,));','addRunDependency','statusTextDiv','status','gameZipURL','readFile','href','ERROR\x20','removeRunDependency','traceback','parse','&amp;','setSelectionRange','initFs','startInput','<br\x20/>','result\x20=\x20json.dumps(dict(data=result));','stopPropagation','_renpy_cmd','setStatus','file://','downloadBytecode',';\x20result\x20=\x20True','innerHTML','mouseup','webglcontextlost','3376364dAfRpT','webgl2','createTextNode','blob','name','keyup','writeFile','add','match','isNaN','pwa_catalog.json?cached','Content-Length','binary','Cannot\x20import\x20savegames','touchcancel','/home/web_user/.renpy','addEventListener','Warning:\x20cannot\x20import\x20savegames:\x20write\x20error:\x20','statusDiv','fetchFileResult','/game/cache/bytecode-311.rpyb','html','preventDefault','write','open','includes','add_cmd','No\x20cached\x20catalog\x20found.','Error\x20opening\x20','\x20=\x20json.loads(base64.b64decode(\x27','The\x20game\x20exited\x20unexpectedly.','The\x20game\x20aborted\x20unexpectedly.','Couldn\x27t\x20import\x20the\x20savegames:\x20','preRun','WEBGL_lose_context','endInput','Preloading\x20game\x20files\x20into\x20browser\x20cache...','FSDownload','getReader','function','result\x20=\x20None;','print','_renpy_cmd_callback','PENDING','Saves\x20exported\x20successfully.\x0a','onSavegamesImport','firstChild','&gt;','none','Could\x20not\x20download\x20game.zip','inputForm','Content-Type','value','selectionEnd','focus','falling\x20back\x20to\x20ArrayBuffer','SUCCESS','cacheVersion','Error\x20syncing\x20IDBFS:\x20','inputDiv','style','error','log','startsWith','setFullscreen','8vGkeIO','send_next_cmd','then','\x20=\x20','mousedown','Saves\x20imported\x20successfully.','readAsArrayBuffer','webglcontextrestored','application/octet-stream','30442GMecDk','getExtension','onSavegamesExport','loadGameZip','487644hOrMuo','replace','remove','classList','blur','onAbort','resolve','ERROR\x20Fetch\x20ID\x20not\x20found.','This\x20browser\x20does\x20not\x20support\x20fetch.','dispatchEvent','5529034tQUAuI','wasm\x20streaming\x20compile\x20failed','295616wdwrhj','arrayBuffer','PENDING\x20Fetch\x20in\x20progress.','inputText','Downloading\x20game\x20data...','URL','postMessage','result\x20=\x20renpy.savelocation.unzip_saves()','length','Downloading\x20engine...','warning:\x20','now','presplash','Unexpected\x20command\x20result','touchend','type','inputPrompt','visible','password','py_script','shift','getElementById','clearCache','1314690CDUbtE','webglContextLost','75ZprKmr','overlayDiv','Could\x20not\x20create\x20~/.renpy/','stop','controller','catch','mousemove','61434rZdrrC'];_0x291c=function(){return _0x33ea3f;};return _0x291c();}
+/*
+
+Copyright 2019-2021 Sylvain Beucler
+Copyright 2022 Teyut <teyut@free.fr>
+Copyright 2019-2022 Tom Rothamel <pytom@bishoujo.us>
+
+Permission is hereby granted, free of charge, to any person
+obtaining a copy of this software and associated documentation files
+(the "Software"), to deal in the Software without restriction,
+including without limitation the rights to use, copy, modify, merge,
+publish, distribute, sublicense, and/or sell copies of the Software,
+and to permit persons to whom the Software is furnished to do so,
+subject to the following conditions:
+
+The above copyright notice and this permission notice shall be
+included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+*/
+
+Module = window.Module || { };
+Module.preRun = Module.preRun || [ ];
+
+(function () {
+
+    /***************************************************************************
+     * Report messages, errors, and progress.
+     **************************************************************************/
+
+    // The div containing the status and progress bar.
+    let statusDiv = document.getElementById("statusDiv");
+    let statusTextDiv = document.getElementById("statusTextDiv");
+    let statusProgress = document.getElementById("statusProgress");
+
+    // Presplash block
+    let presplash = document.getElementById('presplash');
+
+    // The timeout before the status div hides itself.
+    let statusTimeout = null;
+
+    // The status message.
+    let statusText = "";
+
+    // How long before the status div starts hiding, in seconds.
+    const STATUS_TIMEOUT = 5000;
+
+    // The last time the progress was updated.
+    let lastProgressTime = 0;
+
+    // Has an error been reported?
+    let errorReported = false;
+
+    // Should output only go to the console?
+    let printConsoleOnly = false;
+
+    /**
+     * Hide the status div. Once it's hidden, clears the status text.
+     */
+    function hideStatus() {
+        if (errorReported) {
+            return;
+        }
+
+        statusDiv.classList.remove("visible");
+        statusDiv.classList.add("hidden");
+
+        statusTimeout = setTimeout(() => {
+            statusText = "";
+        }, 250);
+    }
+
+    /**
+     * Show the status div.
+     */
+    function showStatus() {
+        statusDiv.classList.remove("hidden");
+        statusDiv.classList.add("visible");
+        statusTextDiv.scrollTop = statusTextDiv.scrollHeight;
+        statusProgress.style.display = "none";
+    }
+
+    /**
+     * Cancels the timeout that hides the status div.
+     */
+    function cancelStatusTimeout() {
+        if (statusTimeout) {
+            clearTimeout(statusTimeout);
+            statusTimeout = null;
+        }
+    }
+
+    /**
+     * Start the timeout that hides the status div.
+     */
+    function startStatusTimeout() {
+        cancelStatusTimeout();
+        statusTimeout = setTimeout(hideStatus, STATUS_TIMEOUT);
+    }
+
+    function printCommon(s) {
+
+        cancelStatusTimeout();
+        lastProgressTime = 0;
+
+        if (statusText) {
+            statusText += "<br>";
+        }
+
+        if (s == "" && !errorReported) {
+            statusText = "";
+            return;
+        }
+
+        for (let i of s.split("\n")) {
+            if (i.length > 0) {
+                console.log(i);
+            }
+        }
+
+        if (printConsoleOnly) {
+            return;
+        }
+
+        s = String(s);
+        s = s.replace(/&/g, "&amp;");
+        s = s.replace(/</g, "&lt;");
+        s = s.replace(/>/g, "&gt;");
+        s = s.replace('\n', '<br />', 'g');
+
+        statusText += s;
+        statusTextDiv.innerHTML = statusText;
+
+        showStatus();
+    }
+
+    /**
+     * Reports a message that will eventually be hidden.
+     */
+    function printMessage(s) {
+
+        if (s.startsWith("warning: ") || s.startsWith("wasm streaming compile failed") || s.startsWith("falling back to ArrayBuffer") ) {
+            console.log(s);
+            return;
+        }
+
+        printCommon(s);
+        startStatusTimeout();
+    }
+
+    function reportError(s, e) {
+        if (e) {
+            console.error(e, e.stack);
+            s += ": " + e.message;
+        }
+
+        s += "\nMore information may be available in the browser console or contained in the log.";
+
+        printCommon(s);
+
+        errorReported = true;
+
+        try {
+            Module.addRunDependency("error");
+        } catch (e) {
+            window.stop();
+        }
+    }
+
+    /**
+     * Updates the progress bar.
+     */
+    function progress(done, total) {
+
+        if (errorReported) {
+            return;
+        }
+
+        let now = +Date.now();
+
+        if ((now < lastProgressTime + 32) && (done < total) && (done > 1)) {
+            return
+        }
+
+        lastProgressTime = now;
+
+        cancelStatusTimeout();
+        showStatus();
+
+        if (total) {
+            statusProgress.value = done;
+            statusProgress.max = total;
+            statusProgress.style.display = "block";
+        }
+
+        startStatusTimeout();
+
+    }
+
+    window.progress = progress;
+
+    Module.print = printMessage;
+    Module.printErr = printMessage;
+
+
+    /***************************************************************************
+     * Browser capability checks.
+     **************************************************************************/
+
+    // Report the lack of WebAssembly support.
+    if (typeof WebAssembly !== 'object') {
+        reportError("This browser does not support WebAssembly.");
+    }
+
+    // Report the lack of the fetch function.
+    if (typeof fetch !== 'function') {
+        reportError("This browser does not support fetch.");
+    }
+
+    // Clear error when running without a server.
+    if (location.href.startsWith('file://')) {
+        reportError("This browser requires the game to be run from a web server (i.e. double-clicking on index.html won't work).");
+    }
+
+
+    /***************************************************************************
+     * Emscripten initialization and termination.
+     **************************************************************************/
+
+    /** Set up the canvas. */
+    let canvas = document.getElementById('canvas');
+
+    /** Set when the webGlContext is lost. */
+    window.webglContextLost = false;
+
+    /** Set when the webGlContext is restored. Cleared by Ren'Py in core.py. */
+    window.webglContextRestored = false;
+
+    canvas.addEventListener("webglcontextlost", (e) => {
+        window.webglContextRestored = false;
+        window.webglContextLost = true;
+        e.preventDefault();
+    }, false);
+
+    canvas.addEventListener("webglcontextrestored", (e) => {
+        window.webglContextLost = false;
+        window.webglContextRestored = true;
+    }, false);
+
+
+    canvas.addEventListener('mouseenter', function (e) { window.focus() });
+
+    canvas.addEventListener('click', function (e) { window.focus() });
+
+    Module.canvas = canvas;
+
+    window.presplashEnd = () => {
+        presplash.remove();
+        cancelStatusTimeout();
+        hideStatus();
+    };
+
+    window.atExit = () => {
+        canvas.remove();
+        reportError("The game exited unexpectedly.");
+    };
+
+    Module.onAbort = () => {
+        canvas.remove();
+        reportError("The game aborted unexpectedly.");
+    };
+
+    /**
+     * Initialize the filesystem.
+     */
+    function initFs() {
+        // Create the save directory, and mount the IDBFS filesystem.
+        try {
+            Module.addRunDependency('initFs');
+            FS.mkdir('/home/web_user/.renpy');
+            FS.mount(IDBFS, {}, '/home/web_user/.renpy');
+            FS.syncfs(true, (err) => {
+                if (err) {
+                    printMessage("Error syncing IDBFS: " + err);
+                    printMessage("The game may not be able to save properly.");
+                }
+
+                Module.removeRunDependency('initFs');
+            });
+        } catch (e) {
+            reportError("Could not create ~/.renpy/", e);
+        }
+    }
+
+    Module.preRun.push(initFs);
+
+    // The size of the data and gamezip files.
+    let dataSize = 0;
+    let gameZipSize = 0;
+
+    // The number of bytes downloaded.
+    let dataDownloaded = 0;
+    let gameZipDownloaded = 0;
+
+    // Have we issued the data and gameZip prompts?
+    let dataPrompt = false;
+    let gameZipPrompt = false;
+
+    function updateDownloadProgress() {
+        if (dataSize == 0) {
+            return;
+        }
+
+        if (dataDownloaded < dataSize || gameZipSize == 0) {
+            if (!dataPrompt) {
+                printMessage("");
+                printMessage("Downloading engine...");
+                dataPrompt = true;
+            }
+
+            progress(dataDownloaded, dataSize);
+            return;
+        }
+
+        if (!gameZipPrompt) {
+            printMessage("");
+            printMessage("Downloading game data...");
+            gameZipPrompt = true;
+        }
+
+        progress(gameZipDownloaded, gameZipSize);
+
+    }
+
+    Module.setStatus = function (s) {
+
+        var m = s.match(/([^(]+)\((\d+(\.\d+)?)\/(\d+)\)/);
+
+        if (m) {
+            dataDownloaded = parseInt(m[2]);
+            dataSize = parseInt(m[4]);
+            updateDownloadProgress();
+            return;
+        }
+
+        console.log(s);
+    }
+
+    async function loadGameZip() {
+
+        try {
+            let response = await fetch(window.gameZipURL);
+
+            if (!response.ok) {
+                reportError("Could not load game.zip: " + response.status + " " + response.statusText);
+            }
+
+            gameZipSize = parseInt(response.headers.get('Content-Length'), 10);
+            if(Number.isNaN(gameZipSize)) gameZipSize = 0;
+
+            let reader = await response.body.getReader();
+
+            let f = FS.open('/game.zip', 'w');
+
+            while (true) {
+
+                let { done, value } = await reader.read();
+
+                if (done) {
+                    break;
+                }
+
+                FS.write(f, value, 0, value.length);
+                gameZipDownloaded += value.length;
+
+                updateDownloadProgress();
+            }
+
+            FS.close(f);
+
+        } catch (e) {
+            reportError("Could not download game.zip", e);
+        }
+    }
+
+    function runLoadGameZip() {
+        Module.addRunDependency('loadGameZip');
+
+        loadGameZip().then(() => {
+            Module.removeRunDependency('loadGameZip');
+        });
+
+    }
+
+    Module['preRun'].push(runLoadGameZip);
+
+    /***************************************************************************
+     *
+     **************************************************************************/
+
+    let cmd_queue = [];
+    let cur_cmd = undefined;
+    let cmd_debug = false;
+
+    function cmd_log(...args) {
+        if (cmd_debug) console.debug(...args);
+    }
+
+    /** This functions is called by the wrapper script at the end of script execution. */
+    function cmd_callback(result) {
+        cmd_log('cmd_callback', result);
+
+        if (cur_cmd === undefined) {
+            console.error('Unexpected command result', result);
+            return;
+        }
+
+        try {
+            if (result.error !== undefined) {
+                cmd_log('ERROR', result.name, result.error, result.traceback);
+                const e = new Error(result.error);
+                e.name = result.name;
+                e.traceback = result.traceback;
+                cur_cmd.reject(e);
+            } else {
+                cmd_log('SUCCESS', result.data);
+                cur_cmd.resolve(result.data);
+            }
+        } finally {
+            cur_cmd = undefined;
+            send_next_cmd();
+        }
+    }
+
+    window._renpy_cmd_callback = cmd_callback;
+
+    /** Prepare and send the next command to be executed if any. */
+    function send_next_cmd() {
+        if (cmd_queue.length == 0) return
+
+        cur_cmd = cmd_queue.shift();
+        cmd_log('send_next_cmd', cur_cmd);
+
+        // Convert script to base64 to prevent having to escape
+        // the script content as a Python string
+        const script_b64 = btoa(cur_cmd.py_script);
+        const wrapper = 'import base64, emscripten, json, traceback;\n'
+            + 'try:'
+            + "result = None;"
+            + "exec(base64.b64decode('" + script_b64 + "').decode('utf-8'));"
+            + "result = json.dumps(dict(data=result));"
+            + "\n"
+            + "except Exception as e:"
+            + "result = json.dumps(dict(error=str(e), name=e.__class__.__name__, traceback=traceback.format_exc()));"
+            + "\n"
+            + "emscripten.run_script('_renpy_cmd_callback(%s)' % (result,));";
+
+        cmd_log(wrapper);
+
+        // Write script to the global variable Ren'Py is monitoring
+        window._renpy_cmd = wrapper;
+    }
+
+    /** Add a command to the queue and execute it if the queue was empty. */
+    function add_cmd(py_script, resolve, reject) {
+        const cmd = { py_script: py_script, resolve: resolve, reject: reject };
+        cmd_log('add_cmd', cmd);
+        cmd_queue.push(cmd);
+
+        if (cur_cmd === undefined) send_next_cmd();
+    }
+
+    /* Global definitions */
+
+    /** Execute Python statements in Ren'Py Python's thread. The statements are executed
+     * using the renpy.python.py_exec() function, and the value of the "result" variable
+     * is passed to the resolve callback. In case of error, an Error instance is passed
+     * to the reject callback, with an extra "traceback" property.
+     * @param py_script The Python script to execute.
+     * @return A promise which resolves with the statements result.
+     */
+    renpy_exec = function (py_script) {
+        return new Promise((resolve, reject) => {
+            add_cmd(py_script, resolve, reject);
+        });
+    };
+
+    window.renpy_exec = renpy_exec;
+
+    /** Helper function to get the value of a Ren'Py variable.
+     * @param name The variable name (e.g., "build.name").
+     * @return A promise which resolves with the variable value.
+     */
+    renpy_get = function (name) {
+        return new Promise((resolve, reject) => {
+            renpy_exec('result = ' + name)
+                .then(resolve).catch(reject);
+        });
+    };
+
+    window.renpy_get = renpy_get;
+
+    /** Helper function to set the value of a Ren'Py variable.
+     * @param name The variable name (e.g., "build.name").
+     * @param value The value to set. It should either be a basic JS type that
+     *              will be converted to JSON, or a Python expression. The raw
+     *              parameter must be set to true for the latter case.
+     * @param raw (optional) If true, value is a valid Python expression.
+     *            Otherwise, it must be a basic JS type.
+     * @return A promise which resolves with true in case of success
+     *         and fails otherwise.
+     */
+    renpy_set = function (name, value, raw) {
+        let script;
+        if (raw) {
+            script = name + " = " + value + "; result = True";
+        } else {
+            // Using base64 as it is unclear if we can use the output
+            // of JSON.stringify() directly as a Python string
+            script = 'import base64, json; '
+                + name + " = json.loads(base64.b64decode('"
+                + btoa(JSON.stringify(value))
+                + "').decode('utf-8')); result = True";
+        }
+        return new Promise((resolve, reject) => {
+            renpy_exec(script)
+                .then(resolve).catch(reject);
+        });
+    };
+
+    window.renpy_set = renpy_set;
+
+
+    /***************************************************************************
+     * Context menu.
+     **************************************************************************/
+
+    const menu = document.getElementById('ContextMenu');
+
+    const contextContainer = document.getElementById('ContextContainer');
+
+    document.getElementById('ContextButton').addEventListener('click', function (e) {
+        if (menu.style.display == 'none') {
+            menu.style.display = 'block';
+            contextContainer.classList.add("shown");
+        } else {
+            menu.style.display = 'none';
+            contextContainer.classList.remove("shown");
+        }
+        e.preventDefault();
+    });
+
+    menu.addEventListener('click', function (e) {
+        if (e.target.tagName == 'A') {
+            // Close context menu when a menu item is selected
+            menu.style.display = 'none';
+        }
+    });
+
+    async function onSavegamesImport(input) {
+        reader = new FileReader();
+        reader.onload = function (e) {
+            FS.writeFile('savegames.zip', new Uint8Array(e.target.result));
+
+            renpy_exec('result = renpy.savelocation.unzip_saves()').then((result) => {
+                FS.syncfs(false, function (err) {
+                    if (err) {
+                        console.trace();
+                        console.log(err, err.message);
+                        printMessage("Warning: cannot import savegames: write error: " + err.message );
+                    } else {
+                        renpy_exec('renpy.loadsave.location.scan()').then(result => {
+                            printMessage("Saves imported successfully.");
+                        }).catch(error => {
+                            console.error('Cannot rescan saves folder:', error);
+                            printMessage("Saves imported - restart game to apply.");
+                        });
+                    }
+                });
+            }).catch(error => {
+                console.error('Cannot import savegames', error);
+                printMessage("Couldn't import the savegames: " + error.message);
+            })
+        }
+        reader.readAsArrayBuffer(input.files[0])
+        input.type = ''; input.type = 'file'; // reset field
+    }
+
+    window.onSavegamesImport = onSavegamesImport;
+
+    function onSavegamesExport() {
+        renpy_exec('result = renpy.savelocation.zip_saves()').then((ret) => {
+            if (ret) {
+                FSDownload('savegames.zip', 'application/zip');
+                printMessage("Saves exported successfully.\n");
+            }
+        });
+    }
+
+    window.onSavegamesExport = onSavegamesExport;
+
+    function FSDownload(filename, mimetype) {
+        console.log('download', filename);
+        var a = document.createElement('a');
+        a.download = filename.replace(/.*\//, '');
+        try {
+            a.href = window.URL.createObjectURL(new Blob([FS.readFile(filename)],
+                { type: mimetype || '' }));
+        } catch (e) {
+            Module.print("Error opening " + filename + "\n");
+            return;
+        }
+        document.body.appendChild(a);
+        a.click();
+
+        // delay clean-up to avoid iOS issue:
+        // The operation couldn’t be completed. (WebKitBlobResource error 1.)
+        setTimeout(function () {
+            window.URL.revokeObjectURL(a.href);
+            document.body.removeChild(a);
+        }, 1000);
+    }
+
+    window.FSDownload = FSDownload;
+
+    /***************************************************************************
+     * Precaching.
+     **************************************************************************/
+
+    function loadCache() {
+
+        try {
+            navigator.serviceWorker.controller.postMessage(["loadCache"]);
+        } catch (e) {
+            // pass
+        }
+
+        async function loadCacheWorker() {
+
+            let response = await fetch("pwa_catalog.json");
+            let catalog = await response.json();
+
+            let cachedCatalog;
+
+            try {
+                let cachedCatalogResponse = await fetch("pwa_catalog.json?cached")
+                cachedCatalog = await cachedCatalogResponse.json();
+            } catch (e) {
+                console.log("No cached catalog found.");
+                cachedCatalog = { version: -1 };
+            }
+
+            if (cachedCatalog.version == catalog.version) {
+                return;
+            }
+
+            printMessage("");
+            printMessage("Preloading game files into browser cache...")
+            progress(0, catalog.files.length);
+
+            for (let i = 0; i < catalog.files.length; i++) {
+                let response = await fetch(catalog.files[i]);
+                await response.blob();
+
+                progress(i + 1, catalog.files.length);
+            }
+
+            cancelStatusTimeout();
+            hideStatus();
+
+            // This will add the catalog to the cache, such that
+            // fetch("pwa_catalog.json?cached") will return it.
+            fetch("pwa_catalog.json?uncached");
+        }
+
+        loadCacheWorker();
+    }
+
+    window.loadCache = loadCache;
+
+    function clearCache() {
+        try {
+            navigator.serviceWorker.controller.postMessage(["clearCache"]);
+        } catch (e) {
+            // pass
+        }
+
+        localStorage.cacheVersion = -1;
+    }
+
+    window.clearCache = clearCache;
+
+    /***************************************************************************
+     * Text input.
+     **************************************************************************/
+
+    const inputDiv = document.getElementById("inputDiv");
+    const inputForm = document.getElementById("inputForm");
+    const inputPrompt = document.getElementById("inputPrompt");
+    const inputText = document.getElementById("inputText");
+
+    // This stores the input after enter is pressed.
+    window.inputResult = null;
+
+    function submitInput(e) {
+        e.preventDefault();
+        window.inputResult = inputText.value;
+    }
+
+    inputForm.addEventListener("submit", submitInput);
+
+    inputDiv.addEventListener("keydown", function (e) { e.stopPropagation(); });
+    inputDiv.addEventListener("keyup", function (e) { e.stopPropagation(); });
+    inputDiv.addEventListener("keypress", function (e) { e.stopPropagation(); });
+
+    inputDiv.addEventListener("mousemove", function (e) { e.stopPropagation(); });
+    inputDiv.addEventListener("mousedown", function (e) { e.stopPropagation(); });
+    inputDiv.addEventListener("mouseup", function (e) { e.stopPropagation(); });
+
+    inputDiv.addEventListener("touchstart", function (e) { e.stopPropagation(); });
+    inputDiv.addEventListener("touchend", function (e) { e.stopPropagation(); });
+    inputDiv.addEventListener("touchcancel", function (e) { e.stopPropagation(); });
+    inputDiv.addEventListener("touchmove", function (e) { e.stopPropagation(); });
+
+    let inputAllow = null;
+    let inputExclude = null;
+
+    inputText.addEventListener("input", (e) => {
+        let newValue = "";
+
+        for (let c of inputText.value) {
+            if (inputAllow && !inputAllow.includes(c)) {
+                continue;
+            }
+
+            if (inputExclude && inputExclude.includes(c)) {
+                continue;
+            }
+
+            newValue += c;
+        }
+
+        if (newValue != inputText.value) {
+            let end = inputText.selectionEnd;
+            inputText.value = newValue;
+            inputText.setSelectionRange(end-1, end-1);
+        }
+    });
+
+
+    function startInput(prompt, value, allow, exclude, mask) {
+        window.inputResult = null;
+
+        inputDiv.classList.remove("hidden");
+        inputDiv.classList.add("visible");
+
+        while (inputPrompt.firstChild) {
+            inputPrompt.removeChild(inputPrompt.firstChild);
+        }
+
+        let promptText = document.createTextNode(prompt);
+        inputPrompt.appendChild(promptText);
+
+        inputText.value = value;
+        inputText.focus();
+
+        inputAllow = allow;
+        inputExclude = exclude;
+
+        if (mask) {
+            inputText.type = "password";
+        } else {
+            inputText.type = "text";
+        }
+
+    }
+
+    window.startInput = startInput;
+
+    function endInput() {
+        inputDiv.classList.remove("visible");
+        inputDiv.classList.add("hidden");
+        inputText.blur();
+    }
+
+    window.endInput = endInput;
+
+    /***************************************************************************
+     * Fetch.
+     ***************************************************************************/
+
+    let fetchId = 1;
+    let fetchResult = { };
+
+    /**
+     * Fetch a file from the server.
+     *
+     * @param method The HTTP method to use.
+     * @param url The URL to fetch.
+     * @param inFile The file to send to the server. A string giving the file name, or null for no file.
+     * @param outFile The file to write the response to. A string giving the file name, or null for no file.
+     * @param inContentType The content type of the file to send to the server. A string giving the content type. Ignored if inFile is null.
+     * @param headers A string containing a JSON object that contains the headers to send to the server.
+     *
+     * @return A string giving the result of the fetch. The first word is the status, which is one of "OK", "ERROR", or "PENDING", followed by the HTTP status code and status text.
+     */
+    function fetchFile(method, url, inFile, outFile, inContentType, headers) {
+
+        let id = fetchId++;
+        fetchResult[id] = "PENDING Fetch in progress.";
+
+        // Ensure headers exists and is not a copy.
+        if (headers) {
+            headers = JSON.parse(headers)
+        } else {
+            headers = { };
+        }
+
+        headers = { ...headers };
+
+        async function fetchFileWork() {
+            try {
+
+                let content = ''
+
+                if (inFile) {
+                    headers["Content-Type"] = inContentType || 'application/octet-stream';
+                }
+
+                let options = { method: method, headers: headers};
+
+                if (inFile) {
+                    options.body = FS.readFile(inFile, { encoding: 'binary' });
+                }
+
+                let response = await fetch(url, options);
+
+                if (response.ok) {
+                    if (outFile) {
+                        let ab = await response.arrayBuffer();
+                        FS.writeFile(outFile, new Uint8Array(ab));
+                    }
+
+                    fetchResult[id] = "OK " + response.status + " " + response.statusText;
+                } else{
+                    fetchResult[id] = "ERROR " + response.status + " " + response.statusText;
+                }
+
+            } catch (err) {
+                fetchResult[id] = "ERROR " + err;
+                console.error(err);
+            }
+
+        }
+
+        fetchFileWork();
+
+        return id;
+    }
+
+    function fetchFileResult(id) {
+        let result = fetchResult[id];
+
+        if (! result.startsWith("PENDING")) {
+            delete fetchResult[id];
+        }
+
+        return result || "ERROR Fetch ID not found.";
+    }
+
+    window.fetchFile = fetchFile;
+    window.fetchFileResult = fetchFileResult;
+
+    /**
+     * Fullscreen support.
+     */
+
+    let lastFullscreenTime = 0;
+
+    function isFullscreen() {
+        let now = +new Date();
+        return document.fullscreenElement ? 1 : 0;
+    }
+
+    window.isFullscreen = isFullscreen;
+
+    function setFullscreen(enable) {
+
+        let current = document.fullscreenElement !== null;
+
+        if (enable == current) {
+            return;
+        }
+
+        let now = +new Date();
+
+        if (lastFullscreenTime + 250 > +new Date()) {
+            return;
+        }
+
+        lastFullscreenTime = now;
+
+        setTimeout(function () {
+            if (enable) {
+                let e = document.getElementsByTagName("html")[0];
+                e.requestFullscreen().catch(function (error) {
+                    lastFullscreenTime = now + 15000;
+                });
+            } else {
+                document.exitFullscreen();
+            }
+        }, 0);
+    }
+
+    window.setFullscreen = setFullscreen;
+
+    /***************************************************************************
+     * "Hidden" developer functions.
+     **************************************************************************/
+
+    function downloadBytecode() {
+        FSDownload('/game/cache/bytecode-311.rpyb', 'application/octet-stream');
+    }
+
+    window.downloadBytecode = downloadBytecode;
+
+    function traceSleep() {
+        printConsoleOnly = true;
+        renpy_exec('import emscripten; emscripten.TRACE = True')
+    }
+
+    window.traceSleep = traceSleep;
+
+    function loseContext() {
+        let e = canvas.getContext("webgl2").getExtension("WEBGL_lose_context");
+        e.loseContext();
+
+        setTimeout(function () {
+            e.restoreContext();
+        }, 1000);
+    }
+
+    window.loseContext = loseContext;
+
+
+    /***************************************************************************
+     * Overlay div handling.
+     **************************************************************************/
+
+    let overlayDiv = document.getElementById("overlayDiv");
+
+    for (let eventName of ["mousedown", "mouseup", "mousemove" ]) {
+        overlayDiv.addEventListener(eventName, function (e) {
+            canvas.dispatchEvent(new MouseEvent(e.type, e));
+
+            if (e.type == "mouseup") {
+                overlayDiv.remove();
+            }
+
+        });
+
+    };
+
+
+
+
+
+
+
+
+})();

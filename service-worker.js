@@ -1,1 +1,92 @@
-const _0x1e3ce6=_0x231c;function _0x270f(){const _0x13a324=['get','If-Modified-Since','skipWaiting','install','52SONcpb','596KmcQkN','replace','?uncached','ETag','6568480uUwKID','message','request','delete','data','activate','claim','1381933AUuiCU','Last-Modified','set','Not\x20found\x20in\x20cache:\x20','Cache\x20cleared\x20in\x20service\x20worker.','status','url','match','2164368qdGcSK','If-None-Match','24kAgfHG','respondWith','?cached','log','Served\x20from\x20cache:\x20','fetch','691608oxEowV','headers','727731kJsPZS','addEventListener','552Fvdmne','6615wOMDqi','clearCache','the-ghosts-of-the-wesenberg-quarter','put','Not\x20found\x20in\x20cache.'];_0x270f=function(){return _0x13a324;};return _0x270f();}(function(_0x5ce8dd,_0x5d262b){const _0x2dd94e=_0x231c,_0x3a1d7b=_0x5ce8dd();while(!![]){try{const _0x14411d=-parseInt(_0x2dd94e(0x1f8))/0x1*(parseInt(_0x2dd94e(0x203))/0x2)+parseInt(_0x2dd94e(0x1f4))/0x3+-parseInt(_0x2dd94e(0x202))/0x4*(parseInt(_0x2dd94e(0x1f9))/0x5)+parseInt(_0x2dd94e(0x216))/0x6+parseInt(_0x2dd94e(0x20e))/0x7+parseInt(_0x2dd94e(0x1ee))/0x8*(parseInt(_0x2dd94e(0x1f6))/0x9)+-parseInt(_0x2dd94e(0x207))/0xa;if(_0x14411d===_0x5d262b)break;else _0x3a1d7b['push'](_0x3a1d7b['shift']());}catch(_0x12866f){_0x3a1d7b['push'](_0x3a1d7b['shift']());}}}(_0x270f,0x2f0cd));function _0x231c(_0x1fd046,_0x59f070){const _0x270f1c=_0x270f();return _0x231c=function(_0x231c7e,_0x24edc3){_0x231c7e=_0x231c7e-0x1ee;let _0x10098c=_0x270f1c[_0x231c7e];return _0x10098c;},_0x231c(_0x1fd046,_0x59f070);}var cacheName=_0x1e3ce6(0x1fb);self[_0x1e3ce6(0x1f7)](_0x1e3ce6(0x201),function(_0xbc102a){const _0x598c1a=_0x1e3ce6;console[_0x598c1a(0x1f1)]('Service\x20worker\x20installed.'),self[_0x598c1a(0x200)]();}),self[_0x1e3ce6(0x1f7)](_0x1e3ce6(0x20c),function(_0x2f6394){const _0x25b813=_0x1e3ce6;return self['clients'][_0x25b813(0x20d)]();});let addToCache=![];async function fetchAndCache(_0x5e97c6){const _0x444190=_0x1e3ce6,_0x15a125=await caches['open'](cacheName),_0x3a28fd=await _0x15a125[_0x444190(0x215)](_0x5e97c6);try{if(_0x5e97c6[_0x444190(0x214)]['endsWith'](_0x444190(0x1f0))){_0x5e97c6=new Request(_0x5e97c6['url'][_0x444190(0x204)](_0x444190(0x1f0),_0x444190(0x205)),_0x5e97c6);let _0x58ffa5=await _0x15a125[_0x444190(0x215)](_0x5e97c6);return _0x58ffa5==null&&(_0x58ffa5=new Response(_0x444190(0x1fd),{'status':0x194,'statusText':_0x444190(0x1fd)})),_0x58ffa5;}_0x3a28fd&&(_0x3a28fd[_0x444190(0x1f5)][_0x444190(0x1fe)](_0x444190(0x20f))&&_0x5e97c6[_0x444190(0x1f5)][_0x444190(0x210)](_0x444190(0x1ff),_0x3a28fd[_0x444190(0x1f5)]['get'](_0x444190(0x20f))),_0x3a28fd[_0x444190(0x1f5)][_0x444190(0x1fe)]('ETag')&&_0x5e97c6[_0x444190(0x1f5)]['set'](_0x444190(0x217),_0x3a28fd[_0x444190(0x1f5)][_0x444190(0x1fe)](_0x444190(0x206))));const _0x580877=await fetch(_0x5e97c6);if(_0x3a28fd&&_0x580877[_0x444190(0x213)]==0x130)return _0x3a28fd;return addToCache&&_0x580877['status']==0xc8&&await _0x15a125[_0x444190(0x1fc)](_0x5e97c6,_0x580877['clone']()),_0x580877;}catch(_0x2d6f3d){if(_0x3a28fd)return console[_0x444190(0x1f1)](_0x444190(0x1f2)+_0x5e97c6[_0x444190(0x214)]),_0x3a28fd;console[_0x444190(0x1f1)](_0x444190(0x211)+_0x5e97c6[_0x444190(0x214)]);throw _0x2d6f3d;}}self['addEventListener'](_0x1e3ce6(0x1f3),function(_0x2442bb){const _0x320527=_0x1e3ce6;_0x2442bb[_0x320527(0x1ef)](fetchAndCache(_0x2442bb[_0x320527(0x209)]));}),self[_0x1e3ce6(0x1f7)](_0x1e3ce6(0x208),function(_0x1e119c){const _0x4b139f=_0x1e3ce6;if(_0x1e119c['data'][0x0]==_0x4b139f(0x1fa))caches[_0x4b139f(0x20a)](cacheName),console[_0x4b139f(0x1f1)](_0x4b139f(0x212)),addToCache=![];else _0x1e119c[_0x4b139f(0x20b)][0x0]=='loadCache'&&(addToCache=!![]);});
+var cacheName = 'the-ghosts-of-the-wesenberg-quarter';
+
+/* Start the service worker and cache all of the app's content or use the existing one */
+self.addEventListener('install', function (e) {
+    console.log('Service worker installed.');
+    self.skipWaiting();
+});
+
+self.addEventListener('activate', function (e) {
+    return self.clients.claim();
+});
+
+
+/**
+ * True if the service worker should add the request to a persistent cache.
+ */
+let addToCache = false;
+
+/**
+ * Serves the cached version of the request if it exists, otherwise fetches the
+ * request from the network and caches it. Fetch is used in the default mode,
+ * which will use the cache for most network requests, freshening the cache
+ * as required.
+ */
+async function fetchAndCache(request) {
+    const cache = await caches.open(cacheName);
+    const cachedResponse = await cache.match(request);
+
+
+    try {
+
+        if (request.url.endsWith("?cached")) {
+            request = new Request(request.url.replace("?cached", "?uncached"), request);
+            let rv = await cache.match(request);
+
+            if (rv == null) {
+                rv = new Response("Not found in cache.", { status: 404, statusText: "Not found in cache." });
+            }
+
+            return rv;
+        }
+
+        if (cachedResponse) {
+            if (cachedResponse.headers.get('Last-Modified')) {
+                request.headers.set('If-Modified-Since', cachedResponse.headers.get('Last-Modified'));
+            }
+            if (cachedResponse.headers.get('ETag')) {
+                request.headers.set('If-None-Match', cachedResponse.headers.get('ETag'));
+            }
+        }
+
+        const response = await fetch(request);
+
+        if (cachedResponse && response.status == 304) {
+            return cachedResponse;
+        }
+
+        if (addToCache && response.status == 200) {
+            await cache.put(request, response.clone());
+        }
+
+        return response;
+
+    } catch (e) {
+
+        if (cachedResponse) {
+            console.log('Served from cache: ' + request.url);
+            return cachedResponse;
+        }
+
+        console.log('Not found in cache: ' + request.url);
+
+        throw e;
+    }
+}
+
+
+/* Serve cached content when offline */
+self.addEventListener('fetch', function (e) {
+    e.respondWith(fetchAndCache(e.request));
+});
+
+self.addEventListener('message', function (e) {
+    if (e.data[0] == "clearCache") {
+        caches.delete(cacheName);
+        console.log("Cache cleared in service worker.");
+
+        addToCache = false;
+    } else if (e.data[0] == "loadCache") {
+        addToCache = true;
+    }
+});
