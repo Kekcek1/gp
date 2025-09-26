@@ -12,30 +12,28 @@ body {
 }
 
 .background-container {
-  position: relative; /* Или static, если не используется для позиционирования потомков */
-  /* УБРАТЬ background-image, background-size, background-position, background-repeat, background-attachment */
+  position: relative;
+  background-image: url('fon.webp');
+  background-size: cover;        /* Заполняет весь контейнер, сохраняя пропорции */
+  background-position: center;   /* Центрирует изображение */
+  background-repeat: no-repeat;  /* Не повторять */
+  background-attachment: fixed;  /* Опционально: создаёт эффект "параллакса" */
   min-height: 100vh;
   color: white;
   display: flex;
   flex-direction: column;
   padding: 20px;
-  /* УБРАТЬ overflow-x: hidden; если он был здесь для фона, т.к. фикс. фон вне контента */
 }
 
-/* Фоновое изображение - фиксированное */
 .background-container::before {
   content: '';
-  position: fixed; /* Фиксируем фон к окну браузера */
+  position: relative;
   top: 0;
   left: 0;
-  width: 100vw; /* Ширина окна просмотра */
-  height: 100vh; /* Высота окна просмотра */
-  background-image: url('fon.webp');
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  /* background-attachment больше не нужно */
-  z-index: -1; /* Позади содержимого и затемнения */
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.4); /* Затемнение */
+  z-index: -1;
 }
 
 header {
