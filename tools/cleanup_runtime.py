@@ -14,6 +14,8 @@ TARGETS = [
     ROOT / "game" / "cache",
     ROOT / "game" / "saves",
     ROOT / "log.txt",
+    ROOT / "traceback.txt",
+    ROOT / "errors.txt",
     ROOT / "game" / "gui" / "game_menu.png",
     ROOT / "game" / "gui" / "main_menu.png",
     ROOT / "game" / "gui" / "overlay" / "main_menu.png",
