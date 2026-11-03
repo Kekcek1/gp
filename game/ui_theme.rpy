@@ -238,7 +238,7 @@ style game_menu_label_text:
 
 style main_menu_frame:
     xsize 420
-    ysize 560
+    ysize 620
     xalign 1.0
     xoffset -60
     yalign 0.5
@@ -306,29 +306,29 @@ screen main_menu():
         # Thin graph-line accents that echo the chosen "Модерн Обводного" layout.
         add Solid("#8fe3ff55"):
             xpos 690
-            ypos 80
+            ypos 50
             xsize 110
             ysize 1
         add Solid("#8fe3ff55"):
             xpos 690
-            ypos 80
+            ypos 50
             xsize 1
             ysize 54
         add Solid("#8fe3ff55"):
             xpos 690
-            ypos 639
+            ypos 669
             xsize 110
             ysize 1
         add Solid("#8fe3ff55"):
             xpos 690
-            ypos 586
+            ypos 616
             xsize 1
             ysize 54
 
     frame:
         style "main_menu_frame"
         xsize (720 if compact_menu else 420)
-        ysize (640 if compact_menu else 560)
+        ysize (660 if compact_menu else 620)
         xalign (0.5 if compact_menu else 1.0)
         xoffset (0 if compact_menu else -60)
         yalign 0.5
