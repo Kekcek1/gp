@@ -1,4 +1,4 @@
-var cacheName = 'the-ghosts-of-the-wesenberg-quarter';
+var cacheName = 'призраки-везенбергского-квартала';
 
 /* Start the service worker and cache all of the app's content or use the existing one */
 self.addEventListener('install', function (e) {

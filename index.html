@@ -1,11 +1,12 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ru">
+
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
   <title>Призраки Везенбергского квартала</title>
-  <link rel="preload" href="fon.webp" as="image">
-  <link rel="stylesheet" href="styles.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="manifest" href="manifest.json" crossorigin="use-credentials" />
   <link rel="icon" href="icons/icon-72x72.png" sizes="72x72" type="image/png" />
   <link rel="icon" href="icons/icon-96x96.png" sizes="96x96" type="image/png" />
   <link rel="icon" href="icons/icon-128x128.png" sizes="128x128" type="image/png" />
@@ -23,44 +24,275 @@
   <link rel="apple-touch-icon" href="icons/icon-192x192.png" sizes="192x192" type="image/png" />
   <link rel="apple-touch-icon" href="icons/icon-384x384.png" sizes="384x384" type="image/png" />
   <link rel="apple-touch-icon" href="icons/icon-512x512.png" sizes="512x512" type="image/png" />
+
+  <meta name="theme-color" content="#070b14" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="mobile-web-app-capable" content="yes" />
+
+  <style>
+    html {
+      background: #444;
+      font-family: sans-serif;
+    }
+
+    body, html {
+      overscroll-behavior: none;
+    }
+
+    #canvas, #overlayDiv {
+      position: absolute;
+      top: 0px;
+      left: 0px;
+
+      width: 100%;
+      height: 100%;
+
+      border: 0 none;
+    }
+
+    #canvas {
+      background: #000;
+    }
+
+    .visible {
+      visibility: visible;
+      opacity: 1.0;
+      transition: opacity .1s linear;
+    }
+
+    .hidden {
+      visibility: hidden;
+      opacity: 0;
+      transition: visibility 0s .25s, opacity .25s linear;
+    }
+
+    #statusDiv, #inputDiv {
+      background: rgba(0, 0, 0, 0.75);
+      width: 50%;
+      margin: auto;
+      min-width: 340px;
+      padding: 10px;
+
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+
+      border-radius: 0 0 5px 5px;
+    }
+
+    #statusTextDiv {
+      overflow: auto;
+      max-height: 40vh;
+      color: #ccc;
+      font-size: 14px;
+    }
+
+    #statusProgress {
+      display: none;
+      width: 100%;
+    }
+
+    #inputDiv {
+      width: 65%;
+      padding-left: 10px;
+      padding-right: 20px;
+    }
+
+    #inputPrompt {
+      color: #eee;
+      font-size: 150%;
+      margin-bottom: 1em;
+      margin-top: 1em;
+
+    }
+
+    #inputText {
+      width: 100%;
+      font-size: 175%;
+      padding: 5px;
+      background: inherit;
+      color: #eee;
+    }
+
+    #inputText:focus {
+      color: #ffffff;
+    }
+
+    #ContextContainer {
+      position: absolute;
+      left: 0px;
+      top: 0px;
+      color: white;
+    }
+
+    #ContextContainer.shown {
+      background: rgba(0, 0, 0, 0.5);
+      border-radius: 0px 0px 5px 0px;
+    }
+
+    #ContextButton {
+      text-decoration: none;
+      color: lightgrey;
+      font-size: xx-large;
+      cursor: pointer;
+      user-select: none;
+      -moz-user-select: none;
+      padding: 10px 10px;
+      opacity: .75;
+    }
+
+    #ContextButton:focus {
+      outline: none;
+      color: #ffffff;
+      opacity: 1.0;
+    }
+
+    #ContextMenu a {
+      text-decoration: none;
+      color: lightgrey;
+      background: #444;
+      height: 48px;
+      width: 250px;
+      border-radius: 5px;
+      border: 1px solid lightgrey;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 5px 5px;
+      opacity: 1.0;
+    }
+
+    #ContextMenu a:hover {
+      text-decoration: none;
+      background: #666666;
+      color: #ffffff
+    }
+
+    #presplash {
+        position: absolute;
+        top: 0;
+        left: 0;
+        display: block;
+        margin: auto;
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+    }
+
+  </style>
+
+
+    <style id="work-novela-responsive">
+      html, body { background: #070b14; }
+      #canvas { touch-action: none; }
+      #rotate-overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        z-index: 99999;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        color: #f2f7ff;
+        background: radial-gradient(circle at 50% 35%, #162948 0%, #070b14 72%);
+        font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+        padding: 24px;
+      }
+      #rotate-overlay .card {
+        max-width: 440px;
+        padding: 28px 24px;
+        border: 1px solid #2c4b74;
+        border-radius: 20px;
+        background: rgba(9, 18, 33, 0.88);
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.45);
+      }
+      #rotate-overlay .phone {
+        width: 58px;
+        height: 100px;
+        margin: 0 auto 18px;
+        border: 3px solid #9fd8ff;
+        border-radius: 12px;
+        transform: rotate(90deg);
+        animation: rotate-hint 2.2s ease-in-out infinite;
+      }
+      #rotate-overlay h1 {
+        margin: 0 0 8px;
+        font-size: 24px;
+        font-weight: 650;
+        letter-spacing: 0.2px;
+      }
+      #rotate-overlay p {
+        margin: 0;
+        color: #b9c9de;
+        font-size: 15px;
+        line-height: 1.45;
+      }
+      @keyframes rotate-hint {
+        0%, 20% { transform: rotate(90deg); }
+        55%, 100% { transform: rotate(0deg); }
+      }
+      @media (orientation: portrait) and (max-width: 1100px) {
+        #rotate-overlay { display: flex; }
+      }
+    </style>
 </head>
+
 <body>
-  <div class="background-container">
-    <header>
-      <a href="https://lermontovka-spb.ru/" class="back-btn" aria-label="Назад на сайт">← Назад на сайт</a>
-    </header>
+  <canvas id="canvas" oncontextmenu="event.preventDefault()" tabindex=-1></canvas>
+  <div id="overlayDiv"></div>
 
-    <main class="game-content">
-      <h1>Игра в жанре визуальной новеллы<br>«Призраки Везенбергского квартала»</h1>
+  <img id="presplash" src="web-presplash.jpg">
 
-      <!-- APK-блок (появляется только на Android) -->
-      <div id="apk-section" class="apk-section">
-        <a href="the.ghosts.of.the.wesenberg.quarter.apk" class="btn apk-btn">Скачать APK для Android</a>
-      </div>
+  <div id="ContextContainer">
+    <a id="ContextButton">&#8801;</a><br />
+    <div id="ContextMenu" style="display: none;">
+      <input id="ID_SavegamesImport" type="file" onchange="onSavegamesImport(this)" accept="application/zip"
+        style=display:none></input>
+      <a href="javascript:document.getElementById('ID_SavegamesImport').click();">Import Saves</a>
+      <a href="javascript:onSavegamesExport();">Export Saves</a>
+      <a href="javascript:FSDownload('/log.txt', 'text/plain');">Download Log</a>
+      <a href="https://www.renpy.org/" target="_blank">
+          Powered by Ren'Py
+      </a>
+      </span>
+    </div>
+  </div>
 
-      <div class="game-description">
-        <p>Санкт-Петербург полон легенд и призраков, о которых мы порой даже не подозреваем! Однажды на улице Шкапина, в библиотеке им. К.А. Тимирязева начали происходить странные события – куда-то исчезли библиотекари, квартал вокруг окутал туман. И только ты, наш друг, можешь сразиться с призраками ближайших домов, посетить исторические здания, разгадать все загадки потустороннего мира, познакомиться с реальными историческими личностями и, возможно, даже подружиться с ними.</p>
+  <div id="statusDiv" class="hidden">
+    <div id="statusTextDiv"></div>
+    <progress id="statusProgress" value="0" max="100"></progress>
+  </div>
 
-        <p>Визуальная новелла «Призраки Везенбергского квартала» расскажет вам некоторые легенды территории у Обводного канала, где располагается библиотека им. К.А. Тимирязева. Многие рассказы основаны на реальных исторических событиях, но это все же художественное произведение, иногда намеренно отступающее от реальных фактов.</p>
-
-        <p>В некоторые моменты истории будут случаться развилки, необходимо будет сделать выбор, который может привести вас на разные пути развития истории. Какой будет финал, зависит только от вас и от того, что вам ближе – мир призраков или мир яви. Для атмосферного прохождения советуем включить звук.</p>
-
-        <p>Игра полностью бесплатная, вы можете проходить ее как с компьютера, так и с мобильных устройств. Удачи, встретимся в Везенбергском квартале!</p>
-
-        <p class="age-rating">16+</p>
-      </div>
-
-      <a href="play.html" class="btn play-btn">Играть</a>
-    </main>
+  <div id="inputDiv" class="hidden">
+    <form id="inputForm">
+      <div id="inputPrompt"></div>
+      <input id="inputText" type="text">
+    </form>
   </div>
 
   <script>
-    // Показываем APK-секцию только на Android
-    if (/Android/i.test(navigator.userAgent)) {
-      document.getElementById('apk-section').style.display = 'block';
-    } else {
-      document.getElementById('apk-section').style.display = 'none';
-    }
+      // The URL to game.zip, relative to the URL of this file.
+      window.gameZipURL = 'game.zip';
+
+      // Register the service worker.
+      if (navigator.serviceWorker) {
+          if (!navigator.serviceWorker.controller) {
+              navigator.serviceWorker.register('./service-worker.js', { updateViaCache: 'all' });
+          }
+      }
   </script>
+  <script src="renpy-pre.js"></script>
+  <script async type="text/javascript" src="renpy.js"></script>
+
+  <div id="rotate-overlay" role="status" aria-live="polite">
+    <div class="card">
+      <div class="phone" aria-hidden="true"></div>
+      <h1>Поверните устройство</h1>
+      <p>Игра рассчитана на горизонтальный экран. Поверните телефон или планшет, чтобы интерфейс и текст были крупными и читаемыми.</p>
+    </div>
+  </div>
 </body>
+
 </html>

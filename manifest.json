@@ -98,11 +98,20 @@
       "purpose": "maskable"
     }
   ],
-  "lang": "ru-RU",
-  "start_url": "./play.html?homescreen=1",
+  "lang": "ru",
+  "start_url": "./index.html",
   "display": "standalone",
-  "background_color": "black",
-  "theme_color": "black",
+  "background_color": "#070b14",
+  "theme_color": "#070b14",
+  "launch_handler": {
+    "route_to": "existing-client",
+    "navigate_existing_client": "always"
+  },
   "orientation": "landscape",
-  "scope": "./"
+  "display_override": [
+    "fullscreen",
+    "minimal-ui"
+  ],
+  "short_name": "Призраки",
+  "description": "Визуальная новелла о призраках Везенбергского квартала."
 }
