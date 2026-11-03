@@ -328,7 +328,7 @@ screen main_menu():
     frame:
         style "main_menu_frame"
         xsize (720 if compact_menu else 420)
-        ysize (660 if compact_menu else 620)
+        ysize (680 if compact_menu else 620)
         xalign (0.5 if compact_menu else 1.0)
         xoffset (0 if compact_menu else -60)
         yalign 0.5
