@@ -2,6 +2,7 @@
 
 Визуальная новелла на Ren'Py 8.5. Пять серий, 112 меток, 91 меню, 2 916
 реплик и три финала. Сюжет оригинала сохранён; изменена только орфография.
+Звук по умолчанию — 50%.
 
 ## Где игра
 
@@ -94,6 +95,11 @@ dist\android\GhostsOfWesenberg-2.0.0.apk
 - Аудит: 642 изображения, 98 групп точных дублей, 131 группа похожих;
   runtime-контент дедуплицирован. Отчёт: `G:\NewWorkNovel\docs\audit\DUPLICATES.md`.
 
+## Интерфейс
+
+Пять вариантов редизайна: `https://kekcek1.github.io/gp/concepts/`.
+Выберите номер в чате — после выбора весь UI будет перерисован под этот стиль.
+
 ## Сценарий
 
 - `G:\NewWorkNovel\docs\script\SCENARIO_FULL.txt` — весь сценарий одним файлом.
@@ -113,8 +119,11 @@ python tools\build_all.py --all
 
 - Репозиторий: `https://github.com/Kekcek1/gp`
 - Сайт: `https://kekcek1.github.io/gp/`
-- Ветка `main` — готовая веб-сборка для GitHub Pages.
-- Ветка `source` — исходники Ren'Py-проекта.
+- Игра: `https://kekcek1.github.io/gp/play/`
+- 5 стилей: `https://kekcek1.github.io/gp/concepts/`
+- Релизы APK/EXE/Web: `https://github.com/Kekcek1/gp/releases/latest`
+- Ветка `main` — лендинг и игра в `/play/` для GitHub Pages.
+- Ветка `source` — исходники Ren'Py-проекта и инструменты.
 
 ## Ограничения
 
