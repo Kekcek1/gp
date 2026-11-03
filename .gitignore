@@ -1,0 +1,25 @@
+﻿# Ren'Py runtime artifacts
+game/saves/
+game/cache/
+game/*.rpyc
+game/chapters/*.rpyc
+log.txt
+errors.txt
+traceback.txt
+
+# Builds and heavy local tooling
+dist/
+tools/pylibs/
+tools/languagetool/
+__pycache__/
+*.pyc
+
+# OS
+Thumbs.db
+desktop.ini
+
+# Secrets
+*.keystore
+*.jks
+*.pem
+

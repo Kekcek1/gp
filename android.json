@@ -1,0 +1,23 @@
+{
+    "expansion": false,
+    "google_play_key": null,
+    "google_play_salt": null,
+    "heap_size": "3",
+    "icon_name": "\u041f\u0440\u0438\u0437\u0440\u0430\u043a\u0438 \u0412\u0435\u0437\u0435\u043d\u0431\u0435\u0440\u0433\u0441\u043a\u043e\u0433\u043e \u043a\u0432\u0430\u0440\u0442\u0430\u043b\u0430",
+    "include_pil": false,
+    "include_sqlite": false,
+    "layout": null,
+    "name": "\u041f\u0440\u0438\u0437\u0440\u0430\u043a\u0438 \u0412\u0435\u0437\u0435\u043d\u0431\u0435\u0440\u0433\u0441\u043a\u043e\u0433\u043e \u043a\u0432\u0430\u0440\u0442\u0430\u043b\u0430",
+    "numeric_version": 1,
+    "orientation": "sensorLandscape",
+    "package": "ru.wezenberg.ghosts",
+    "permissions": [
+        "VIBRATE"
+    ],
+    "source": false,
+    "store": "none",
+    "update_always": true,
+    "update_icons": true,
+    "update_keystores": true,
+    "version": "2.0.0"
+}
