@@ -316,7 +316,7 @@ h1 span {
 }
 
 .float-card-top { top: -4px; right: -8px; transform: rotate(-2deg); }
-.float-card-bottom { bottom: 2px; left: -10px; transform: rotate(1.5deg); }
+.float-card-bottom { bottom: 2px; right: -10px; left: auto; transform: rotate(1.5deg); }
 
 .section {
   max-width: var(--max);
@@ -591,7 +591,7 @@ h2 {
   .footer { grid-template-columns: 1fr; }
   .footer-note { text-align: left; white-space: normal; }
   .float-card-top { top: -14px; right: 0; }
-  .float-card-bottom { left: 0; bottom: -10px; }
+  .float-card-bottom { right: 0; left: auto; bottom: -10px; }
 }
 
 @media (max-width: 520px) {
@@ -600,9 +600,9 @@ h2 {
   .hero-art { padding: 8px 8px 28px; }
   .section { padding-left: 16px; padding-right: 16px; }
   .stats div { padding: 11px 12px; }
-  .topnav { gap: 8px; }
-  .topnav a:not(.nav-play) { display: none; }
-  .topnav { justify-content: flex-end; }
+  .topnav { gap: 8px 14px; flex-wrap: wrap; justify-content: flex-start; padding-bottom: 4px; }
+  .topnav a:not(.nav-play) { display: inline-flex; font-size: 12px; }
+  .nav-play { margin-left: auto; }
   .footer { padding-left: 16px; padding-right: 16px; }
 }
 
