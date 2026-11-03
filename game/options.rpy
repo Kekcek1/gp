@@ -34,6 +34,7 @@ define config.has_voice = True
 define config.main_menu_music = "audio/name.mp3"
 define config.default_music_volume = 0.5
 define config.default_sfx_volume = 0.5
+define config.default_voice_volume = 0.5
 define config.enter_transition = dissolve
 define config.exit_transition = dissolve
 define config.intra_transition = dissolve

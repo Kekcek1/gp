@@ -71,52 +71,6 @@ define characterPrd = Character("Продавец", color="#ffffff")
 define characterCir = Character("Цирюльник", color="#ffffff")
 define characterVois = Character("Голос", color="#ffffff")
 
-init:
-    define show_stats_details = False
-
-init python:
-    def toggle_stats_details():
-        global show_stats_details
-        show_stats_details = not show_stats_details
-        renpy.restart_interaction()
-
-    def change_stat(stat_name, delta):
-        current_value = getattr(store, stat_name)
-        new_value = max(0, current_value + delta)
-        setattr(store, stat_name, new_value)
-        renpy.restart_interaction()
-
-style stats_toggle_button_text:
-    size 23
-    color "#ffffff"
-    outlines [(1, "#000000", 0, 0)]
-
-screen main_stats_display():
-    zorder 100
-    frame:
-        xpos 10
-        ypos 5
-        background None
-        padding (10, 10)
-
-        hbox:
-            spacing 20
-            vbox:
-                spacing 5
-                text "Призрак [ghost]" size 24 color "#ffffff" outlines [(1, "#000000", 0, 0)]
-
-            vbox:
-                spacing 5
-                text "Явь [reality]" size 24 color "#ffffff" outlines [(1, "#000000", 0, 0)]
-
-            vbox:
-                $ total_books = book_lermnt + book_canal + book_coi + book_misticPeter + book_promish + book_rest
-                spacing 5
-                text "Книг [total_books]" size 24 color "#ffffff" outlines [(1, "#000000", 0, 0)]
-
-init python:
-    config.overlay_screens.append("main_stats_display")
-
 screen choice_timer(duration):
     default time_left = duration
     timer 0.1 repeat True action If(time_left > 0,
@@ -360,13 +314,4 @@ define name = "audio/name.mp3"
 define office = "audio/office.mp3"
 define titleMaster = "audio/titlemaster.mp3"
 define untitledMaster = "audio/untitledmaster.mp3"
-define ghost = "audio/ghost.mp3"
 
-# Метаданные серий: используются экраном «Серии» и сборкой.
-define series_info = [
-    {"number": 1, "title": "Межмирье", "label": "scene1", "image": "images/series/1_seria.webp"},
-    {"number": 2, "title": "Бал призраков", "label": "scene16", "image": "images/series/2_seria.webp"},
-    {"number": 3, "title": "Голос из омута", "label": "scene26", "image": "images/series/3_seria.webp"},
-    {"number": 4, "title": "Призраки предприятий", "label": "scene37", "image": "images/series/4_seria.webp"},
-    {"number": 5, "title": "Есть ли путь домой?", "label": "scene39", "image": "images/series/5_seria.webp"},
-]

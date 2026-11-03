@@ -1,5 +1,9 @@
-# Дополнительный интерфейс: галерея серий и компактный счётчик.
+# Дополнительный интерфейс: компактный счётчик ресурсов.
 # Файл подключается после 00_definitions.rpy и переопределяет оверлей.
+
+init python:
+    config.overlay_screens.append("main_stats_display")
+
 
 screen main_stats_display():
     zorder 100
@@ -7,36 +11,13 @@ screen main_stats_display():
         frame:
             xpos 24
             ypos 14
-            background "#00000088"
-            padding (14, 8)
+            background Frame("gui/panel.png", Borders(20, 20, 20, 20), tile=False)
+            padding (18, 8, 22, 8)
             hbox:
-                spacing 22
-                text "Призрак: [ghost]" size 24 color "#ffffff" outlines [(1, "#000000", 0, 0)]
-                text "Явь: [reality]" size 24 color "#ffffff" outlines [(1, "#000000", 0, 0)]
+                spacing 10
+                text "{color=#8fe3ff}ПРИЗРАК{/color} [ghost]" size 19 color "#f2f8ff" kerning 1
+                text "·" size 19 color "#5f8ba3"
+                text "{color=#8fe3ff}ЯВЬ{/color} [reality]" size 19 color "#f2f8ff" kerning 1
                 $ total_books = book_lermnt + book_canal + book_coi + book_misticPeter + book_promish + book_rest
-                text "Книги: [total_books]" size 24 color "#ffffff" outlines [(1, "#000000", 0, 0)]
-
-
-screen series_gallery():
-    tag menu
-    use game_menu(_("Серии"), scroll="viewport"):
-        vbox:
-            spacing 26
-            text "Пять серий одной истории. Все материалы собраны в папке materials/series.":
-                size 24
-                color "#d8d8d8"
-
-            for item in series_info:
-                vbox:
-                    spacing 8
-                    add item["image"]:
-                        size (720, 405)
-                        fit "contain"
-                    $ caption = "Серия %d. %s" % (item["number"], item["title"])
-                    text caption:
-                        size 30
-                        bold True
-                        color "#ffffff"
-                    text "Начало: label %s" % item["label"]:
-                        size 19
-                        color "#9fc9d8"
+                text "·" size 19 color "#5f8ba3"
+                text "{color=#8fe3ff}КНИГИ{/color} [total_books]" size 19 color "#f2f8ff" kerning 1

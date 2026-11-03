@@ -181,8 +181,8 @@ screen quick_menu():
 
         hbox:
             style_prefix "quick"
-            xalign 0.99
-            yalign 0.984
+            xalign 0.985
+            ypos 18
             textbutton _("Опции") action ShowMenu('preferences')
 
 init python:
@@ -560,39 +560,56 @@ screen preferences():
 
     use game_menu(_("Настройки"), scroll="viewport"):
 
-        vbox:
+        hbox:
+            spacing 64
 
-            hbox:
-                box_wrap True
+            vbox:
+                xsize 400
 
                 if renpy.variant("pc") or renpy.variant("web"):
-
                     vbox:
                         style_prefix "radio"
                         label _("Режим экрана")
                         textbutton _("Оконный") action Preference("display", "window")
                         textbutton _("Полный") action Preference("display", "fullscreen")
 
-            null height (4 * gui.pref_spacing)
-
-            hbox:
-                style_prefix "slider"
-                box_wrap True
+                    null height (2 * gui.pref_spacing)
 
                 vbox:
+                    style_prefix "slider"
+                    label _("Скорость текста")
 
-                    if config.has_music:
-                        label _("Громкость музыки")
+                    hbox:
+                        bar value Preference("text speed")
 
-                        hbox:
-                            bar value Preference("music volume")
+                null height (2 * gui.pref_spacing)
 
-                    if config.has_music or config.has_sound or config.has_voice:
-                        null height gui.pref_spacing
+                if config.has_music or config.has_sound or config.has_voice:
+                    textbutton _("Без звука"):
+                        action Preference("all mute", "toggle")
+                        style "mute_all_button"
 
-                        textbutton _("Без звука"):
-                            action Preference("all mute", "toggle")
-                            style "mute_all_button"
+            vbox:
+                xsize 400
+                style_prefix "slider"
+
+                if config.has_music:
+                    label _("Громкость музыки")
+
+                    hbox:
+                        bar value Preference("music volume")
+
+                if config.has_sound:
+                    label _("Громкость звуков")
+
+                    hbox:
+                        bar value Preference("sound volume")
+
+                if config.has_voice:
+                    label _("Громкость голоса")
+
+                    hbox:
+                        bar value Preference("voice volume")
 
 
 style pref_label is gui_label
