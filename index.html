@@ -1,66 +1,257 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Призраки Везенбергского квартала</title>
-  <link rel="preload" href="fon.webp" as="image">
-  <link rel="stylesheet" href="styles.css" />
-  <link rel="icon" href="icons/icon-72x72.png" sizes="72x72" type="image/png" />
-  <link rel="icon" href="icons/icon-96x96.png" sizes="96x96" type="image/png" />
-  <link rel="icon" href="icons/icon-128x128.png" sizes="128x128" type="image/png" />
-  <link rel="icon" href="icons/icon-144x144.png" sizes="144x144" type="image/png" />
-  <link rel="icon" href="icons/icon-152x152.png" sizes="152x152" type="image/png" />
-  <link rel="icon" href="icons/icon-192x192.png" sizes="192x192" type="image/png" />
-  <link rel="icon" href="icons/icon-384x384.png" sizes="384x384" type="image/png" />
-  <link rel="icon" href="icons/icon-512x512.png" sizes="512x512" type="image/png" />
-  <!-- ios support -->
-  <link rel="apple-touch-icon" href="icons/icon-72x72.png" sizes="72x72" type="image/png" />
-  <link rel="apple-touch-icon" href="icons/icon-96x96.png" sizes="96x96" type="image/png" />
-  <link rel="apple-touch-icon" href="icons/icon-128x128.png" sizes="128x128" type="image/png" />
-  <link rel="apple-touch-icon" href="icons/icon-144x144.png" sizes="144x144" type="image/png" />
-  <link rel="apple-touch-icon" href="icons/icon-152x152.png" sizes="152x152" type="image/png" />
-  <link rel="apple-touch-icon" href="icons/icon-192x192.png" sizes="192x192" type="image/png" />
-  <link rel="apple-touch-icon" href="icons/icon-384x384.png" sizes="384x384" type="image/png" />
-  <link rel="apple-touch-icon" href="icons/icon-512x512.png" sizes="512x512" type="image/png" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Игровая вселенная — два проекта, пять игр</title>
+  <meta name="description" content="Личный игровой хаб: визуальная новелла «Призраки Везенбергского квартала» и четыре браузерные игры Яндекс Игр — Pulsebound, Сияние рифа, Астрощит и Звездолов.">
+  <meta name="theme-color" content="#05060c">
+  <meta name="color-scheme" content="dark">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Игровая вселенная — два проекта, пять игр">
+  <meta property="og:description" content="Новела и коллекция браузерных игр в одном месте. Выбери проект, затем игру — и играй без установки.">
+  <meta property="og:image" content="assets/img/novela.webp">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="preload" href="assets/fonts/russo-one-cyrillic.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fonts/exo2-cyrillic.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="assets/css/site.css">
 </head>
-<body>
-  <div class="background-container">
-    <header>
-      <a href="https://lermontovka-spb.ru/" class="back-btn" aria-label="Назад на сайт">← Назад на сайт</a>
-    </header>
+<body class="page-home">
+  <canvas id="stars" class="stars" aria-hidden="true"></canvas>
+  <div class="aurora" aria-hidden="true"><span></span><span></span><span></span></div>
 
-    <main class="game-content">
-      <h1>Игра в жанре визуальной новеллы<br>«Призраки Везенбергского квартала»</h1>
+  <header class="site-header" data-header>
+    <div class="container header-inner">
+      <a class="brand" href="./" aria-label="Игровая вселенная — на главную">
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 40 40" fill="none">
+            <circle cx="20" cy="20" r="12.4" stroke="currentColor" stroke-width="1.4" opacity=".45"/>
+            <ellipse cx="20" cy="20" rx="17.4" ry="6.8" transform="rotate(-28 20 20)" stroke="currentColor" stroke-width="1.4" opacity=".85"/>
+            <circle cx="31.4" cy="11" r="2.4" fill="currentColor"/>
+            <circle cx="20" cy="20" r="3.1" fill="currentColor"/>
+          </svg>
+        </span>
+        <span class="brand-text">
+          <strong>Игровая вселенная</strong>
+          <small>личный хаб проектов</small>
+        </span>
+      </a>
 
-      <!-- APK-блок (появляется только на Android) -->
-      <div id="apk-section" class="apk-section">
-        <a href="the.ghosts.of.the.wesenberg.quarter.apk" class="btn apk-btn">Скачать APK для Android</a>
+      <nav class="main-nav" aria-label="Основная навигация">
+        <a href="#projects">Проекты</a>
+        <a href="yandex/">Игры</a>
+        <a class="nav-github" href="https://github.com/Kekcek1/gp" target="_blank" rel="noopener">
+          GitHub
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M14 4h6v6M20 4l-8 8"/>
+            <path d="M20 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1h5"/>
+          </svg>
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero container">
+      <div class="hero-copy">
+        <p class="eyebrow"><span class="eyebrow-dot" aria-hidden="true"></span> Личный игровой хаб · 2026</p>
+        <h1>Два мира.<br><span class="text-grad">Пять игр.</span><br>Один вход.</h1>
+        <p class="hero-lead">
+          Визуальная новелла и коллекция браузерных игр — в одном месте.
+          Выбери проект, затем игру — и играй без установки.
+        </p>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="#projects">
+            Выбрать проект
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M5 12h14M13 6l6 6-6 6"/>
+            </svg>
+          </a>
+          <a class="btn btn-ghost" href="yandex/">Открыть каталог игр</a>
+        </div>
+        <ul class="hero-facts">
+          <li><strong>2</strong><span>проекта</span></li>
+          <li><strong>5</strong><span>игр</span></li>
+          <li><strong>0</strong><span>установок</span></li>
+        </ul>
       </div>
 
-      <div class="game-description">
-        <p>Санкт-Петербург полон легенд и призраков, о которых мы порой даже не подозреваем! Однажды на улице Шкапина, в библиотеке им. К.А. Тимирязева начали происходить странные события – куда-то исчезли библиотекари, квартал вокруг окутал туман. И только ты, наш друг, можешь сразиться с призраками ближайших домов, посетить исторические здания, разгадать все загадки потустороннего мира, познакомиться с реальными историческими личностями и, возможно, даже подружиться с ними.</p>
+      <div class="hero-stage" aria-hidden="true">
+        <div class="stage-ring stage-ring--3"></div>
+        <div class="stage-ring stage-ring--1"></div>
+        <div class="stage-ring stage-ring--2"></div>
+        <div class="stage-center">
+          <svg viewBox="0 0 40 40" fill="none">
+            <circle cx="20" cy="20" r="12.4" stroke="currentColor" stroke-width="1.4" opacity=".45"/>
+            <ellipse cx="20" cy="20" rx="17.4" ry="6.8" transform="rotate(-28 20 20)" stroke="currentColor" stroke-width="1.4" opacity=".85"/>
+            <circle cx="31.4" cy="11" r="2.4" fill="currentColor"/>
+            <circle cx="20" cy="20" r="3.1" fill="currentColor"/>
+          </svg>
+        </div>
 
-        <p>Визуальная новелла «Призраки Везенбергского квартала» расскажет вам некоторые легенды территории у Обводного канала, где располагается библиотека им. К.А. Тимирязева. Многие рассказы основаны на реальных исторических событиях, но это все же художественное произведение, иногда намеренно отступающее от реальных фактов.</p>
+        <a class="stage-card stage-card--novela" href="novela/" tabindex="-1">
+          <img src="assets/img/novela-scene.webp" alt="" width="1200" height="675" loading="eager">
+          <span class="stage-label"><i aria-hidden="true"></i> Новела</span>
+        </a>
 
-        <p>В некоторые моменты истории будут случаться развилки, необходимо будет сделать выбор, который может привести вас на разные пути развития истории. Какой будет финал, зависит только от вас и от того, что вам ближе – мир призраков или мир яви. Для атмосферного прохождения советуем включить звук.</p>
+        <a class="stage-card stage-card--yandex" href="yandex/" tabindex="-1">
+          <img src="assets/img/yandex-mosaic.webp" alt="" width="1200" height="676" loading="eager">
+          <span class="stage-label"><i aria-hidden="true"></i> Яндекс Игры</span>
+        </a>
+      </div>
+    </section>
 
-        <p>Игра полностью бесплатная, вы можете проходить ее как с компьютера, так и с мобильных устройств. Удачи, встретимся в Везенбергском квартале!</p>
-
-        <p class="age-rating">16+</p>
+    <section class="section container" id="projects">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">Проекты</p>
+          <h2>Выбери вселенную</h2>
+        </div>
+        <p>Два независимых мира. В каждом — своя атмосфера, свои истории и свой способ играть.</p>
       </div>
 
-      <a href="play.html" class="btn play-btn">Играть</a>
-    </main>
-  </div>
+      <div class="project-grid">
+        <article class="project-card project-card--novela" data-reveal>
+          <a class="project-link" href="novela/" aria-label="Открыть проект Новела — Призраки Везенбергского квартала">
+            <div class="project-cover">
+              <img src="assets/img/novela-scene.webp" alt="Диалог из визуальной новеллы «Призраки Везенбергского квартала»" width="1200" height="675" loading="lazy">
+              <span class="project-number">Проект 01</span>
+              <span class="project-type">Визуальная новелла</span>
+              <span class="project-cta">
+                Войти в проект
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M5 12h14M13 6l6 6-6 6"/>
+                </svg>
+              </span>
+            </div>
+            <div class="project-content">
+              <div class="project-title-row">
+                <h3>Новела</h3>
+                <span class="project-arrow" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M7 17 17 7M9 7h8v8"/>
+                  </svg>
+                </span>
+              </div>
+              <p class="project-sub">Призраки Везенбергского квартала</p>
+              <p class="project-desc">
+                Пять серий, три финала и Санкт-Петербург, который помнит больше, чем кажется.
+                Визуальная новелла о призраках Обводного канала, белых ночах и старых библиотеках.
+              </p>
+              <ul class="tag-list" aria-label="Особенности проекта">
+                <li>5 серий</li>
+                <li>3 финала</li>
+                <li>16+</li>
+              </ul>
+            </div>
+          </a>
+        </article>
 
-  <script>
-    // Показываем APK-секцию только на Android
-    if (/Android/i.test(navigator.userAgent)) {
-      document.getElementById('apk-section').style.display = 'block';
-    } else {
-      document.getElementById('apk-section').style.display = 'none';
-    }
-  </script>
+        <article class="project-card project-card--yandex" data-reveal>
+          <a class="project-link" href="yandex/" aria-label="Открыть проект Яндекс Игры — каталог из четырёх игр">
+            <div class="project-cover">
+              <img src="assets/img/yandex-mosaic.webp" alt="Коллаж из четырёх игр: Pulsebound, Сияние рифа, Астрощит и Звездолов" width="1200" height="676" loading="lazy">
+              <span class="project-number">Проект 02</span>
+              <span class="project-type">Каталог игр</span>
+              <span class="project-cta">
+                Открыть каталог
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M5 12h14M13 6l6 6-6 6"/>
+                </svg>
+              </span>
+            </div>
+            <div class="project-content">
+              <div class="project-title-row">
+                <h3>Яндекс Игры</h3>
+                <span class="project-arrow" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M7 17 17 7M9 7h8v8"/>
+                  </svg>
+                </span>
+              </div>
+              <p class="project-sub">Коллекция браузерных игр</p>
+              <p class="project-desc">
+                Четыре законченные игры: неоновая аркада, уютный три-в-ряд, космический щит
+                и медитативная рыбалка на краю ночного неба.
+              </p>
+              <ul class="tag-list" aria-label="Особенности проекта">
+                <li>4 игры</li>
+                <li>3 жанра</li>
+                <li>Без установки</li>
+              </ul>
+            </div>
+          </a>
+        </article>
+      </div>
+    </section>
+
+    <section class="steps container">
+      <div class="steps-head">
+        <div>
+          <p class="eyebrow">Как это устроено</p>
+          <h2>Три шага до игры</h2>
+        </div>
+      </div>
+      <ol class="steps-list">
+        <li class="step">
+          <span class="step-num">01</span>
+          <h3>Выбери проект</h3>
+          <p>Новела или коллекция Яндекс Игр — два входа в разные настроения.</p>
+        </li>
+        <li class="step">
+          <span class="step-num">02</span>
+          <h3>Выбери игру</h3>
+          <p>Внутри проекта — карточки с названиями, жанрами и обложками.</p>
+        </li>
+        <li class="step">
+          <span class="step-num">03</span>
+          <h3>Играй в браузере</h3>
+          <p>Без установки и регистрации. Прогресс сохраняется локально.</p>
+        </li>
+      </ol>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <a class="brand" href="./" aria-label="Игровая вселенная — на главную">
+            <span class="brand-mark" aria-hidden="true">
+              <svg viewBox="0 0 40 40" fill="none">
+                <circle cx="20" cy="20" r="12.4" stroke="currentColor" stroke-width="1.4" opacity=".45"/>
+                <ellipse cx="20" cy="20" rx="17.4" ry="6.8" transform="rotate(-28 20 20)" stroke="currentColor" stroke-width="1.4" opacity=".85"/>
+                <circle cx="31.4" cy="11" r="2.4" fill="currentColor"/>
+                <circle cx="20" cy="20" r="3.1" fill="currentColor"/>
+              </svg>
+            </span>
+            <span class="brand-text">
+              <strong>Игровая вселенная</strong>
+              <small>личный хаб проектов</small>
+            </span>
+          </a>
+          <p>Личный хаб проектов и браузерных игр. Всё запускается прямо в браузере — на компьютере, планшете или телефоне.</p>
+        </div>
+        <div class="footer-cols">
+          <div class="footer-col">
+            <h4>Проекты</h4>
+            <a href="novela/">Новела</a>
+            <a href="yandex/">Яндекс Игры</a>
+          </div>
+          <div class="footer-col">
+            <h4>Ссылки</h4>
+            <a href="yandex/#games">Все игры</a>
+            <a href="https://github.com/Kekcek1/gp" target="_blank" rel="noopener">GitHub ↗</a>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© <span data-year>2026</span> Игровая вселенная</span>
+        <span>Сделано для браузера · без установки</span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="assets/js/site.js" defer></script>
 </body>
 </html>

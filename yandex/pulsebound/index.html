@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+    <meta name="theme-color" content="#050814">
+    <meta name="description" content="Pulsebound — неоновая аркада на одну кнопку. Перескакивай между орбитами, собирай звёзды и удерживай импульс. Бесконечный космос, рекорды и задания.">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="format-detection" content="telephone=no">
+    <title>Pulsebound — бесконечная орбита</title>
+    <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="css/style.css">
+    <!-- Yandex Games SDK. On Yandex hosting this relative path is served by the platform. -->
+    <script src="/sdk.js"></script>
+</head>
+<body>
+<noscript>
+    <div class="noscript">Для запуска игры включите JavaScript.</div>
+</noscript>
+
+<svg class="svg-sprite" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg">
+    <symbol id="i-play" viewBox="0 0 24 24"><path d="M8 5.5v13l10.5-6.5L8 5.5z" fill="currentColor" stroke="none"/></symbol>
+    <symbol id="i-pause" viewBox="0 0 24 24"><path d="M8 5v14M16 5v14"/></symbol>
+    <symbol id="i-sound" viewBox="0 0 24 24"><path d="M4 9v6h4l5 4V5L8 9H4z"/><path d="M17 9.5a4 4 0 0 1 0 5M19.5 7a8 8 0 0 1 0 10"/></symbol>
+    <symbol id="i-mute" viewBox="0 0 24 24"><path d="M4 9v6h4l5 4V5L8 9H4z"/><path d="m17 9 5 5M22 9l-5 5"/></symbol>
+    <symbol id="i-music" viewBox="0 0 24 24"><path d="M9 18V5l11-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="17" cy="16" r="3"/></symbol>
+    <symbol id="i-settings" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3.2"/><path d="M19.4 15a1.7 1.7 0 0 0 .34 1.87l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.7 1.7 0 0 0-1.87-.34 1.7 1.7 0 0 0-1 1.55V21a2 2 0 1 1-4 0v-.09a1.7 1.7 0 0 0-1.11-1.55 1.7 1.7 0 0 0-1.87.34l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.7 1.7 0 0 0 4.6 15a1.7 1.7 0 0 0-1.55-1H3a2 2 0 1 1 0-4h.09A1.7 1.7 0 0 0 4.6 8.9a1.7 1.7 0 0 0-.34-1.87l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.7 1.7 0 0 0 9 4.6a1.7 1.7 0 0 0 1-1.55V3a2 2 0 1 1 4 0v.09a1.7 1.7 0 0 0 1 1.55 1.7 1.7 0 0 0 1.87-.34l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.7 1.7 0 0 0 19.4 9c.12.37.5 1 1.55 1H21a2 2 0 1 1 0 4h-.09a1.7 1.7 0 0 0-1.51 1z"/></symbol>
+    <symbol id="i-target" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></symbol>
+    <symbol id="i-comet" viewBox="0 0 24 24"><circle cx="15.5" cy="8.5" r="3.5"/><path d="M11.5 12.5 4 20M12.5 8H4M16 12.5V20M9.5 15.5 5 20"/></symbol>
+    <symbol id="i-trophy" viewBox="0 0 24 24"><path d="M7 4h10v5a5 5 0 0 1-10 0V4z"/><path d="M7 6H4v2a3 3 0 0 0 3 3M17 6h3v2a3 3 0 0 1-3 3M12 14v4M8 21h8M9 18h6"/></symbol>
+    <symbol id="i-gift" viewBox="0 0 24 24"><path d="M4 9h16v12H4zM2 5h20v4H2zM12 5v16"/><path d="M12 5c-3 0-5-1-5-3 0-1 .7-2 2-2 2 0 3 2.5 3 5zM12 5c3 0 5-1 5-3 0-1-.7-2-2-2-2 0-3 2.5-3 5z"/></symbol>
+    <symbol id="i-close" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></symbol>
+    <symbol id="i-back" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></symbol>
+    <symbol id="i-star" viewBox="0 0 24 24"><path d="M12 2.5c.6 6 3.5 8.9 9.5 9.5-6 .6-8.9 3.5-9.5 9.5-.6-6-3.5-8.9-9.5-9.5 6-.6 8.9-3.5 9.5-9.5z" fill="currentColor" stroke="none"/></symbol>
+    <symbol id="i-dust" viewBox="0 0 24 24"><path d="M12 3c.5 4.7 2.8 7 7.5 7.5-4.7.5-7 2.8-7.5 7.5-.5-4.7-2.8-7-7.5-7.5C9.2 10 11.5 7.7 12 3z" fill="currentColor" stroke="none"/><circle cx="19" cy="18" r="1.6" fill="currentColor" stroke="none"/><circle cx="5" cy="6" r="1.2" fill="currentColor" stroke="none"/></symbol>
+    <symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="10" width="14" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="m4.5 12.5 5 5L20 6.5"/></symbol>
+    <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.5"/></symbol>
+    <symbol id="i-ad" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="M10 9.5v5l4.5-2.5L10 9.5z" fill="currentColor" stroke="none"/></symbol>
+    <symbol id="i-refresh" viewBox="0 0 24 24"><path d="M20 11a8 8 0 1 0-2.3 6.3"/><path d="M20 4v7h-7"/></symbol>
+    <symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.6 2.4 4 5.6 4 9s-1.4 6.6-4 9c-2.6-2.4-4-5.6-4-9s1.4-6.6 4-9z"/></symbol>
+    <symbol id="i-bolt" viewBox="0 0 24 24"><path d="M13 2 4 14h7l-1 8 10-13h-7l1-7z" fill="currentColor" stroke="none"/></symbol>
+    <symbol id="i-home" viewBox="0 0 24 24"><path d="m3 11 9-8 9 8"/><path d="M5 10v11h14V10"/><path d="M9 21v-7h6v7"/></symbol>
+    <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+</svg>
+
+<div id="app">
+    <canvas id="scene" aria-hidden="true"></canvas>
+
+    <div id="stage">
+        <!-- Boot -->
+        <div id="boot" class="screen boot">
+            <div class="boot-mark" aria-hidden="true">
+                <span class="orbit orbit-a"></span>
+                <span class="orbit orbit-b"></span>
+                <span class="boot-dot"></span>
+                <span class="boot-core"></span>
+            </div>
+            <div class="boot-title">Pulsebound</div>
+            <div class="boot-sub" data-i18n="tagline">Бесконечная орбита</div>
+            <div class="boot-track"><div id="boot-progress" class="boot-fill"></div></div>
+            <div class="boot-status" data-i18n="loading">Загрузка…</div>
+        </div>
+
+        <!-- Main menu -->
+        <section id="screen-menu" class="screen menu is-hidden" aria-label="Main menu">
+            <div class="menu-top">
+                <div class="pill pill-dust" title="Звёздная пыль">
+                    <svg class="icon"><use href="#i-dust"></use></svg>
+                    <span id="menu-dust">0</span>
+                </div>
+                <div class="menu-top-actions">
+                    <button class="icon-btn" type="button" data-action="toggle-sound" aria-label="Звук"><svg class="icon"><use href="#i-sound"></use></svg></button>
+                    <button class="icon-btn" type="button" data-action="open-settings" aria-label="Настройки"><svg class="icon"><use href="#i-settings"></use></svg></button>
+                </div>
+            </div>
+
+            <div class="menu-content">
+                <header class="brand">
+                    <div class="brand-mark" aria-hidden="true">
+                        <span class="brand-ring"></span>
+                        <span class="brand-comet"></span>
+                        <span class="brand-core"></span>
+                    </div>
+                    <h1 class="wordmark">Pulsebound</h1>
+                    <p class="tagline" data-i18n="tagline">Бесконечная орбита</p>
+                </header>
+
+                <div class="best-line">
+                    <span data-i18n="bestScore">Рекорд</span>
+                    <strong id="menu-best">0</strong>
+                </div>
+
+                <button id="btn-play" class="btn btn-primary btn-play" type="button" data-action="play">
+                    <svg class="icon"><use href="#i-play"></use></svg>
+                    <span data-i18n="play">Играть</span>
+                </button>
+
+                <nav class="menu-grid" aria-label="Разделы">
+                    <button class="menu-card" type="button" data-action="open-missions">
+                        <span class="menu-card-icon"><svg class="icon"><use href="#i-target"></use></svg><i id="badge-missions" class="badge-dot is-hidden"></i></span>
+                        <span class="menu-card-label" data-i18n="missions">Задания</span>
+                        <span class="menu-card-note" id="menu-missions-note">3 задания</span>
+                    </button>
+                    <button class="menu-card" type="button" data-action="open-shop">
+                        <span class="menu-card-icon"><svg class="icon"><use href="#i-comet"></use></svg></span>
+                        <span class="menu-card-label" data-i18n="ships">Следы</span>
+                        <span class="menu-card-note" id="menu-shop-note">8 образов</span>
+                    </button>
+                    <button class="menu-card" type="button" data-action="open-rating">
+                        <span class="menu-card-icon"><svg class="icon"><use href="#i-trophy"></use></svg></span>
+                        <span class="menu-card-label" data-i18n="rating">Рейтинг</span>
+                        <span class="menu-card-note" data-i18n="ratingNote">Рекорды</span>
+                    </button>
+                </nav>
+
+                <div class="menu-bottom">
+                    <button class="daily-btn" type="button" data-action="open-daily">
+                        <span class="daily-icon"><svg class="icon"><use href="#i-gift"></use></svg><i id="badge-daily" class="badge-dot is-hidden"></i></span>
+                        <span class="daily-text">
+                            <strong data-i18n="dailyGift">Подарок дня</strong>
+                            <small id="daily-note" data-i18n="dailyAvailable">Забрать награду</small>
+                        </span>
+                        <svg class="icon chevron"><use href="#i-arrow"></use></svg>
+                    </button>
+                    <button class="text-btn" type="button" data-action="open-howto">
+                        <svg class="icon"><use href="#i-info"></use></svg>
+                        <span data-i18n="howTo">Как играть</span>
+                    </button>
+                </div>
+
+                <div class="menu-foot">
+                    <span data-i18n="madeFor">Создано для Яндекс Игр</span>
+                    <span class="dot-sep">·</span>
+                    <span>v1.0.0</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- In-game HUD -->
+        <section id="hud" class="hud is-hidden" aria-label="Game HUD">
+            <div class="hud-top">
+                <button id="btn-pause" class="icon-btn hud-btn" type="button" data-action="pause" aria-label="Пауза"><svg class="icon"><use href="#i-pause"></use></svg></button>
+                <div class="score-box">
+                    <div class="score-label" data-i18n="score">Очки</div>
+                    <div id="hud-score" class="score-value">0</div>
+                    <div class="score-best"><span data-i18n="bestShort">Лучший</span> <span id="hud-best">0</span></div>
+                </div>
+                <button id="btn-mute" class="icon-btn hud-btn" type="button" data-action="toggle-sound" aria-label="Звук"><svg class="icon"><use href="#i-sound"></use></svg></button>
+            </div>
+            <div id="hud-combo" class="combo-chip is-hidden"><svg class="icon"><use href="#i-star"></use></svg><span id="hud-combo-text">x2</span></div>
+            <div id="sector-chip" class="sector-chip"><span data-i18n="sector">Сектор</span> <strong id="hud-sector">1</strong></div>
+            <div id="game-hint" class="game-hint is-hidden"><span data-i18n="hintSwitch">Тап — сменить орбиту</span></div>
+            <div id="tutorial-hint" class="tutorial-hint is-hidden">
+                <div class="tutorial-hand" aria-hidden="true"><span></span></div>
+                <div id="tutorial-text">Нажми, чтобы сменить орбиту</div>
+                <button class="tutorial-skip" type="button" data-action="skip-tutorial"><span data-i18n="tutorialSkip">Пропустить обучение</span></button>
+            </div>
+            <div id="sector-toast" class="sector-toast is-hidden"><small data-i18n="sector">Сектор</small><strong id="sector-toast-num">2</strong></div>
+            <div id="overdrive-toast" class="overdrive-toast is-hidden"><svg class="icon"><use href="#i-bolt"></use></svg><span data-i18n="overdrive">Импульс!</span><small data-i18n="overdriveNote">x2 очки · магнит</small></div>
+        </section>
+
+        <!-- Pause -->
+        <div id="overlay-pause" class="overlay is-hidden" role="dialog" aria-modal="true" aria-labelledby="pause-title">
+            <div class="panel panel-pause">
+                <div class="panel-head">
+                    <h2 id="pause-title" data-i18n="paused">Пауза</h2>
+                    <button class="icon-btn close-btn" type="button" data-action="resume" aria-label="Продолжить"><svg class="icon"><use href="#i-close"></use></svg></button>
+                </div>
+                <div class="pause-stats">
+                    <div><span data-i18n="score">Очки</span><strong id="pause-score">0</strong></div>
+                    <div><span data-i18n="sector">Сектор</span><strong id="pause-sector">1</strong></div>
+                </div>
+                <button class="btn btn-primary" type="button" data-action="resume"><svg class="icon"><use href="#i-play"></use></svg><span data-i18n="resume">Продолжить</span></button>
+                <div class="btn-row">
+                    <button class="btn btn-ghost" type="button" data-action="open-howto"><svg class="icon"><use href="#i-info"></use></svg><span data-i18n="howTo">Как играть</span></button>
+                    <button class="btn btn-ghost" type="button" data-action="restart"><svg class="icon"><use href="#i-refresh"></use></svg><span data-i18n="restart">Заново</span></button>
+                </div>
+                <div class="btn-row">
+                    <button class="btn btn-ghost" type="button" data-action="toggle-sound"><svg class="icon"><use href="#i-sound"></use></svg><span id="pause-sound-label" data-i18n="sound">Звук</span></button>
+                    <button class="btn btn-ghost" type="button" data-action="quit-run"><svg class="icon"><use href="#i-home"></use></svg><span data-i18n="menu">В меню</span></button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Game over -->
+        <div id="overlay-over" class="overlay is-hidden" role="dialog" aria-modal="true" aria-labelledby="over-title">
+            <div class="panel panel-over">
+                <div class="result-glow" aria-hidden="true"></div>
+                <div id="record-badge" class="record-badge is-hidden"><svg class="icon"><use href="#i-trophy"></use></svg><span data-i18n="newRecord">Новый рекорд!</span></div>
+                <h2 id="over-title" data-i18n="runOver">Орбита прервана</h2>
+                <div class="result-score">
+                    <span class="result-label" data-i18n="score">Очки</span>
+                    <strong id="result-score">0</strong>
+                </div>
+                <div class="result-best"><span data-i18n="bestScore">Рекорд</span> <strong id="result-best">0</strong></div>
+                <div class="result-grid">
+                    <div><svg class="icon"><use href="#i-dust"></use></svg><span data-i18n="dustEarned">Пыль</span><strong id="result-dust">+0</strong></div>
+                    <div><svg class="icon"><use href="#i-star"></use></svg><span data-i18n="orbs">Звёзды</span><strong id="result-orbs">0</strong></div>
+                    <div><svg class="icon"><use href="#i-bolt"></use></svg><span data-i18n="maxCombo">Комбо</span><strong id="result-combo">x1</strong></div>
+                    <div><svg class="icon"><use href="#i-comet"></use></svg><span data-i18n="sector">Сектор</span><strong id="result-sector">1</strong></div>
+                </div>
+                <button id="btn-again" class="btn btn-primary" type="button" data-action="again"><svg class="icon"><use href="#i-refresh"></use></svg><span data-i18n="again">Ещё раз</span></button>
+                <button id="btn-revive" class="btn btn-reward is-hidden" type="button" data-action="reward-revive">
+                    <span class="ad-tag" data-i18n="adTag">Реклама</span>
+                    <svg class="icon"><use href="#i-ad"></use></svg>
+                    <span class="reward-text"><strong data-i18n="revive">Продолжить забег</strong><small data-i18n="reviveNote">Посмотри видео и вернись в игру</small></span>
+                </button>
+                <button id="btn-double" class="btn btn-reward is-hidden" type="button" data-action="reward-double">
+                    <span class="ad-tag" data-i18n="adTag">Реклама</span>
+                    <svg class="icon"><use href="#i-ad"></use></svg>
+                    <span class="reward-text"><strong data-i18n="doubleDust">Удвоить пыль</strong><small data-i18n="doubleDustNote">Посмотри видео и получи ×2</small></span>
+                </button>
+                <button class="text-btn center" type="button" data-action="quit-to-menu"><svg class="icon"><use href="#i-home"></use></svg><span data-i18n="menu">В меню</span></button>
+            </div>
+        </div>
+
+        <!-- Missions -->
+        <div id="overlay-missions" class="overlay is-hidden" role="dialog" aria-modal="true" aria-labelledby="missions-title">
+            <div class="panel panel-scroll">
+                <div class="panel-head">
+                    <div><h2 id="missions-title" data-i18n="missionsTitle">Задания</h2><p class="panel-sub" id="missions-sub" data-i18n="missionsSub">Обновляются каждый день</p></div>
+                    <button class="icon-btn close-btn" type="button" data-action="close" aria-label="Закрыть"><svg class="icon"><use href="#i-close"></use></svg></button>
+                </div>
+                <div id="missions-list" class="missions-list"></div>
+                <div id="missions-bonus" class="mission-bonus"></div>
+                <div class="panel-foot-note"><svg class="icon"><use href="#i-refresh"></use></svg><span id="missions-reset">До обновления: —</span></div>
+            </div>
+        </div>
+
+        <!-- Shop -->
+        <div id="overlay-shop" class="overlay is-hidden" role="dialog" aria-modal="true" aria-labelledby="shop-title">
+            <div class="panel panel-scroll">
+                <div class="panel-head">
+                    <div><h2 id="shop-title" data-i18n="shopTitle">Следы кометы</h2><p class="panel-sub" data-i18n="shopSub">Настрой свой след в космосе</p></div>
+                    <button class="icon-btn close-btn" type="button" data-action="close" aria-label="Закрыть"><svg class="icon"><use href="#i-close"></use></svg></button>
+                </div>
+                <div class="shop-preview">
+                    <canvas id="skin-preview" width="640" height="300" aria-hidden="true"></canvas>
+                    <div class="shop-preview-info">
+                        <h3 id="skin-name">Аврора</h3>
+                        <p id="skin-desc">Холодное сияние первого прыжка.</p>
+                    </div>
+                </div>
+                <div id="shop-grid" class="skin-grid"></div>
+                <div class="shop-buy">
+                    <div class="price-line"><svg class="icon"><use href="#i-dust"></use></svg><span id="skin-price">0</span></div>
+                    <button id="btn-skin-action" class="btn btn-primary" type="button" data-action="skin-action"><span data-i18n="skinActionEquip">Выбрать</span></button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Rating -->
+        <div id="overlay-rating" class="overlay is-hidden" role="dialog" aria-modal="true" aria-labelledby="rating-title">
+            <div class="panel panel-scroll">
+                <div class="panel-head">
+                    <div><h2 id="rating-title" data-i18n="ratingTitle">Рейтинг</h2><p class="panel-sub" data-i18n="ratingSub">Лучшие пилоты галактики</p></div>
+                    <button class="icon-btn close-btn" type="button" data-action="close" aria-label="Закрыть"><svg class="icon"><use href="#i-close"></use></svg></button>
+                </div>
+                <div class="tabs" role="tablist">
+                    <button class="tab is-active" type="button" data-action="rating-tab" data-tab="top" data-i18n="tabTop">Топ игроков</button>
+                    <button class="tab" type="button" data-action="rating-tab" data-tab="me" data-i18n="tabMe">Мои рекорды</button>
+                </div>
+                <div id="rating-top" class="rating-pane">
+                    <div id="auth-box" class="auth-box is-hidden">
+                        <svg class="icon auth-icon"><use href="#i-trophy"></use></svg>
+                        <h3 data-i18n="loginTitle">Попади в топ</h3>
+                        <p data-i18n="loginText">Войди с Яндекс ID — прогресс сохранится на всех устройствах, а рекорд попадёт в общий рейтинг.</p>
+                        <button class="btn btn-primary btn-sm" type="button" data-action="login"><span data-i18n="login">Войти с Яндекс ID</span></button>
+                    </div>
+                    <div id="leader-list" class="leader-list"></div>
+                </div>
+                <div id="rating-me" class="rating-pane is-hidden">
+                    <div id="me-stats" class="me-stats"></div>
+                    <div id="me-auth" class="me-auth"></div>
+                </div>
+                <div class="panel-foot-note"><svg class="icon"><use href="#i-info"></use></svg><span data-i18n="ratingNote2">Рейтинг обновляется после каждого рекорда</span></div>
+            </div>
+        </div>
+
+        <!-- Daily gift -->
+        <div id="overlay-daily" class="overlay is-hidden" role="dialog" aria-modal="true" aria-labelledby="daily-title">
+            <div class="panel">
+                <div class="panel-head">
+                    <div><h2 id="daily-title" data-i18n="dailyTitle">Подарок дня</h2><p class="panel-sub" data-i18n="dailySub">Заходи каждый день — награда растёт</p></div>
+                    <button class="icon-btn close-btn" type="button" data-action="close" aria-label="Закрыть"><svg class="icon"><use href="#i-close"></use></svg></button>
+                </div>
+                <div id="daily-days" class="daily-days"></div>
+                <div class="daily-status" id="daily-status">Серия: 0 дней</div>
+                <button id="btn-daily-claim" class="btn btn-primary" type="button" data-action="claim-daily"><span data-i18n="claim">Забрать</span></button>
+            </div>
+        </div>
+
+        <!-- Settings -->
+        <div id="overlay-settings" class="overlay is-hidden" role="dialog" aria-modal="true" aria-labelledby="settings-title">
+            <div class="panel panel-scroll">
+                <div class="panel-head">
+                    <div><h2 id="settings-title" data-i18n="settingsTitle">Настройки</h2><p class="panel-sub" data-i18n="settingsSub">Звук, язык и эффекты</p></div>
+                    <button class="icon-btn close-btn" type="button" data-action="close" aria-label="Закрыть"><svg class="icon"><use href="#i-close"></use></svg></button>
+                </div>
+                <div class="setting-row">
+                    <div class="setting-label"><svg class="icon"><use href="#i-sound"></use></svg><span data-i18n="sound">Звук</span></div>
+                    <button class="toggle" type="button" data-action="toggle-sound" role="switch" aria-checked="true"><span></span></button>
+                </div>
+                <div class="setting-row">
+                    <div class="setting-label"><svg class="icon"><use href="#i-music"></use></svg><span data-i18n="music">Музыка</span></div>
+                    <button class="toggle" type="button" data-action="toggle-music" role="switch" aria-checked="true"><span></span></button>
+                </div>
+                <div class="setting-row">
+                    <div class="setting-label"><svg class="icon"><use href="#i-bolt"></use></svg><span data-i18n="effects">Эффекты</span></div>
+                    <button class="seg" type="button" data-action="toggle-effects"><span id="effects-label">Высокие</span></button>
+                </div>
+                <div class="setting-row setting-lang">
+                    <div class="setting-label"><svg class="icon"><use href="#i-globe"></use></svg><span data-i18n="language">Язык</span></div>
+                    <div id="lang-options" class="lang-options"></div>
+                </div>
+                <p class="setting-hint" data-i18n="langHint">Язык определяется автоматически по настройкам Яндекс Игр. Можно выбрать вручную.</p>
+                <div class="panel-actions">
+                    <button class="btn btn-danger-ghost" type="button" data-action="reset-progress"><svg class="icon"><use href="#i-refresh"></use></svg><span data-i18n="resetProgress">Сбросить прогресс</span></button>
+                </div>
+                <div class="about-box">
+                    <div><strong>Pulsebound</strong> <span>v1.0.0</span></div>
+                    <p data-i18n="aboutText">Неоновая аркада об орбитах, звёздах и идеальном ритме. Все графика и звук созданы процедурно.</p>
+                    <p class="muted" data-i18n="madeFor">Создано для Яндекс Игр</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- How to play -->
+        <div id="overlay-howto" class="overlay is-hidden" role="dialog" aria-modal="true" aria-labelledby="howto-title">
+            <div class="panel panel-scroll">
+                <div class="panel-head">
+                    <div><h2 id="howto-title" data-i18n="howtoTitle">Как играть</h2><p class="panel-sub" data-i18n="howtoSub">Одна кнопка. Бесконечная орбита.</p></div>
+                    <button class="icon-btn close-btn" type="button" data-action="close" aria-label="Закрыть"><svg class="icon"><use href="#i-close"></use></svg></button>
+                </div>
+                <div class="howto-hero" aria-hidden="true">
+                    <span class="howto-orbit"></span>
+                    <span class="howto-orbit howto-orbit-2"></span>
+                    <span class="howto-dot"></span>
+                    <span class="howto-core"></span>
+                    <svg class="icon howto-bolt"><use href="#i-bolt"></use></svg>
+                </div>
+                <ol class="howto-steps">
+                    <li><span class="step-num">1</span><span data-i18n="howto1">Тапай по экрану, кликай мышью или жми пробел, чтобы перескакивать между двумя орбитами.</span></li>
+                    <li><span class="step-num">2</span><span data-i18n="howto2">Уклоняйся от астероидов. Они вращаются вокруг пульсара и занимают одну из орбит.</span></li>
+                    <li><span class="step-num">3</span><span data-i18n="howto3">Собирай звёзды и крупные осколки. Они заполняют шкалу импульса вокруг пульсара.</span></li>
+                    <li><span class="step-num">4</span><span data-i18n="howto4">Когда шкала заполнена, включается импульс: неуязвимость, магнит и двойные очки.</span></li>
+                    <li><span class="step-num">5</span><span data-i18n="howto5">Скорость растёт, а каждые три круга открывается новый сектор с новой палитрой.</span></li>
+                </ol>
+                <div class="controls-table">
+                    <div><span data-i18n="controlSwitch">Сменить орбиту</span><kbd data-i18n="tapKey">Тап</kbd><kbd data-i18n="spaceKey">Пробел</kbd><kbd>↑</kbd><kbd>↓</kbd></div>
+                    <div><span data-i18n="controlPause">Пауза</span><kbd>Esc</kbd><kbd>P</kbd></div>
+                    <div><span data-i18n="controlSound">Звук</span><kbd>M</kbd></div>
+                </div>
+                <p class="howto-goal" data-i18n="howtoGoal">Цель — продержаться как можно дольше и побить свой рекорд. Каждый забег уникален.</p>
+                <button class="btn btn-primary" type="button" data-action="close"><span data-i18n="gotIt">Понятно</span></button>
+            </div>
+        </div>
+
+        <!-- Confirm -->
+        <div id="overlay-confirm" class="overlay is-hidden" role="dialog" aria-modal="true" aria-labelledby="confirm-title">
+            <div class="panel panel-confirm">
+                <h2 id="confirm-title">Подтверждение</h2>
+                <p id="confirm-text"></p>
+                <div class="btn-row">
+                    <button class="btn btn-ghost" type="button" data-action="confirm-no"><span data-i18n="cancel">Отмена</span></button>
+                    <button class="btn btn-danger" type="button" data-action="confirm-yes"><span data-i18n="confirm">Подтвердить</span></button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Toast -->
+        <div id="toast" class="toast is-hidden" role="status" aria-live="polite"><svg class="icon"><use href="#i-check"></use></svg><span id="toast-text"></span></div>
+        <div id="aria-live" class="sr-only" aria-live="polite"></div>
+    </div>
+</div>
+
+<script src="js/i18n.js"></script>
+<script src="js/storage.js"></script>
+<script src="js/audio.js"></script>
+<script src="js/sdk.js"></script>
+<script src="js/game.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>

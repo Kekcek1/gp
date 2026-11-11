@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+  <meta name="theme-color" content="#070b16">
+  <meta name="description" content="Звездолов — тихая рыбалка на краю ночного неба. Ловите светящихся рыб, возвращайте созвездия и слушайте, о чём говорит озеро.">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>Звездолов — рыбалка на краю ночного неба</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%23070b16'/%3E%3Cpath d='M32 10l5 15 15 5-15 5-5 15-5-15-15-5 15-5z' fill='%23ffd479'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="css/style.css">
+  <!-- Yandex Games SDK. В архиве для платформы путь должен быть относительным. -->
+  <script src="/sdk.js"></script>
+</head>
+<body>
+  <div id="app">
+    <canvas id="scene" aria-hidden="true"></canvas>
+    <div class="scene-tint" aria-hidden="true"></div>
+
+    <!-- Загрузка -->
+    <section id="loading" class="screen loading-screen" aria-live="polite">
+      <div class="load-sky" aria-hidden="true">
+        <span class="load-star s1"></span>
+        <span class="load-star s2"></span>
+        <span class="load-star s3"></span>
+        <span class="load-star s4"></span>
+      </div>
+      <div class="loading-inner">
+        <div class="loading-mark" aria-hidden="true">
+          <span class="loading-orbit"></span>
+          <span class="loading-orbit orbit2"></span>
+          <span class="loading-star">✦</span>
+        </div>
+        <h1 class="loading-title" data-i18n="app.title">Звездолов</h1>
+        <p class="loading-sub" data-i18n="app.subtitle">рыбалка на краю ночного неба</p>
+        <div class="loading-bar"><span></span></div>
+        <p class="loading-text" id="loading-text" data-i18n="loading.text">Раскладываем снасти…</p>
+        <p class="loading-tip" id="loading-tip"></p>
+      </div>
+      <p class="loading-version">v1.0</p>
+    </section>
+
+    <!-- Главное меню -->
+    <section id="menu" class="screen menu-screen hidden" aria-label="Главное меню">
+      <div class="menu-top">
+        <div class="menu-top-brand">
+          <span class="brand-star" aria-hidden="true">✦</span>
+          <span data-i18n="app.title">Звездолов</span>
+        </div>
+        <div class="menu-top-actions">
+          <button class="icon-btn ghost" id="menu-sound" type="button" data-i18n-aria="hud.soundOn" aria-label="Звук"><span data-icon="soundOn"></span></button>
+          <button class="icon-btn ghost" id="menu-help" type="button" data-i18n-aria="menu.howto" aria-label="Как играть"><span data-icon="info"></span></button>
+          <button class="icon-btn ghost" id="menu-settings" type="button" data-i18n-aria="menu.settings" aria-label="Настройки"><span data-icon="gear"></span></button>
+        </div>
+      </div>
+
+      <div class="menu-main">
+        <div class="menu-brand-block">
+          <p class="eyebrow" data-i18n="menu.firstTime">Первая ночь</p>
+          <h1 class="menu-title" id="menu-title">
+            <span>Звезд</span><span class="title-accent">олов</span>
+          </h1>
+          <p class="menu-subtitle" data-i18n="app.subtitle">рыбалка на краю ночного неба</p>
+          <p class="menu-welcome" id="menu-welcome" data-i18n="app.tagline">Тихая заводь. Тёмное небо. Одна удочка.</p>
+
+          <div class="menu-actions">
+            <button class="btn btn-primary btn-play" id="btn-play" type="button">
+              <span class="btn-icon" data-icon="hook"></span>
+              <span class="btn-copy">
+                <b id="btn-play-label" data-i18n="menu.play">Забросить удочку</b>
+                <small id="btn-play-note" data-i18n="menu.firstTime">Первая ночь</small>
+              </span>
+              <span class="btn-arrow" data-icon="arrow"></span>
+            </button>
+            <div class="menu-secondary">
+              <button class="btn btn-secondary" type="button" data-open="collection">
+                <span data-icon="book"></span><span data-i18n="menu.collection">Коллекция</span>
+              </button>
+              <button class="btn btn-secondary" type="button" data-open="shop">
+                <span data-icon="shop"></span><span data-i18n="menu.shop">Лавка</span>
+              </button>
+              <button class="btn btn-secondary" type="button" data-open="quests">
+                <span data-icon="quest"></span><span data-i18n="menu.quests">Задания</span>
+              </button>
+              <button class="btn btn-secondary" type="button" data-open="records">
+                <span data-icon="trophy"></span><span data-i18n="menu.records">Рейтинг</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <aside class="menu-aside" aria-label="Статистика">
+          <div class="menu-card">
+            <div class="menu-card-head">
+              <span class="icon-badge" data-icon="crown"></span>
+              <div>
+                <p class="eyebrow" id="menu-card-eyebrow" data-i18n="menu.firstTime">Первая ночь</p>
+                <p class="menu-rank" id="menu-rank">Ученик смотрителя</p>
+              </div>
+            </div>
+            <div class="menu-stat-grid">
+              <div class="menu-stat">
+                <span data-i18n="menu.species">Видов открыто</span>
+                <b id="menu-species">0 / 48</b>
+              </div>
+              <div class="menu-stat">
+                <span data-i18n="menu.score">Звездолов score</span>
+                <b id="menu-score">0</b>
+              </div>
+              <div class="menu-stat wide">
+                <span data-i18n="menu.best">Лучший улов</span>
+                <b id="menu-best">—</b>
+              </div>
+            </div>
+            <div class="menu-progress">
+              <div class="menu-progress-label"><span data-i18n="menu.rank">Ранг</span><b id="menu-level">1</b></div>
+              <div class="mini-bar"><span id="menu-xp-fill"></span></div>
+            </div>
+            <div class="menu-daily" id="menu-daily" hidden>
+              <span class="daily-pulse" data-icon="gift"></span>
+              <div><b data-i18n="menu.daily">Подарок дня</b><small id="menu-daily-text"></small></div>
+              <span class="menu-daily-arrow" data-icon="chevron"></span>
+            </div>
+            <p class="menu-save"><span data-icon="check"></span><span data-i18n="menu.saveNote">Прогресс сохраняется автоматически</span></p>
+          </div>
+          <div class="menu-signature">
+            <span class="line"></span>
+            <span data-i18n="app.madeBy">Сделано с любовью к тихим вечерам</span>
+            <span class="line"></span>
+          </div>
+        </aside>
+      </div>
+
+      <button class="menu-howto-link" id="menu-howto-link" type="button">
+        <span data-icon="info"></span><span data-i18n="menu.howto">Как играть</span>
+      </button>
+    </section>
+
+    <!-- Игра -->
+    <section id="game" class="screen game-screen hidden" aria-label="Игра">
+      <header class="hud">
+        <div class="rank-chip" id="rank-chip" title="Ранг">
+          <span class="rank-level" id="hud-level">1</span>
+          <span class="rank-copy">
+            <b id="hud-rank">Ученик смотрителя</b>
+            <span class="rank-xp"><span id="hud-xp-fill"></span></span>
+          </span>
+        </div>
+        <div class="hud-spacer"></div>
+        <div class="resource-chip sparks" title="Искры">
+          <span class="res-icon" data-icon="spark"></span>
+          <b id="hud-sparks">0</b>
+        </div>
+        <div class="resource-chip shards" title="Осколки звёзд">
+          <span class="res-icon" data-icon="shard"></span>
+          <b id="hud-shards">0</b>
+        </div>
+        <button class="icon-btn hud-btn" id="hud-sound" type="button" aria-label="Звук"><span data-icon="soundOn"></span></button>
+        <button class="icon-btn hud-btn" id="hud-pause" type="button" data-i18n-aria="hud.pause" aria-label="Пауза"><span data-icon="pause"></span></button>
+      </header>
+
+      <div class="quest-chip" id="quest-chip" role="button" tabindex="0">
+        <span class="quest-chip-icon" data-icon="quest"></span>
+        <span class="quest-chip-copy">
+          <small id="quest-chip-label">Задание</small>
+          <b id="quest-chip-title">Первый заброс</b>
+        </span>
+        <span class="quest-chip-progress"><span id="quest-chip-bar"></span></span>
+        <span class="quest-chip-count" id="quest-chip-count">0 / 3</span>
+      </div>
+
+      <div class="location-chip" id="location-chip" role="button" tabindex="0">
+        <span class="loc-weather" data-icon="star"></span>
+        <span class="loc-copy">
+          <b id="loc-name">Тихая заводь</b>
+          <small id="loc-weather">Тихий вечер</small>
+        </span>
+        <span class="loc-signs" id="loc-signs" title="Знамения"></span>
+        <span class="loc-map-icon" data-icon="map"></span>
+      </div>
+
+      <div class="bite-prompt hidden" id="bite-prompt">
+        <span class="bite-ring"></span>
+        <span class="bite-text" data-i18n="fish.bite">Поклёвка!</span>
+        <small data-i18n="fish.hook">Тапните!</small>
+      </div>
+
+      <div class="cast-hint hidden" id="cast-hint" data-i18n="fish.castHint">Зажмите кнопку и отпустите в золотой зоне</div>
+
+      <div class="power-meter hidden" id="power-meter" aria-hidden="true">
+        <div class="power-zone"></div>
+        <div class="power-fill" id="power-fill"></div>
+        <span class="power-label" data-i18n="fish.goldenZone">Золотая зона</span>
+      </div>
+
+      <div class="reel-panel hidden" id="reel-panel">
+        <div class="reel-top">
+          <div class="reel-fish-icon" id="reel-fish-icon" data-icon="fish"></div>
+          <div class="reel-copy">
+            <b id="reel-title" data-i18n="reel.title">Вываживание</b>
+            <small id="reel-subtitle" data-i18n="reel.perfectHint">Держите натяжение в зелёной зоне</small>
+          </div>
+          <span class="reel-perfect" id="reel-perfect" hidden data-i18n="fish.perfect">Идеально</span>
+        </div>
+        <div class="reel-row">
+          <span class="reel-label" data-i18n="fish.tension">Натяжение</span>
+          <div class="tension-meter" id="tension-meter">
+            <div class="tension-safe"></div>
+            <div class="tension-fill" id="tension-fill"></div>
+          </div>
+          <b class="reel-value" id="tension-value">0%</b>
+        </div>
+        <div class="reel-row">
+          <span class="reel-label" data-i18n="fish.progress">Подмотка</span>
+          <div class="progress-meter">
+            <div class="progress-fill" id="reel-progress-fill"></div>
+          </div>
+          <b class="reel-value" id="progress-value">0%</b>
+        </div>
+      </div>
+
+      <div class="tutorial-tip hidden" id="tutorial-tip" role="status">
+        <span class="tip-pointer"></span>
+        <p id="tutorial-text"></p>
+        <button class="tip-skip" id="tutorial-skip" type="button" data-i18n="tut.skip">Пропустить обучение</button>
+      </div>
+
+      <div class="bottom-dock" id="bottom-dock">
+        <button class="bait-card" id="btn-bait" type="button">
+          <span class="bait-icon" data-icon="lure"></span>
+          <span class="bait-copy">
+            <small data-i18n="bait.title">Наживка</small>
+            <b id="bait-name">Светлячок</b>
+          </span>
+          <span class="bait-arrow" data-icon="chevron"></span>
+        </button>
+
+        <div class="cast-area">
+          <button class="cast-btn" id="btn-cast" type="button" aria-label="Забросить">
+            <span class="cast-glow" aria-hidden="true"></span>
+            <span class="cast-icon" id="cast-icon" data-icon="hook"></span>
+            <span class="cast-label" id="cast-label" data-i18n="fish.cast">Забросить</span>
+            <span class="cast-sub" id="cast-sub" data-i18n="fish.castHint">Зажмите и отпустите</span>
+          </button>
+          <div class="cast-cancel hidden" id="cast-cancel">
+            <button type="button" id="btn-cancel-cast" data-i18n="fish.cancel">Смотать леску</button>
+          </div>
+        </div>
+
+        <div class="dock-actions">
+          <button class="dock-btn" type="button" data-open="collection">
+            <span data-icon="book"></span><small data-i18n="col.title">Коллекция</small>
+          </button>
+          <button class="dock-btn" type="button" data-open="shop">
+            <span data-icon="shop"></span><small data-i18n="menu.shop">Лавка</small>
+          </button>
+          <button class="dock-btn" type="button" data-open="quests">
+            <span data-icon="quest"></span><small data-i18n="menu.quests">Задания</small>
+          </button>
+          <button class="dock-btn" type="button" data-open="map">
+            <span data-icon="map"></span><small data-i18n="loc.title">Локации</small>
+          </button>
+        </div>
+      </div>
+
+      <button class="toast-anchor hidden" id="toast-anchor" type="button"></button>
+    </section>
+
+    <!-- Пауза -->
+    <section id="pause" class="screen pause-screen hidden" aria-label="Пауза">
+      <div class="pause-card">
+        <span class="pause-mark" data-icon="pause"></span>
+        <h2 data-i18n="pause.title">Пауза</h2>
+        <p data-i18n="pause.note">Небо подождёт.</p>
+        <button class="btn btn-primary" id="btn-resume" type="button"><span data-icon="play"></span><span data-i18n="pause.resume">Вернуться к воде</span></button>
+        <div class="pause-links">
+          <button class="btn btn-secondary" type="button" data-open="settings"><span data-icon="gear"></span><span data-i18n="pause.settings">Настройки</span></button>
+          <button class="btn btn-secondary" type="button" data-open="help"><span data-icon="info"></span><span data-i18n="pause.help">Как играть</span></button>
+          <button class="btn btn-secondary" id="btn-to-menu" type="button"><span data-icon="home"></span><span data-i18n="pause.menu">В главное меню</span></button>
+        </div>
+      </div>
+    </section>
+
+    <div id="modal-root" aria-live="polite"></div>
+    <div id="toast-root" class="toast-root" aria-live="polite" aria-atomic="false"></div>
+    <div id="fx-root" aria-hidden="true"></div>
+  </div>
+
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>

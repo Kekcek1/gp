@@ -1,0 +1,338 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#041b2d">
+  <meta name="description" content="Сияние рифа — уютная головоломка три в ряд. Собирайте самоцветы, очищайте тину и возвращайте свет в глубины.">
+  <title>Сияние рифа</title>
+  <link rel="icon" type="image/png" sizes="64x64" href="assets/favicon.png">
+  <link rel="stylesheet" href="css/style.css">
+  <!-- Yandex Games SDK: относительный путь обязателен для архива. -->
+  <script src="/sdk.js" onerror="window.__sdkMissing=true"></script>
+</head>
+<body>
+<div id="app" class="app">
+
+  <canvas id="bg-canvas" class="bg-canvas" aria-hidden="true"></canvas>
+  <div class="bg-shade" aria-hidden="true"></div>
+
+  <!-- ============================== ЗАГРУЗКА ============================== -->
+  <section id="screen-boot" class="screen screen-boot is-active" aria-label="Загрузка">
+    <div class="boot-inner">
+      <div class="logo-mark logo-mark-big" aria-hidden="true">
+        <svg viewBox="0 0 120 120" fill="none">
+          <defs>
+            <radialGradient id="bootGlow" cx="50%" cy="45%" r="55%">
+              <stop offset="0%" stop-color="#b9fff2" stop-opacity=".9"/>
+              <stop offset="55%" stop-color="#45e0d0" stop-opacity=".25"/>
+              <stop offset="100%" stop-color="#45e0d0" stop-opacity="0"/>
+            </radialGradient>
+            <linearGradient id="bootGem" gradientUnits="userSpaceOnUse" x1="30" y1="28" x2="92" y2="96">
+              <stop offset="0%" stop-color="#ffffff"/>
+              <stop offset="35%" stop-color="#b8f3ff"/>
+              <stop offset="70%" stop-color="#ff8fb1"/>
+              <stop offset="100%" stop-color="#9b7bff"/>
+            </linearGradient>
+          </defs>
+          <circle cx="60" cy="58" r="52" fill="url(#bootGlow)"/>
+          <path d="M60 20 L84 42 L76 82 L60 98 L44 82 L36 42 Z" fill="url(#bootGem)" stroke="#eafffb" stroke-width="1.5"/>
+          <path d="M60 20 L60 98 M36 42 L84 42 M44 82 L76 82" stroke="#ffffff" stroke-opacity=".35" stroke-width="1.2"/>
+          <circle cx="48" cy="48" r="7" fill="#ffffff" fill-opacity=".7"/>
+          <path d="M20 104 Q40 96 60 104 T100 104" stroke="#6ff2d0" stroke-opacity=".55" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <h1 class="boot-title" data-i18n="game.title">Сияние рифа</h1>
+      <p class="boot-tagline" data-i18n="game.tagline">Верни свет в глубины</p>
+      <div class="loader" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="boot-loader">
+        <div class="loader-fill" id="boot-progress"></div>
+      </div>
+      <p class="boot-status" id="boot-status" data-i18n="common.loading">Загружаем глубины…</p>
+    </div>
+  </section>
+
+  <!-- ================================ МЕНЮ ================================ -->
+  <section id="screen-menu" class="screen screen-menu" aria-label="Главное меню">
+    <header class="topbar">
+      <div class="stat-pill" title="Монеты">
+        <span class="icon icon-coin" data-icon="coin"></span>
+        <span id="menu-coins">0</span>
+      </div>
+      <div class="stat-pill" title="Звёзды">
+        <span class="icon icon-star" data-icon="star"></span>
+        <span id="menu-stars">0</span>
+      </div>
+      <span class="topbar-spacer"></span>
+      <button class="icon-btn" data-action="sound" id="menu-sound" data-i18n-aria="menu.soundOff" aria-label="Звук">
+        <span data-icon="sound-on"></span>
+      </button>
+      <button class="icon-btn" data-action="settings" data-i18n-aria="common.settings" aria-label="Настройки">
+        <span data-icon="gear"></span>
+      </button>
+    </header>
+
+    <div class="menu-inner">
+      <div class="menu-brand">
+        <div class="logo-mark" aria-hidden="true">
+          <svg viewBox="0 0 120 120" fill="none">
+            <defs>
+              <radialGradient id="menuGlow" cx="50%" cy="45%" r="55%">
+                <stop offset="0%" stop-color="#b9fff2" stop-opacity=".75"/>
+                <stop offset="60%" stop-color="#45e0d0" stop-opacity=".2"/>
+                <stop offset="100%" stop-color="#45e0d0" stop-opacity="0"/>
+              </radialGradient>
+              <linearGradient id="menuGem" gradientUnits="userSpaceOnUse" x1="30" y1="28" x2="92" y2="96">
+                <stop offset="0%" stop-color="#ffffff"/>
+                <stop offset="35%" stop-color="#b8f3ff"/>
+                <stop offset="70%" stop-color="#ff8fb1"/>
+                <stop offset="100%" stop-color="#9b7bff"/>
+              </linearGradient>
+            </defs>
+            <circle cx="60" cy="58" r="52" fill="url(#menuGlow)"/>
+            <path d="M60 20 L84 42 L76 82 L60 98 L44 82 L36 42 Z" fill="url(#menuGem)" stroke="#eafffb" stroke-width="1.5"/>
+            <path d="M60 20 L60 98 M36 42 L84 42 M44 82 L76 82" stroke="#ffffff" stroke-opacity=".35" stroke-width="1.2"/>
+            <circle cx="48" cy="48" r="7" fill="#ffffff" fill-opacity=".7"/>
+            <path d="M20 104 Q40 96 60 104 T100 104" stroke="#6ff2d0" stroke-opacity=".55" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <h1 class="brand-title" data-i18n="game.title">Сияние рифа</h1>
+        <p class="brand-tagline" data-i18n="game.tagline">Верни свет в глубины</p>
+      </div>
+
+      <div class="menu-actions">
+        <button class="btn btn-primary btn-play" data-action="play" id="menu-play">
+          <span class="btn-play-icon" data-icon="play"></span>
+          <span class="btn-play-text">
+            <b data-i18n="menu.play">Играть</b>
+            <small id="menu-play-sub">Уровень 1</small>
+          </span>
+        </button>
+
+        <div class="menu-row">
+          <button class="menu-tile" data-action="map">
+            <span class="menu-tile-icon" data-icon="map"></span>
+            <span data-i18n="menu.map">Карта</span>
+          </button>
+          <button class="menu-tile" data-action="shop">
+            <span class="menu-tile-icon" data-icon="shop"></span>
+            <span data-i18n="menu.shop">Магазин</span>
+          </button>
+          <button class="menu-tile" data-action="leaderboard">
+            <span class="menu-tile-icon" data-icon="trophy"></span>
+            <span data-i18n="menu.rating">Рейтинг</span>
+          </button>
+        </div>
+
+        <button class="daily-strip" data-action="daily" id="daily-strip">
+          <span class="daily-gift" data-icon="gift"></span>
+          <span class="daily-text">
+            <b data-i18n="menu.daily">Подарок дня</b>
+            <small id="daily-strip-sub" data-i18n="menu.dailyReady">Подарок ждёт!</small>
+          </span>
+          <span class="daily-dot" id="daily-dot"></span>
+        </button>
+      </div>
+    </div>
+
+    <footer class="menu-footer">
+      <button class="link-btn" data-action="howto" data-i18n="menu.howto">Как играть</button>
+      <span class="footer-sep">•</span>
+      <button class="link-btn" data-action="profile" data-i18n="achievements.title">Достижения</button>
+      <span class="footer-sep">•</span>
+      <span class="footer-made" data-i18n="footer.made">Сделано с любовью к океану</span>
+    </footer>
+  </section>
+
+  <!-- ================================ КАРТА ================================ -->
+  <section id="screen-map" class="screen screen-map" aria-label="Карта рифа">
+    <header class="page-head">
+      <button class="icon-btn" data-action="menu" data-i18n-aria="common.back" aria-label="Назад">
+        <span data-icon="back"></span>
+      </button>
+      <div class="page-title">
+        <small id="map-chapter-label">Глава 1 из 6</small>
+        <h2 data-i18n="map.title">Карта рифа</h2>
+      </div>
+      <div class="stat-pill">
+        <span class="icon icon-star" data-icon="star"></span>
+        <span id="map-stars">0</span>
+      </div>
+    </header>
+
+    <div class="chapter-switch">
+      <button class="icon-btn chapter-arrow" data-action="chapter-prev" aria-label="Предыдущая глава">
+        <span data-icon="chevron-left"></span>
+      </button>
+      <div class="chapter-heading">
+        <h3 id="chapter-title">Мелководье</h3>
+        <p id="chapter-subtitle">Первые лучи света</p>
+        <div class="chapter-stars-line">
+          <div class="mini-bar"><div class="mini-bar-fill" id="chapter-bar"></div></div>
+          <span id="chapter-stars">0 / 30</span>
+        </div>
+      </div>
+      <button class="icon-btn chapter-arrow" data-action="chapter-next" aria-label="Следующая глава">
+        <span data-icon="chevron-right"></span>
+      </button>
+    </div>
+
+    <div class="chapter-dots" id="chapter-dots" role="tablist" aria-label="Главы"></div>
+
+    <div class="level-grid" id="level-grid"></div>
+
+    <footer class="map-footer">
+      <p class="map-hint" id="map-hint" data-i18n="map.selectLevel">Выберите уровень</p>
+      <button class="btn btn-primary" data-action="play-current" id="map-play">
+        <span data-icon="play"></span>
+        <span id="map-play-text">Играть</span>
+      </button>
+    </footer>
+  </section>
+
+  <!-- ================================ ИГРА ================================ -->
+  <section id="screen-game" class="screen screen-game" aria-label="Игровой уровень">
+    <header class="game-top">
+      <button class="icon-btn hud-btn" data-action="pause" data-i18n-aria="hud.pause" aria-label="Пауза">
+        <span data-icon="pause"></span>
+      </button>
+      <div class="game-level">
+        <small data-i18n="hud.level">Уровень</small>
+        <b id="hud-level">1</b>
+      </div>
+      <div class="game-stat">
+        <small data-i18n="hud.score">Очки</small>
+        <b id="hud-score">0</b>
+      </div>
+      <div class="game-stat moves-stat" id="moves-stat">
+        <small data-i18n="hud.moves">Ходы</small>
+        <b id="hud-moves">24</b>
+      </div>
+    </header>
+
+    <div class="game-main">
+      <aside class="goals-panel">
+        <h3 data-i18n="level.goals">Цели</h3>
+        <div class="goals-list" id="goals-list"></div>
+      </aside>
+
+      <div class="board-shell" id="board-shell">
+        <canvas id="board-canvas" aria-label="Игровое поле"></canvas>
+        <div class="combo-banner" id="combo-banner" aria-live="polite"></div>
+      </div>
+
+      <aside class="wave-panel">
+        <button class="wave-btn" id="wave-btn" data-action="wave" aria-label="Волна">
+          <span class="wave-fill" id="wave-fill"></span>
+          <span class="wave-icon" data-icon="wave"></span>
+          <span class="wave-text" data-i18n="hud.wave">Волна</span>
+          <b id="wave-pct">0%</b>
+        </button>
+      </aside>
+    </div>
+
+    <div class="coach-bubble" id="coach-bubble" hidden></div>
+
+    <footer class="booster-bar" id="booster-bar"></footer>
+  </section>
+
+  <!-- ============================== МАГАЗИН ============================== -->
+  <section id="screen-shop" class="screen panel-screen" aria-label="Магазин">
+    <header class="page-head">
+      <button class="icon-btn" data-action="menu" data-i18n-aria="common.back" aria-label="Назад">
+        <span data-icon="back"></span>
+      </button>
+      <div class="page-title">
+        <small data-i18n="shop.subtitle">Свет можно копить</small>
+        <h2 data-i18n="shop.title">Магазин рифа</h2>
+      </div>
+      <div class="stat-pill">
+        <span class="icon icon-coin" data-icon="coin"></span>
+        <span id="shop-coins">0</span>
+      </div>
+    </header>
+    <div class="panel-body" id="shop-body"></div>
+  </section>
+
+  <!-- ============================== НАСТРОЙКИ ============================== -->
+  <section id="screen-settings" class="screen panel-screen" aria-label="Настройки">
+    <header class="page-head">
+      <button class="icon-btn" data-action="menu" data-i18n-aria="common.back" aria-label="Назад">
+        <span data-icon="back"></span>
+      </button>
+      <div class="page-title">
+        <small data-i18n="common.settings">Настройки</small>
+        <h2 data-i18n="settings.title">Настройки</h2>
+      </div>
+      <span class="page-spacer"></span>
+    </header>
+    <div class="panel-body panel-narrow" id="settings-body"></div>
+  </section>
+
+  <!-- ============================== КАК ИГРАТЬ ============================== -->
+  <section id="screen-howto" class="screen panel-screen" aria-label="Как играть">
+    <header class="page-head">
+      <button class="icon-btn" data-action="menu" data-i18n-aria="common.back" aria-label="Назад">
+        <span data-icon="back"></span>
+      </button>
+      <div class="page-title">
+        <small data-i18n="menu.howto">Как играть</small>
+        <h2 data-i18n="howto.title">Как играть</h2>
+      </div>
+      <span class="page-spacer"></span>
+    </header>
+    <div class="panel-body panel-narrow" id="howto-body"></div>
+  </section>
+
+  <!-- ============================== ДОСТИЖЕНИЯ ============================== -->
+  <section id="screen-profile" class="screen panel-screen" aria-label="Достижения">
+    <header class="page-head">
+      <button class="icon-btn" data-action="menu" data-i18n-aria="common.back" aria-label="Назад">
+        <span data-icon="back"></span>
+      </button>
+      <div class="page-title">
+        <small data-i18n="achievements.subtitle">Маленькие победы хранителя</small>
+        <h2 data-i18n="achievements.title">Достижения</h2>
+      </div>
+      <div class="stat-pill">
+        <span class="icon icon-star" data-icon="star"></span>
+        <span id="profile-stars">0</span>
+      </div>
+    </header>
+    <div class="panel-body panel-narrow" id="profile-body"></div>
+  </section>
+
+  <!-- ============================== РЕЙТИНГ ============================== -->
+  <section id="screen-leaderboard" class="screen panel-screen" aria-label="Рейтинг">
+    <header class="page-head">
+      <button class="icon-btn" data-action="menu" data-i18n-aria="common.back" aria-label="Назад">
+        <span data-icon="back"></span>
+      </button>
+      <div class="page-title">
+        <small data-i18n="leaderboard.subtitle">Больше звёзд — ярче риф</small>
+        <h2 data-i18n="leaderboard.title">Рейтинг рифа</h2>
+      </div>
+      <div class="stat-pill">
+        <span class="icon icon-star" data-icon="star"></span>
+        <span id="leaderboard-stars">0</span>
+      </div>
+    </header>
+    <div class="panel-body panel-narrow" id="leaderboard-body"></div>
+  </section>
+
+  <div id="modal-root" class="modal-root"></div>
+  <div id="toast-root" class="toast-root" aria-live="polite" aria-atomic="true"></div>
+</div>
+
+<script src="js/core.js"></script>
+<script src="js/levels.js"></script>
+<script src="js/i18n.js"></script>
+<script src="js/sdk.js"></script>
+<script src="js/save.js"></script>
+<script src="js/audio.js"></script>
+<script src="js/render.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/game.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>
+
